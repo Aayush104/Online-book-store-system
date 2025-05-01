@@ -62,5 +62,13 @@ namespace Online_Bookstore_System.Controllers
             return BadRequest(errorResponse);
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            var response = await _authService.LoginUserAsync(loginDto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+
     }
 }

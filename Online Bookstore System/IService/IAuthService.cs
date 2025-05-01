@@ -6,5 +6,7 @@ namespace Online_Bookstore_System.IService
     public interface IAuthService
     {
         Task<ApiResponseDto> RegisterUserAsync(RegistrationDto registrationDto);
+        Task<ApiResponseDto> LoginUserAsync(LoginDto loginDto);
     }
+
 }

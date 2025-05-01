@@ -120,3 +120,11 @@ D:\Online Bookstore System\Online Bookstore System\obj\Debug\net8.0\Online Books
 D:\Online Bookstore System\Online Bookstore System\obj\Debug\net8.0\ref\Online Bookstore System.dll
 D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\DotNetEnv.dll
 D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Sprache.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
