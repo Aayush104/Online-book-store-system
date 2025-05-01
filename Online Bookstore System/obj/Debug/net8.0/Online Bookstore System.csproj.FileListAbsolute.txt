@@ -118,3 +118,5 @@ D:\Online Bookstore System\Online Bookstore System\obj\Debug\net8.0\refint\Onlin
 D:\Online Bookstore System\Online Bookstore System\obj\Debug\net8.0\Online Bookstore System.pdb
 D:\Online Bookstore System\Online Bookstore System\obj\Debug\net8.0\Online Bookstore System.genruntimeconfig.cache
 D:\Online Bookstore System\Online Bookstore System\obj\Debug\net8.0\ref\Online Bookstore System.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\DotNetEnv.dll
+D:\Online Bookstore System\Online Bookstore System\bin\Debug\net8.0\Sprache.dll

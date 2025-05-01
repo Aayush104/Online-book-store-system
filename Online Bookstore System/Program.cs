@@ -1,9 +1,21 @@
+using DotNetEnv;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Online_Bookstore_System.Data;
+using Online_Bookstore_System.Extension;
+using Online_Bookstore_System.IService;
+using Online_Bookstore_System.Model;
+using Online_Bookstore_System.Service;
 
+
+Env.Load(); //.env lai load garna yo chainxa
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
+builder.Services.AddApplicationServices();
+builder.Services.AddApplicationRepository();
 
 builder.Services.AddControllers();
 
@@ -17,6 +29,12 @@ builder.Services.AddCors(o =>
             .AllowCredentials());
 });
 
+
+
+// Identity use garna yo halnu parxa
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 //Database Connection
 builder.Services.AddDbContext<AppDbContext>(options =>

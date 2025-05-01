@@ -189,6 +189,9 @@ namespace Online_Bookstore_System.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
@@ -201,6 +204,7 @@ namespace Online_Bookstore_System.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -252,17 +256,17 @@ namespace Online_Bookstore_System.Migrations
                         {
                             Id = "754ea22b-c181-4069-9f95-be2ea98f24e8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dc8f7fc4-0e0b-4637-a69f-dea6a82cad25",
+                            ConcurrencyStamp = "fb183224-5ac8-4308-a9e3-2c0402db5c17",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPOVJVuvdpJILF3a7ddvbUzvjX0DH9cP4P9gbJwKEqiSH+wlJYsVkxcoTaPkLcCZmg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECQiV07EZGyK5M/nGhOEB2tsdma/q9vbkgCoKaFwj4t78s0ufjPKLz5sepwYif1L6Q==",
                             PhoneNumber = "9876543210",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f88eb60f-6260-4859-bebe-f1896bbd47d6",
+                            SecurityStamp = "748713e4-c66f-4a29-bd2f-c3ca2d55bc90",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
