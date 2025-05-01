@@ -10,6 +10,7 @@ namespace Online_Bookstore_System.Extension
         public static IServiceCollection AddApplicationRepository(this IServiceCollection services)
         {
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IOtpRepository, OtpRepository>();
             return services;
         }
     }

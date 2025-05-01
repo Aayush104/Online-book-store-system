@@ -17,11 +17,13 @@ namespace Online_Bookstore_System.Service
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IDataProtector _dataProtector;
         private readonly IMailService _mailService;
-        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDataProtectionProvider dataProtector, DataSecurityProvider securityProvider, IMailService mailService)
+        private readonly IOtpService _otpService;
+        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDataProtectionProvider dataProtector, DataSecurityProvider securityProvider, IMailService mailService, IOtpService otpService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mailService = mailService;
+            _otpService = otpService;
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);   
         }
         public async Task<ApiResponseDto> RegisterUserAsync(RegistrationDto registrationDto)
@@ -35,7 +37,7 @@ namespace Online_Bookstore_System.Service
                     return new ApiResponseDto { IsSuccess = false, Message = "A user with this email already exists.", StatusCode = 409 };
                 }
 
-                var otp = OtpGenerator.GenerateOtp();
+               
 
                 var user = new ApplicationUser
                 { 
@@ -49,6 +51,8 @@ namespace Online_Bookstore_System.Service
                 };
 
                 var result = await _userManager.CreateAsync(user, registrationDto.Password);
+                var otp = OtpGenerator.GenerateOtp();
+                await _otpService.StoreOtpAsync(user.Id, "Registration", otp);
                 await _mailService.SendOtpMail(user.Email, user.FullName, otp);
 
 

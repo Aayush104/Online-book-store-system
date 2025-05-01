@@ -132,6 +132,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Online_Bookstore_System.Controllers.AuthController",
+    "Method": "VerifyOtp",
+    "RelativePath": "api/Auth/VerifyOtp",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "otpVerification",
+        "Type": "Online_Bookstore_System.Dto.AuthDto.OtpVerificationDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Online_Bookstore_System.Controllers.BookController",
     "Method": "GetBooks",
     "RelativePath": "api/Book",

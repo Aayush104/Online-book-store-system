@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Online_Bookstore_System.Data;
@@ -11,9 +12,11 @@ using Online_Bookstore_System.Data;
 namespace Online_Bookstore_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250501093222_Third Migraton")]
+    partial class ThirdMigraton
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,17 +259,17 @@ namespace Online_Bookstore_System.Migrations
                         {
                             Id = "754ea22b-c181-4069-9f95-be2ea98f24e8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b4c8988a-0fff-4324-ad15-83c62f1068fc",
+                            ConcurrencyStamp = "d8af08c4-def6-4b8a-9b6b-cf4424eea968",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEALxcELFCniGmFrFzvfPCK25ozMpw6TDn5I+SKrmHyC5Pj9Ug++8KCBuEuYh9c0D1A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJLzbRAkoeuW0A2ckYyAK+GKSUeQ4+QKHxeRCcuzXqQayHAB60Jvk/ZJZgQn5WNMeg==",
                             PhoneNumber = "9876543210",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d15e4f03-9a7a-4e09-a953-deae51f58ce6",
+                            SecurityStamp = "0df5dbc0-f1c9-4085-acc1-80e211c31f74",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -280,7 +283,7 @@ namespace Online_Bookstore_System.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ExpiresAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IsOtp")

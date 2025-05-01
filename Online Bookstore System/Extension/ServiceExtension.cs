@@ -10,6 +10,7 @@ namespace Online_Bookstore_System.Extension
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<DataSecurityProvider>();
             return services;
         }
