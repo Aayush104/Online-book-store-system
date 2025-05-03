@@ -1,74 +1,106 @@
 [
   {
     "ContainingType": "Online_Bookstore_System.Controllers.AdminBookController",
-    "Method": "CreateBook",
-    "RelativePath": "api/AdminBook",
+    "Method": "AddBook",
+    "RelativePath": "api/AdminBook/AddBook",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "book",
-        "Type": "Online_Bookstore_System.Controllers.BookDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Online_Bookstore_System.Controllers.AdminBookController",
-    "Method": "UpdateBook",
-    "RelativePath": "api/AdminBook/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
       },
       {
-        "Name": "book",
-        "Type": "Online_Bookstore_System.Controllers.BookDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Online_Bookstore_System.Controllers.AdminBookController",
-    "Method": "DeleteBook",
-    "RelativePath": "api/AdminBook/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Online_Bookstore_System.Controllers.AdminBookController",
-    "Method": "UpdateInventory",
-    "RelativePath": "api/AdminBook/{id}/inventory",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
+        "Name": "ISBN",
+        "Type": "System.String",
+        "IsRequired": false
       },
       {
-        "Name": "inventory",
-        "Type": "Online_Bookstore_System.Controllers.InventoryDto",
-        "IsRequired": true
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Author",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "BookPhotoFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "BookPhoto",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Genre",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Language",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Format",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Publisher",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PublicationDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "Price",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      },
+      {
+        "Name": "Stock",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsAvailableInLibrary",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "OnSale",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "DiscountPercentage",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "DiscountStartDate",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "DiscountEndDate",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ExclusiveEdition",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

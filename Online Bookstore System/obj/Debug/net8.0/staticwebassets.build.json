@@ -1,12 +1,20 @@
 {
   "Version": 1,
-  "Hash": "nELMP5ey0nXlwdHY7WVI4k+jn9MuYuJa49AfmGoEYko=",
+  "Hash": "Zv38xANFE27zMGznG/DTGozQYX6bcbqJIWVcHVeir0k=",
   "Source": "Online Bookstore System",
   "BasePath": "_content/Online Bookstore System",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "Online Bookstore System\\wwwroot",
+      "Source": "Online Bookstore System",
+      "ContentRoot": "D:\\Online Bookstore System\\Online Bookstore System\\wwwroot\\",
+      "BasePath": "_content/Online Bookstore System",
+      "Pattern": "**"
+    }
+  ],
   "Assets": [],
   "Endpoints": []
 }

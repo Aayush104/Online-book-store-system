@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Online_Bookstore_System.Data;
@@ -11,9 +12,11 @@ using Online_Bookstore_System.Data;
 namespace Online_Bookstore_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250503144611_Added Book Model")]
+    partial class AddedBookModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,17 +259,17 @@ namespace Online_Bookstore_System.Migrations
                         {
                             Id = "754ea22b-c181-4069-9f95-be2ea98f24e8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ccbec44c-4023-4b27-bc68-7ade176c015a",
+                            ConcurrencyStamp = "463f039d-ea76-436e-8a8a-89c46943b55f",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGDdGS0BvYO24xpOF0WojLS8sHkB9tKhrrRIHqtYZTfU9i+K0bxP49PVnYGZVO9eog==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELK06Q+BbFbWt95luUUflyXafu+c9jmlkWbMOMAuHHiiJJTxUOlhQujxcH+Pp/Xqwg==",
                             PhoneNumber = "9876543210",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7c6f035e-8ffd-41d1-a8f1-9e4ee40fae1b",
+                            SecurityStamp = "d86d62f0-4a29-412b-a058-779ff81881e9",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -274,20 +277,16 @@ namespace Online_Bookstore_System.Migrations
 
             modelBuilder.Entity("Online_Bookstore_System.Model.Book", b =>
                 {
-                    b.Property<long>("BookId")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("BookId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Author")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("BookPhoto")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -346,7 +345,7 @@ namespace Online_Bookstore_System.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("BookId");
+                    b.HasKey("Id");
 
                     b.ToTable("Books");
                 });

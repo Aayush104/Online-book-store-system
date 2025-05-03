@@ -11,6 +11,7 @@ namespace Online_Bookstore_System.Extension
         {
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IOtpRepository, OtpRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
             return services;
         }
     }
