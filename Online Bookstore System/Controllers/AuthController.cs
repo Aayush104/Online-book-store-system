@@ -69,6 +69,19 @@ namespace Online_Bookstore_System.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPost("CreateStaff")]
+        public async Task<IActionResult> CreateStaff(StaffRegistrationDto staffRegistrationDto)
+        {
+            var response = await _authService.CreateStaffAsync(staffRegistrationDto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var response = await _authService.ResetPassowordAsync(resetPasswordDto);
+            return StatusCode(response.StatusCode, response);
+        }
 
     }
 }

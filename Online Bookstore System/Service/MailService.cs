@@ -58,5 +58,37 @@ namespace Online_Bookstore_System.Service
                 message.Dispose();
             }
         }
+
+        public async Task SendResetMail(string toEmail, string fullName, string reset_url)
+        {
+            var body = $"Welcome {fullName},<br/><br/>Click the link below to set your password:<br/><a href='{reset_url}'>Set Password</a>";
+
+
+            var message = new MailMessage
+            {
+                From = new MailAddress(_fromEmail),
+                Subject = "Set Your Password for Bookstore Staff Portal",
+                Body = body,
+                IsBodyHtml = true
+            };
+
+            message.To.Add(toEmail);
+
+            try
+            {
+                await _smtpClient.SendMailAsync(message);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new InvalidOperationException("Error sending email", ex);
+            }
+            finally
+            {
+
+                message.Dispose();
+            }
+        }
     }
 }
