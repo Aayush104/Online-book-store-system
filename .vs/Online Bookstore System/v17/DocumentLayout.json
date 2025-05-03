@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\Online Bookstore System\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\dto\\bookdto\\addbookdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\dto\\bookdto\\addbookdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -29,8 +33,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 4,
-          "SelectedChildIndex": 6,
+          "DockedHeight": 63,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,7 +54,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": ".gitignore",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\.gitignore",
+              "RelativeDocumentMoniker": "Online Bookstore System\\.gitignore",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\.gitignore",
+              "RelativeToolTip": "Online Bookstore System\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-05-03T17:00:16.963Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "ServiceExtension.cs",
               "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Extension\\ServiceExtension.cs",
               "RelativeDocumentMoniker": "Online Bookstore System\\Extension\\ServiceExtension.cs",
@@ -58,12 +75,11 @@
               "RelativeToolTip": "Online Bookstore System\\Extension\\ServiceExtension.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T16:43:55.27Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-03T16:43:55.27Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "BookService.cs",
               "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\BookService.cs",
               "RelativeDocumentMoniker": "Online Bookstore System\\Service\\BookService.cs",
@@ -71,25 +87,24 @@
               "RelativeToolTip": "Online Bookstore System\\Service\\BookService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T16:41:42.408Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-03T16:41:42.408Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "AddBookDto.cs",
               "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\BookDto\\AddBookDto.cs",
               "RelativeDocumentMoniker": "Online Bookstore System\\Dto\\BookDto\\AddBookDto.cs",
               "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\BookDto\\AddBookDto.cs",
               "RelativeToolTip": "Online Bookstore System\\Dto\\BookDto\\AddBookDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-03T16:38:30.751Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Book.cs",
               "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Model\\Book.cs",
               "RelativeDocumentMoniker": "Online Bookstore System\\Model\\Book.cs",
@@ -97,12 +112,11 @@
               "RelativeToolTip": "Online Bookstore System\\Model\\Book.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAAowBoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T16:36:14.063Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-03T16:36:14.063Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "FileService.cs",
               "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\FileService.cs",
               "RelativeDocumentMoniker": "Online Bookstore System\\Service\\FileService.cs",
@@ -110,18 +124,25 @@
               "RelativeToolTip": "Online Bookstore System\\Service\\FileService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T16:34:37.528Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-03T16:34:37.528Z"
             }
           ]
         },
         {
-          "DockedHeight": 68,
+          "DockedHeight": 9,
           "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
