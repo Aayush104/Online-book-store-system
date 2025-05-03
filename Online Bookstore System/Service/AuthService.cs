@@ -7,6 +7,7 @@ using Online_Bookstore_System.Helper;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Model;
 using System.Data;
+using System.Net;
 
 namespace Online_Bookstore_System.Service
 {
@@ -28,6 +29,60 @@ namespace Online_Bookstore_System.Service
             _otpService = otpService;
             _tokenService = tokenService;
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);   
+        }
+
+        public async Task<ApiResponseDto> CreateStaffAsync(StaffRegistrationDto staffRegistrationDto)
+        {
+            try
+            {
+                var existingUser = await _userManager.FindByEmailAsync(staffRegistrationDto.Email);
+
+                if (existingUser != null)
+                {
+                    return new ApiResponseDto { IsSuccess = false, Message = "A user with this email already exists.", StatusCode = 409 };
+                }
+                var user = new ApplicationUser
+                {
+                    FullName = staffRegistrationDto.FullName,
+                    Email = staffRegistrationDto.Email,
+                    UserName = staffRegistrationDto.Email,
+                    PhoneNumber = staffRegistrationDto.PhoneNumber,
+                };
+
+                var result = await _userManager.CreateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = $"{ result.Errors}",
+                        StatusCode = 400
+                    };
+                }
+
+                await _userManager.AddToRoleAsync(user, "Staff");
+
+                //Generate password reset Token
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = WebUtility.UrlEncode(token);
+
+
+                var frontendUrl = Environment.GetEnvironmentVariable("Frontend__ResetPasswordUrl");
+                var reset_url = $"{frontendUrl}?email={staffRegistrationDto.Email}&token={encodedToken}";
+
+                await _mailService.SendResetMail(staffRegistrationDto.Email,staffRegistrationDto.FullName, reset_url);
+
+                return new ApiResponseDto { IsSuccess = true, Message = "Staff created successfully.", StatusCode = 200};
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return new ApiResponseDto { IsSuccess = false, Message = "An error occurred during staff Creation", StatusCode = 500, Data = ex.Message };
+            }
         }
 
         public async Task<ApiResponseDto> LoginUserAsync(LoginDto loginDto)
@@ -104,7 +159,7 @@ namespace Online_Bookstore_System.Service
                     await _userManager.AddToRoleAsync(user, "PublicUser");
                 }
 
-                return new ApiResponseDto { IsSuccess = true, Message = "User created successfully.", StatusCode = 201, Data = _dataProtector.Protect(user.Id) };
+                return new ApiResponseDto { IsSuccess = true, Message = "User created successfully.", StatusCode = 200, Data = _dataProtector.Protect(user.Id) };
 
             }
             catch (Exception ex)
@@ -112,5 +167,62 @@ namespace Online_Bookstore_System.Service
                 return new ApiResponseDto { IsSuccess = false, Message = ex.Message, StatusCode = 500 };
             }
         }
+
+        public async Task<ApiResponseDto> ResetPassowordAsync(ResetPasswordDto resetPasswordDto)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+
+                if (user == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "User is not registered.",
+                        StatusCode = 404
+                    };
+                }
+
+                var decodedToken = WebUtility.UrlDecode(resetPasswordDto.Token);
+
+                var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.Password);
+
+                if (result.Succeeded)
+
+                {
+
+
+                    user.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(user);
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = true,
+                        Message = "Password reset successfully.",
+                        StatusCode = 200
+                    };
+                }
+                else
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = string.Join("; ", result.Errors.Select(e => e.Description)),
+                        StatusCode = 400
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while resetting the password. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+
     }
 }

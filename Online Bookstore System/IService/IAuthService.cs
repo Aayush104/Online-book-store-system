@@ -7,6 +7,8 @@ namespace Online_Bookstore_System.IService
     {
         Task<ApiResponseDto> RegisterUserAsync(RegistrationDto registrationDto);
         Task<ApiResponseDto> LoginUserAsync(LoginDto loginDto);
+        Task<ApiResponseDto> CreateStaffAsync(StaffRegistrationDto staffRegistrationDto);
+        Task<ApiResponseDto> ResetPassowordAsync(ResetPasswordDto resetPasswordDto);
     }
 
 }

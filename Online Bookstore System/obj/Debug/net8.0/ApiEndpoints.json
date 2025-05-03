@@ -117,6 +117,22 @@
   },
   {
     "ContainingType": "Online_Bookstore_System.Controllers.AuthController",
+    "Method": "CreateStaff",
+    "RelativePath": "api/Auth/CreateStaff",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "staffRegistrationDto",
+        "Type": "Online_Bookstore_System.Dto.AuthDto.StaffRegistrationDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Online_Bookstore_System.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/Login",
     "HttpMethod": "POST",
@@ -142,6 +158,22 @@
       {
         "Name": "registrationDto",
         "Type": "Online_Bookstore_System.Dto.AuthDto.RegistrationDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Online_Bookstore_System.Controllers.AuthController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/Auth/ResetPassword",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "resetPasswordDto",
+        "Type": "Online_Bookstore_System.Dto.AuthDto.ResetPasswordDto",
         "IsRequired": true
       }
     ],
