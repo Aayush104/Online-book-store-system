@@ -10,6 +10,7 @@ namespace Online_Bookstore_System.Model
         public string? Address { get; set; }
 
         public virtual ICollection<Otp> Otps { get; set; } = new List<Otp>();
+        public ICollection<Bookmark> Bookmarks { get; set; }
 
 
 

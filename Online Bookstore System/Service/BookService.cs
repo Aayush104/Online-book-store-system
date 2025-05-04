@@ -218,12 +218,46 @@ namespace Online_Bookstore_System.Service
             {
                 var filteredBooks = await _bookRepository.GetBooksAsync(bookFilterParams);
 
+                if (filteredBooks == null || !filteredBooks.Any())
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "No books found.",
+                        StatusCode = 404
+                    };
+                }
+
+                var protectedBooks = filteredBooks.Select(book => new GetBookDto
+                {
+                    BookId = _dataProtector.Protect(book.BookId.ToString()),
+                    Title = book.Title,
+                    Isbn = book.ISBN,
+                    Description = book.Description,
+                    Author = book.Author,
+                    Genre = book.Genre,
+                    Language = book.Language,
+                    BookPhoto = book.BookPhoto,
+                    Format = book.Format,
+                    Publisher = book.Publisher,
+                    PublicationDate = book.PublicationDate,
+                    Price = book.Price,
+                    Stock = book.Stock,
+                    IsAvailableInLibrary = book.IsAvailableInLibrary,
+                    OnSale = book.OnSale,
+                    DiscountPercentage = book.DiscountPercentage,
+                    DiscountStartDate = book.DiscountStartDate,
+                    DiscountEndDate = book.DiscountEndDate,
+                    ExclusiveEdition = book.ExclusiveEdition,
+                    AddedDate = book.AddedDate
+                }).ToList();
+
                 return new ApiResponseDto
                 {
                     IsSuccess = true,
                     Message = "Books fetched successfully.",
                     StatusCode = 200,
-                    Data = filteredBooks
+                    Data = protectedBooks
                 };
             }
             catch (Exception ex)
@@ -236,5 +270,6 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
+
     }
 }
