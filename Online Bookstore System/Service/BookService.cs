@@ -74,6 +74,8 @@ namespace Online_Bookstore_System.Service
             }
         }
 
+     
+
         public async Task<ApiResponseDto> GetBooksAsync(PaginationParams paginationParams)
         {
             try
@@ -266,6 +268,124 @@ namespace Online_Bookstore_System.Service
                 {
                     IsSuccess = false,
                     Message = $"An error occurred: {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> UpdateBookAsync(string id, UpdateBookDto updateBookDto)
+        {
+            try
+            {
+                string unprotectedId = _dataProtector.Unprotect(id);
+                if (!int.TryParse(unprotectedId, out int bookId))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Book ID format.",
+                        StatusCode = 400
+                    };
+                }
+
+                var existingBook = await _bookRepository.GetBooksById(bookId);
+                if (existingBook == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Book not found.",
+                        StatusCode = 404
+                    };
+                }
+
+                // Optional: Update image if a new one is uploaded
+                if (updateBookDto.BookPhotoFile != null)
+                {
+                    existingBook.BookPhoto = await _fileService.SaveFileAsync(updateBookDto.BookPhotoFile, "BookPhotos");
+                }
+
+                // Update book fields
+                existingBook.Title = updateBookDto.Title;
+                existingBook.ISBN = updateBookDto.ISBN;
+                existingBook.Description = updateBookDto.Description;
+                existingBook.Author = updateBookDto.Author;
+                existingBook.Genre = updateBookDto.Genre;
+                existingBook.Language = updateBookDto.Language;
+                existingBook.Format = updateBookDto.Format;
+                existingBook.Publisher = updateBookDto.Publisher;
+                existingBook.PublicationDate = updateBookDto.PublicationDate;
+                existingBook.Price = updateBookDto.Price;
+                existingBook.Stock = updateBookDto.Stock;
+                existingBook.IsAvailableInLibrary = updateBookDto.IsAvailableInLibrary;
+                existingBook.OnSale = updateBookDto.OnSale;
+                existingBook.DiscountPercentage = updateBookDto.OnSale ? updateBookDto.DiscountPercentage : null;
+                existingBook.DiscountStartDate = updateBookDto.OnSale ? updateBookDto.DiscountStartDate : null;
+                existingBook.DiscountEndDate = updateBookDto.OnSale ? updateBookDto.DiscountEndDate : null;
+                existingBook.ExclusiveEdition = updateBookDto.ExclusiveEdition;
+
+                await _bookRepository.UpdateBook(existingBook);
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Book updated successfully.",
+                    StatusCode = 200,
+                    Data = existingBook
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while updating the book. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> DeleteBookAsync(string id)
+        {
+            try
+            {
+                string unprotectedId = _dataProtector.Unprotect(id);
+                if (!int.TryParse(unprotectedId, out int bookId))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Book ID format.",
+                        StatusCode = 400
+                    };
+                }
+
+                var book = await _bookRepository.GetBooksById(bookId);
+                if (book == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Book not found.",
+                        StatusCode = 404
+                    };
+                }
+
+                await _bookRepository.DeleteBook(book);
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Book deleted successfully.",
+                    StatusCode = 200
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while deleting the book. {ex.Message}",
                     StatusCode = 500
                 };
             }

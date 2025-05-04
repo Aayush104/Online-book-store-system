@@ -22,6 +22,14 @@ namespace Online_Bookstore_System.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteBook(Book book)
+        {
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
+        }
+
+
+
         public async Task<int> GetBookNumber()
         {
             if (await _context.Books.AnyAsync())
@@ -148,5 +156,12 @@ namespace Online_Bookstore_System.Repository
                 Items = items
             };
         }
+
+        public async Task UpdateBook(Book book)
+        {
+            _context.Books.Update(book);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

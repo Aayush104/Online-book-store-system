@@ -49,6 +49,19 @@ namespace Online_Bookstore_System.Controllers
             var response = await _whiteListService.GetWhiteListAsync(userId);
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpDelete("RemoveBookMark/{bookId}")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> RemoveBookmark(string bookId)
+        {
+            var userIdClaim = HttpContext.User.FindFirst("userId");
+            if (userIdClaim == null) return Unauthorized("User not found");
+
+            var userId = userIdClaim.Value;
+            var response = await _whiteListService.RemoveWhiteListAsync(bookId, userId);
+            return StatusCode(response.StatusCode, response);
+        }
+
     }
 }
 

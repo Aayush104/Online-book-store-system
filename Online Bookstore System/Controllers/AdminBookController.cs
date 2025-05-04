@@ -26,7 +26,21 @@ namespace Online_Bookstore_System.Controllers
 
         }
 
-       
+        [HttpPut("UpdateBook/{id}")]
+        public async Task<IActionResult> UpdateBook(string id, [FromForm] UpdateBookDto updateBookDto)
+        {
+            var response = await _bookService.UpdateBookAsync(id, updateBookDto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("DeleteBook/{id}")]
+        public async Task<IActionResult> DeleteBook(string id)
+        {
+            var response = await _bookService.DeleteBookAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+
 
     }
 }

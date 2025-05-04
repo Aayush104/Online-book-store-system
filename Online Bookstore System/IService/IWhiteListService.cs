@@ -7,5 +7,8 @@ namespace Online_Bookstore_System.IService
     {
         Task<ApiResponseDto> AddWhiteListAsync(string BookId, string userId);
         Task<ApiResponseDto> GetWhiteListAsync( string userId);
+
+        Task<ApiResponseDto> RemoveWhiteListAsync(string BookId, string userId);
+
     }
 }
