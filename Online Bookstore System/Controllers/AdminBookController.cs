@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Bookstore_System.Dto.AuthDto;
+using Online_Bookstore_System.Dto.BookDto;
+using Online_Bookstore_System.IService;
 
 namespace Online_Bookstore_System.Controllers
 {
@@ -7,16 +10,21 @@ namespace Online_Bookstore_System.Controllers
     [ApiController]
     public class AdminBookController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult CreateBook([FromBody] BookDto book) { /* create new book */ return Ok(); }
+        private readonly IBookService _bookService;
+        public AdminBookController(IBookService bookService)
+        {
+            _bookService = bookService;
+        }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateBook(int id, [FromBody] BookDto book) { /* update book */ return Ok(); }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteBook(int id) { /* delete book */ return Ok(); }
+        [HttpPost("AddBook")]
 
-        [HttpPost("{id}/inventory")]
-        public IActionResult UpdateInventory(int id, [FromBody] InventoryDto inventory) { /* update stock */ return Ok(); }
+        public async Task<IActionResult> AddBook(AddBookDto addBookDto)
+        {
+            var response = await _bookService.AddBookAsync(addBookDto);
+            return StatusCode(response.StatusCode, response);
+
+        }
+
     }
 }

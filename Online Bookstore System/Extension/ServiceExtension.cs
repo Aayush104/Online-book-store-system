@@ -15,6 +15,8 @@ namespace Online_Bookstore_System.Extension
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IFileService, FileService>();
             services.AddScoped<DataSecurityProvider>();
 
             var JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");

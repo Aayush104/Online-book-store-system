@@ -16,6 +16,7 @@ namespace Online_Bookstore_System.Data
 
         public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Otp> Otps { get; set; }
+        public DbSet<Book> Books { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
