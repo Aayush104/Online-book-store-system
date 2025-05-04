@@ -59,5 +59,8 @@ namespace Online_Bookstore_System.Model
         public string? ExclusiveEdition { get; set; }
 
         public DateTime AddedDate { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Bookmark> Bookmarks { get; set; }
+
     }
 }
