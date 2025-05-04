@@ -8,5 +8,7 @@ namespace Online_Bookstore_System.IRepository
         Task<int> GetBookNumber();
         Task AddBook(Book book);
         Task<PagedResult<Book>> GetPaginatedBooksAsync(PaginationParams paginationParams);
+        Task<Book> GetBooksById(int BookId);
+        Task<List<Book>> GetBooksAsync(BookFilterParams filterParams);
     }
 }

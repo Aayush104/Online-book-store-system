@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Online_Bookstore_System.Data;
 using Online_Bookstore_System.Dto.Pagination;
 using Online_Bookstore_System.IRepository;
@@ -31,6 +32,98 @@ namespace Online_Bookstore_System.Repository
 
             return 1;
         }
+
+        public async Task<List<Book>> GetBooksAsync(BookFilterParams filterParams)
+        {
+            var query = _context.Books.AsQueryable();
+
+            // Search by title, author, ISBN, or description
+            if (!string.IsNullOrWhiteSpace(filterParams.Search))
+            {
+                query = query.Where(b =>
+                    b.Title.Contains(filterParams.Search) ||
+                    b.Author.Contains(filterParams.Search) ||
+                    b.ISBN.Contains(filterParams.Search) ||
+                    b.Description.Contains(filterParams.Search));
+            }
+
+            //  Filter by genre
+            if (!string.IsNullOrWhiteSpace(filterParams.Genre))
+            {
+                query = query.Where(b => b.Genre == filterParams.Genre);
+            }
+
+            //  Filter by author
+            if (!string.IsNullOrWhiteSpace(filterParams.Author))
+            {
+                query = query.Where(b => b.Author == filterParams.Author);
+            }
+
+            // Filter by publisher
+            if (!string.IsNullOrWhiteSpace(filterParams.Publisher))
+            {
+                query = query.Where(b => b.Publisher == filterParams.Publisher);
+            }
+
+            // Filter by language
+            if (!string.IsNullOrWhiteSpace(filterParams.Language))
+            {
+                query = query.Where(b => b.Language == filterParams.Language);
+            }
+
+            //  Filter by stock
+            if (filterParams.InStock.HasValue && filterParams.InStock.Value)
+            {
+                query = query.Where(b => b.Stock > 0);
+            }
+
+            // Filter by library availability
+            if (filterParams.InLibrary.HasValue)
+            {
+                query = query.Where(b => b.IsAvailableInLibrary == filterParams.InLibrary.Value);
+            }
+
+            //  Filter by price range
+            if (filterParams.MinPrice.HasValue)
+            {
+                query = query.Where(b => b.Price >= filterParams.MinPrice.Value);
+            }
+
+            if (filterParams.MaxPrice.HasValue)
+            {
+                query = query.Where(b => b.Price <= filterParams.MaxPrice.Value);
+            }
+
+            // Filter by format (e.g., paperback, hardcover, collector’s, etc.)
+            if (!string.IsNullOrWhiteSpace(filterParams.Format))
+            {
+                query = query.Where(b => b.Format == filterParams.Format);
+            }
+
+            //  Sorting
+            query = filterParams.SortBy?.ToLower() switch
+            {
+                "title" => filterParams.SortOrder == "desc" ? query.OrderByDescending(b => b.Title) : query.OrderBy(b => b.Title),
+                "price" => filterParams.SortOrder == "desc" ? query.OrderByDescending(b => b.Price) : query.OrderBy(b => b.Price),
+                "publicationdate" => filterParams.SortOrder == "desc" ? query.OrderByDescending(b => b.PublicationDate) : query.OrderBy(b => b.PublicationDate),
+                _ => query.OrderBy(b => b.Title) // default sorting
+            };
+
+            // Pagination
+            return await query
+                .Skip((filterParams.Page - 1) * filterParams.PageSize)
+                .Take(filterParams.PageSize)
+                .ToListAsync();
+        }
+
+
+        public async Task<Book> GetBooksById(int bookId)
+        {
+            return await _context.Books
+                .Where(x => x.BookId == bookId)
+                .FirstOrDefaultAsync();
+        }
+
 
         public async Task<PagedResult<Book>> GetPaginatedBooksAsync(PaginationParams paginationParams)
         {

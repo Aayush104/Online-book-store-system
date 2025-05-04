@@ -1,4 +1,6 @@
-﻿using Online_Bookstore_System.Dto.BookDto;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Online_Bookstore_System.DataSecurity;
+using Online_Bookstore_System.Dto.BookDto;
 using Online_Bookstore_System.Dto.Pagination;
 using Online_Bookstore_System.Dto.ResponseDto;
 using Online_Bookstore_System.IRepository;
@@ -11,11 +13,14 @@ namespace Online_Bookstore_System.Service
     {
         private readonly IBookRepository _bookRepository;
         private readonly IFileService _fileService;
+        private readonly IDataProtector _dataProtector;
 
-        public BookService(IBookRepository bookRepository, IFileService fileService)
+
+        public BookService(IBookRepository bookRepository, IFileService fileService, IDataProtectionProvider dataProtector, DataSecurityProvider securityProvider)
         {
             _bookRepository = bookRepository;
             _fileService = fileService;
+            _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);
         }
 
         public async Task<ApiResponseDto> AddBookAsync(AddBookDto addBookDto)
@@ -69,7 +74,7 @@ namespace Online_Bookstore_System.Service
             }
         }
 
-      public async Task<ApiResponseDto> GetBooksAsync(PaginationParams paginationParams)
+        public async Task<ApiResponseDto> GetBooksAsync(PaginationParams paginationParams)
         {
             try
             {
@@ -85,7 +90,7 @@ namespace Online_Bookstore_System.Service
 
                 var books = await _bookRepository.GetPaginatedBooksAsync(paginationParams);
 
-                if (books == null)
+                if (books == null || books.Items == null || !books.Items.Any())
                 {
                     return new ApiResponseDto
                     {
@@ -95,12 +100,46 @@ namespace Online_Bookstore_System.Service
                     };
                 }
 
+               
+                var protectedItems = books.Items.Select(book => new GetBookDto
+                {
+                    BookId = _dataProtector.Protect(book.BookId.ToString()),
+                    Title = book.Title,
+                    Isbn = book.ISBN,
+                    Description = book.Description,
+                    Author = book.Author,
+                    Genre = book.Genre,
+                    Language = book.Language,
+                    BookPhoto = book.BookPhoto,
+                    Format = book.Format,
+                    Publisher = book.Publisher,
+                    PublicationDate = book.PublicationDate,
+                    Price = book.Price,
+                    Stock = book.Stock,
+                    IsAvailableInLibrary = book.IsAvailableInLibrary,
+                    OnSale = book.OnSale,
+                    DiscountPercentage = book.DiscountPercentage,
+                    DiscountStartDate = book.DiscountStartDate,
+                    DiscountEndDate = book.DiscountEndDate,
+                    ExclusiveEdition = book.ExclusiveEdition,
+                    AddedDate = book.AddedDate
+                }).ToList();
+
+                var protectedResult = new PagedResult<GetBookDto>
+                {
+                    CurrentPage = books.CurrentPage,
+                    PageSize = books.PageSize,
+                    TotalItems = books.TotalItems,
+                    TotalPages = books.TotalPages,
+                    Items = protectedItems
+                };
+
                 return new ApiResponseDto
                 {
                     IsSuccess = true,
                     Message = "Books fetched successfully.",
-                    StatusCode = 200, 
-                    Data = books
+                    StatusCode = 200,
+                    Data = protectedResult
                 };
             }
             catch (Exception ex)
@@ -114,5 +153,88 @@ namespace Online_Bookstore_System.Service
             }
         }
 
+        public async Task<ApiResponseDto> GetBooksByIdAsync(string id)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Book ID is required.",
+                        StatusCode = 400
+                    };
+                }
+
+              
+                string unprotectedId = _dataProtector.Unprotect(id);
+                if (!int.TryParse(unprotectedId, out int bookId))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Book ID format.",
+                        StatusCode = 400
+                    };
+                }
+
+            
+                var book = await _bookRepository.GetBooksById(bookId);
+
+                if (book == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Book not found.",
+                        StatusCode = 404
+                    };
+                }
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Book fetched successfully.",
+                    StatusCode = 200,
+                    Data = book
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+
+        public async Task<ApiResponseDto> GetFilterBooksAsync(BookFilterParams bookFilterParams)
+        {
+            try
+            {
+                var filteredBooks = await _bookRepository.GetBooksAsync(bookFilterParams);
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Books fetched successfully.",
+                    StatusCode = 200,
+                    Data = filteredBooks
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
     }
 }

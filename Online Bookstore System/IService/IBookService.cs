@@ -9,6 +9,8 @@ namespace Online_Bookstore_System.IService
     {
         Task<ApiResponseDto> AddBookAsync(AddBookDto addBookDto);
         Task<ApiResponseDto> GetBooksAsync(PaginationParams paginationParams);
+        Task<ApiResponseDto> GetFilterBooksAsync(BookFilterParams bookFilterParams);
+        Task<ApiResponseDto> GetBooksByIdAsync(string id);
 
     }
 }
