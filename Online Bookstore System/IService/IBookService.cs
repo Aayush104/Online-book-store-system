@@ -12,5 +12,9 @@ namespace Online_Bookstore_System.IService
         Task<ApiResponseDto> GetFilterBooksAsync(BookFilterParams bookFilterParams);
         Task<ApiResponseDto> GetBooksByIdAsync(string id);
 
+        Task<ApiResponseDto> UpdateBookAsync(string id, UpdateBookDto updateBookDto);
+        Task<ApiResponseDto> DeleteBookAsync(string id);
+
+
     }
 }

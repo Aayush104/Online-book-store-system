@@ -107,6 +107,51 @@ namespace Online_Bookstore_System.Service
             }
         }
 
+        public async Task<ApiResponseDto> RemoveWhiteListAsync(string BookId, string userId)
+        {
+            try
+            {
+                var decryptedBookId = _dataProtector.Unprotect(BookId);
+
+                if (!long.TryParse(decryptedBookId, out long convertedBookId))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Book ID format.",
+                        StatusCode = 400
+                    };
+                }
+
+                var result = await _whiteListRepository.RemoveBookmarkAsync(userId, convertedBookId);
+
+                if (!result)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Bookmark not found.",
+                        StatusCode = 404
+                    };
+                }
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Bookmark removed successfully.",
+                    StatusCode = 200
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
 
     }
 }

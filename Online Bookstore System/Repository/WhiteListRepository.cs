@@ -34,5 +34,18 @@ namespace Online_Bookstore_System.Repository
          .Include(b => b.Book) // Load related Book data
          .ToListAsync();
         }
+
+        public async Task<bool> RemoveBookmarkAsync(string userId, long bookId)
+        {
+            var bookmark = await _context.BookMarks
+                .FirstOrDefaultAsync(b => b.UserId == userId && b.BookId == bookId);
+
+            if (bookmark == null) return false;
+
+            _context.BookMarks.Remove(bookmark);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

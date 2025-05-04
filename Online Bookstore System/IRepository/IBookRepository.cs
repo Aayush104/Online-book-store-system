@@ -10,5 +10,9 @@ namespace Online_Bookstore_System.IRepository
         Task<PagedResult<Book>> GetPaginatedBooksAsync(PaginationParams paginationParams);
         Task<Book> GetBooksById(int BookId);
         Task<List<Book>> GetBooksAsync(BookFilterParams filterParams);
+
+        Task UpdateBook(Book book);
+        Task DeleteBook(Book book);
+
     }
 }

@@ -7,6 +7,8 @@ namespace Online_Bookstore_System.IRepository
     {
         Task AddWhiteListAsync(string userId, long bookId);
         Task<List<Bookmark>> GetBookmarksAsync(string userId);
+        Task<bool> RemoveBookmarkAsync(string userId, long bookId);
+
 
     }
 }
