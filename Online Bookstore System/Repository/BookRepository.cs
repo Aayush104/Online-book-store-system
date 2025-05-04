@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Online_Bookstore_System.Data;
+using Online_Bookstore_System.Dto.Pagination;
 using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.Model;
 
@@ -29,6 +30,30 @@ namespace Online_Bookstore_System.Repository
             }
 
             return 1;
+        }
+
+        public async Task<PagedResult<Book>> GetPaginatedBooksAsync(PaginationParams paginationParams)
+        {
+           var query = _context.Books.OrderBy(e => e.BookId).AsQueryable();
+
+            var totaItems = await query.CountAsync();
+
+            var totalPages = (int)Math.Ceiling(totaItems / (double)paginationParams.PageSize);
+
+
+            var items = await query
+                .Skip((paginationParams.Page-1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
+                 .ToListAsync(); 
+
+            return new PagedResult<Book>
+            {
+                CurrentPage = paginationParams.Page,
+                PageSize = paginationParams.PageSize,
+                TotalItems = totaItems,
+                TotalPages = totalPages,
+                Items = items
+            };
         }
     }
 }
