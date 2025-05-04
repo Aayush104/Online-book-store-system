@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Bookstore_System.Dto.AuthDto;
+using Online_Bookstore_System.Dto.Pagination;
+using Online_Bookstore_System.IService;
 
 namespace Online_Bookstore_System.Controllers
 {
@@ -7,12 +10,20 @@ namespace Online_Bookstore_System.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        // GET: api/Book
-        [HttpGet]
-        public IActionResult GetBooks([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+
+        private readonly IBookService _bookService; 
+        public BookController(IBookService bookService)
         {
-            // Logic to return paginated list of books from DB
-            return Ok(new { message = "Paginated list of books returned." });
+            _bookService = bookService;
+        }
+
+        [HttpGet("PaginatedBooks")]
+        public async Task <IActionResult> GetBooks([FromQuery] PaginationParams paginationParams)
+        {
+            var response = await _bookService.GetBooksAsync(paginationParams);
+
+            return StatusCode(response.StatusCode, response);
+
         }
 
         // GET: api/Book/{id}

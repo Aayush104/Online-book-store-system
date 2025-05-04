@@ -1,4 +1,5 @@
 ﻿using Online_Bookstore_System.Dto.BookDto;
+using Online_Bookstore_System.Dto.Pagination;
 using Online_Bookstore_System.Dto.ResponseDto;
 using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.IService;
@@ -67,5 +68,51 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
+
+      public async Task<ApiResponseDto> GetBooksAsync(PaginationParams paginationParams)
+        {
+            try
+            {
+                if (paginationParams.PageSize <= 0 || paginationParams.Page <= 0)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "PageSize or Page must be greater than zero.",
+                        StatusCode = 400
+                    };
+                }
+
+                var books = await _bookRepository.GetPaginatedBooksAsync(paginationParams);
+
+                if (books == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "No books found.",
+                        StatusCode = 404
+                    };
+                }
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Books fetched successfully.",
+                    StatusCode = 200, 
+                    Data = books
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
     }
 }
