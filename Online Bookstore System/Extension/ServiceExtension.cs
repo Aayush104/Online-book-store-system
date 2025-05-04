@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Online_Bookstore_System.DataSecurity;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Service;
+using System.Security.Claims;
 using System.Text;
 
 namespace Online_Bookstore_System.Extension
@@ -19,31 +20,35 @@ namespace Online_Bookstore_System.Extension
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<DataSecurityProvider>();
 
-            var JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
-            var JWT_AUDIENCE = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-            var JWT_ISSUER = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            var JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "YourFallbackSecretKey";
+            var JWT_ISSUER = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "YourIssuer";
+            var JWT_AUDIENCE = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "YourAudience";
 
-            // Configure authentication
+            var key = Encoding.UTF8.GetBytes(JWT_SECRET);
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
             })
             .AddJwtBearer(options =>
             {
-                options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
                     ValidIssuer = JWT_ISSUER,
                     ValidAudience = JWT_AUDIENCE,
-                    ClockSkew = TimeSpan.Zero,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET))
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    RoleClaimType = ClaimTypes.Role
                 };
             });
+
             return services;
         }
     }
