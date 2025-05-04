@@ -7,14 +7,14 @@ namespace Online_Bookstore_System.Controllers
     [ApiController]
     public class WishlistController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetWishlist() { /* get current member's wishlist */ return Ok(); }
+        //[HttpGet]
+        //public IActionResult GetWishlist() { /* get current member's wishlist */ return Ok(); }
 
-        [HttpPost("{bookId}")]
-        public IActionResult AddToWishlist(int bookId) { /* add book to wishlist */ return Ok(); }
+        //[HttpPost("{bookId}")]
+        //public IActionResult AddToWishlist(int bookId) { /* add book to wishlist */ return Ok(); }
 
-        [HttpDelete("{bookId}")]
-        public IActionResult RemoveFromWishlist(int bookId) { /* remove book from wishlist */ return Ok(); }
+        //[HttpDelete("{bookId}")]
+        //public IActionResult RemoveFromWishlist(int bookId) { /* remove book from wishlist */ return Ok(); }
     }
 }
 
