@@ -60,7 +60,8 @@ namespace Online_Bookstore_System.Model
 
         public DateTime AddedDate { get; set; } = DateTime.UtcNow;
 
-        public ICollection<Bookmark> Bookmarks { get; set; }
+        public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
+        public ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     }
 }

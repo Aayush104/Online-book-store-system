@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Online_Bookstore_System.Data;
@@ -11,9 +12,11 @@ using Online_Bookstore_System.Data;
 namespace Online_Bookstore_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250505031820_CartTable")]
+    partial class CartTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,17 +259,17 @@ namespace Online_Bookstore_System.Migrations
                         {
                             Id = "754ea22b-c181-4069-9f95-be2ea98f24e8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "57390ea5-b81f-4767-b7dc-e1219c9521a8",
+                            ConcurrencyStamp = "c2b3b869-152c-4673-92aa-6c6a523870a9",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC4f1tjwVvCGcca3SEegRUbh3bmzqk4Vg4J/NMbsyTxU+qgjiCejNGjJ5KE8QnDd2w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECJIIG2SJyOXH7Ffv3HAqcpFzzci6bcS+FwdVBRr7tN/498ciQcV2ji0eUyamz5+2g==",
                             PhoneNumber = "9876543210",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4b454e7b-e690-40dd-9f3b-4141a32bf5a5",
+                            SecurityStamp = "022603b5-049a-4be5-b025-89abe3cf186f",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -392,9 +395,6 @@ namespace Online_Bookstore_System.Migrations
                     b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -405,7 +405,7 @@ namespace Online_Bookstore_System.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("Online_Bookstore_System.Model.Otp", b =>

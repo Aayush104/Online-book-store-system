@@ -18,6 +18,7 @@ namespace Online_Bookstore_System.Data
         public DbSet<Otp> Otps { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Bookmark> BookMarks{ get; set; }
+        public DbSet<Cart> Carts{ get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -41,6 +42,19 @@ namespace Online_Bookstore_System.Data
             .WithMany(u => u.Bookmarks)
             .HasForeignKey(o => o.BookId)
             .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<Cart>()
+             .HasOne(o => o.User)
+             .WithMany(u => u.Carts)
+             .HasForeignKey(o => o.UserId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Cart>()
+          .HasOne(o => o.Book)
+          .WithMany(u => u.Carts)
+          .HasForeignKey(o => o.BookId)
+          .OnDelete(DeleteBehavior.Cascade);
 
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
