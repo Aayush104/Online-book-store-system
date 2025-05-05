@@ -98,7 +98,7 @@ namespace Online_Bookstore_System.Service
                 var verifyExistingUser = await _userManager.CheckPasswordAsync(existingUser, loginDto.Password);
                 if (!verifyExistingUser)
                 {
-                    return new ApiResponseDto { IsSuccess = false, Message = "Password is incorrect", StatusCode = 404 };
+                    return new ApiResponseDto { IsSuccess = false, Message = "Incorrect password. Please try again.", StatusCode = 401 };
                 }
 
                 var userRole = await _userManager.GetRolesAsync(existingUser);
@@ -149,6 +149,12 @@ namespace Online_Bookstore_System.Service
                 };
 
                 var result = await _userManager.CreateAsync(user, registrationDto.Password);
+
+                if (!result.Succeeded)
+                {
+                    string errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                    return new ApiResponseDto { IsSuccess = false, Message = $"User registration failed. {errors}", StatusCode = 400 };
+                }
                 var otp = OtpGenerator.GenerateOtp();
                 await _otpService.StoreOtpAsync(user.Id, "Registration", otp);
                 await _mailService.SendOtpMail(user.Email, user.FullName, otp);

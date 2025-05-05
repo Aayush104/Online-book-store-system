@@ -13,6 +13,7 @@ namespace Online_Bookstore_System.Extension
             services.AddScoped<IOtpRepository, OtpRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IWhiteListRepository, WhiteListRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
             return services;
         }
     }
