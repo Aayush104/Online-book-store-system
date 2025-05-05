@@ -32,7 +32,47 @@ const loadAuthFromStorage = () => {
   };
 };
 
-const initialState = loadAuthFromStorage();
+// Load theme preference
+const loadThemePreference = () => {
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme === "light" || savedTheme === "dark") {
+    return savedTheme;
+  }
+
+  // If no saved preference, check system preference
+  if (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    return "dark";
+  }
+
+  return "light";
+};
+
+// Apply theme to document
+const applyTheme = (theme) => {
+  const root = document.documentElement;
+
+  if (theme === "dark") {
+    root.classList.add("dark");
+    root.style.colorScheme = "dark";
+  } else {
+    root.classList.remove("dark");
+    root.style.colorScheme = "light";
+  }
+
+  localStorage.setItem("theme", theme);
+};
+
+const initialState = {
+  ...loadAuthFromStorage(),
+  theme: loadThemePreference(), // Add theme to initial state
+};
+
+// Apply initial theme
+applyTheme(initialState.theme);
 
 const userSlice = createSlice({
   name: "user",
@@ -90,6 +130,20 @@ const userSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+
+    // Set theme
+    setTheme: (state, action) => {
+      const theme = action.payload;
+      state.theme = theme;
+      applyTheme(theme);
+    },
+
+    // Toggle theme
+    toggleTheme: (state) => {
+      const newTheme = state.theme === "light" ? "dark" : "light";
+      state.theme = newTheme;
+      applyTheme(newTheme);
+    },
   },
 });
 
@@ -100,6 +154,8 @@ export const {
   logoutUser,
   updateUser,
   clearError,
+  setTheme,
+  toggleTheme,
 } = userSlice.actions;
 
 // Selectors
@@ -109,5 +165,6 @@ export const selectIsAuthenticated = (state) => state.user.isAuthenticated;
 export const selectLoading = (state) => state.user.loading;
 export const selectError = (state) => state.user.error;
 export const selectUserRole = (state) => state.user.user?.role;
+export const selectTheme = (state) => state.user.theme;
 
 export default userSlice.reducer;
