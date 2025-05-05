@@ -30,11 +30,25 @@ export const login = async (email, password) => {
 
       return response;
     } else {
-      dispatch(setError(response.message || "Login failed"));
-      throw new Error(response.message || "Login failed");
+      // If the response indicates failure, throw with the message
+      const errorMessage = response.message || "Login failed";
+      dispatch(setError(errorMessage));
+      throw new Error(errorMessage);
     }
   } catch (error) {
-    dispatch(setError(error.message || "Login failed"));
+    // Handle different types of errors
+    let errorMessage = "Login failed";
+
+    if (error.response) {
+      // The server responded with an error status
+      errorMessage =
+        error.response.data?.message || error.response.data || errorMessage;
+    } else if (error.message) {
+      // Network error or custom error
+      errorMessage = error.message;
+    }
+
+    dispatch(setError(errorMessage));
     throw error;
   } finally {
     dispatch(setLoading(false));
@@ -50,16 +64,30 @@ export const register = async (registrationData) => {
     dispatch(clearError());
 
     const response = await api.post("/Auth/RegisterUser", registrationData);
+    console.log("Registration response:", response);
 
     if (response.isSuccess) {
-      dispatch(setLoading(false));
       return response;
     } else {
-      dispatch(setError(response.message || "Registration failed"));
-      throw new Error(response.message || "Registration failed");
+      const errorMessage = response.message || "Registration failed";
+      dispatch(setError(errorMessage));
+      throw new Error(errorMessage);
     }
   } catch (error) {
-    dispatch(setError(error.message || "Registration failed"));
+    console.log("Registration error:", error);
+
+    let errorMessage = "Registration failed";
+
+    if (error.response) {
+      // The server responded with an error status
+      errorMessage =
+        error.response.data?.message || error.response.data || errorMessage;
+    } else if (error.message) {
+      // Network error or custom error
+      errorMessage = error.message;
+    }
+
+    dispatch(setError(errorMessage));
     throw error;
   } finally {
     dispatch(setLoading(false));
@@ -81,14 +109,25 @@ export const verifyOtp = async (userId, otp, purpose = "Registration") => {
     });
 
     if (response.isSuccess) {
-      dispatch(setLoading(false));
       return response;
     } else {
-      dispatch(setError(response.message || "OTP verification failed"));
-      throw new Error(response.message || "OTP verification failed");
+      const errorMessage = response.message || "OTP verification failed";
+      dispatch(setError(errorMessage));
+      throw new Error(errorMessage);
     }
   } catch (error) {
-    dispatch(setError(error.message || "OTP verification failed"));
+    let errorMessage = "OTP verification failed";
+
+    if (error.response) {
+      // The server responded with an error status
+      errorMessage =
+        error.response.data?.message || error.response.data || errorMessage;
+    } else if (error.message) {
+      // Network error or custom error
+      errorMessage = error.message;
+    }
+
+    dispatch(setError(errorMessage));
     throw error;
   } finally {
     dispatch(setLoading(false));

@@ -1,15 +1,12 @@
 import axios from "axios";
 
 // Base URL for all API calls - uses environment variable if available, otherwise defaults to localhost
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:7219/api";
+const API_BASE_URL = "https://localhost:7219/api";
 
 // Create a reusable instance of axios with our base URL
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
 });
-
-// INTERCEPTORS - These run automatically before requests and after responses
 
 // Request Interceptor - Adds authentication token to every request
 axiosInstance.interceptors.request.use(
@@ -38,13 +35,61 @@ axiosInstance.interceptors.response.use(
   // For errors, extract the error message and format it consistently
   (error) => {
     // Check if the server actually responded with an error
-    if (error.response && error.response.data) {
-      // Use the exact error message from the server
-      throw error.response.data;
-    }
+    if (error.response) {
+      // The server responded with a status code outside 2xx range
+      console.log("API Error Response:", error.response);
 
-    // If no server response (like no internet), provide a generic message
-    throw { message: "Network error. Please check your connection." };
+      // Extract error message from different possible locations
+      let errorMessage = "An error occurred";
+
+      if (error.response.data) {
+        if (typeof error.response.data === "string") {
+          errorMessage = error.response.data;
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.response.data.errors) {
+          // Handle validation errors from .NET API
+          const errors = error.response.data.errors;
+          const errorMessages = [];
+
+          Object.keys(errors).forEach((key) => {
+            if (Array.isArray(errors[key])) {
+              errorMessages.push(...errors[key]);
+            } else {
+              errorMessages.push(errors[key]);
+            }
+          });
+
+          errorMessage = errorMessages.join(", ");
+        } else if (error.response.data.title) {
+          // Handle .NET problem details format
+          errorMessage = error.response.data.title;
+        }
+      }
+
+      // Create a custom error object with all the information we need
+      const enhancedError = new Error(errorMessage);
+      enhancedError.response = error.response;
+      enhancedError.status = error.response.status;
+
+      // Return the enhanced error
+      return Promise.reject(enhancedError);
+    } else if (error.request) {
+      // Request was made but no response was received
+      console.log("No response received:", error.request);
+
+      const networkError = new Error(
+        "Network error. Please check your connection."
+      );
+      networkError.request = error.request;
+
+      return Promise.reject(networkError);
+    } else {
+      // Something happened in setting up the request
+      console.log("Request setup error:", error.message);
+
+      return Promise.reject(error);
+    }
   }
 );
 
