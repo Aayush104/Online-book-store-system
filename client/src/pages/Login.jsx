@@ -66,10 +66,10 @@ const Login = () => {
         message: location.state.message,
         duration: 5000,
       });
-      // Clear the message after showing
-      window.history.replaceState({}, document.title);
+      // Clear the message after showing to prevent infinite loops
+      navigate(location.pathname, { replace: true });
     }
-  }, [location, showToast]);
+  }, [location.state?.message, navigate, showToast]);
 
   // Auto-rotate slides
   useEffect(() => {
@@ -79,7 +79,7 @@ const Login = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Handle errors with toast
+  // Handle redux error state
   useEffect(() => {
     if (error) {
       showToast({
@@ -140,13 +140,9 @@ const Login = () => {
 
       // If you want to show a custom message here, you can
       let errorMessage = "Login failed. Please check your credentials.";
-
       if (error.response) {
         errorMessage =
-          error.response.data?.message ||
-          error.response.data ||
-          errorMessage ||
-          error;
+          error.response.data?.message || error.response.data || errorMessage;
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -176,7 +172,7 @@ const Login = () => {
               </div>
             </div>
 
-            <div className=" p-8 rounded-2xl ">
+            <div className="p-8 rounded-2xl">
               <h2 className="text-2xl font-display font-bold text-center text-neutral-900 dark:text-neutral-100 mb-6">
                 Welcome Back
               </h2>

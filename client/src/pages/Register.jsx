@@ -181,6 +181,7 @@ const Register = () => {
     } catch (error) {
       console.error("Registration failed:", error);
 
+      console.log(error);
       // Extract error message
       let errorMessage = "Registration failed";
 
