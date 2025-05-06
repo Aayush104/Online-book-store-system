@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Bookstore_System.Dto.OrderDto;
+using Online_Bookstore_System.IService;
 
 namespace Online_Bookstore_System.Controllers
 {
@@ -7,19 +10,29 @@ namespace Online_Bookstore_System.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        //[HttpPost]
-        //public IActionResult PlaceOrder([FromBody] OrderDto order) { /* place order and apply discounts */ return Ok(); }
+        private readonly IOrderService _orderService;
+        public OrdersController(IOrderService orderService)
+        {
+            _orderService = orderService;
+        }
 
-        //[HttpGet]
-        //public IActionResult GetAllOrders() { /* get all orders of user */ return Ok(); }
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetOrderById(int id) { /* get order details */ return Ok(); }
+        [HttpPost("PlaceOrder")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
 
-        //[HttpDelete("{id}")]
-        //public IActionResult CancelOrder(int id) { /* cancel order if within timeframe */ return Ok(); }
+        public async Task<IActionResult> PlaceOrder(PlaceOrderDto placeOrderDto)
+        {
 
-        //[HttpGet("{orderId}/claim")]
-        //public IActionResult SendClaimCode(int orderId) { /* email claim code + bill */ return Ok(); }
+            var userIdClaim = HttpContext.User.FindFirst("userId");
+
+            if (userIdClaim == null) return Unauthorized("User not found");
+
+            var userId = userIdClaim?.Value;
+            var response = await _orderService.PlaceOrderAsync(userId, placeOrderDto);
+
+            return StatusCode(response.StatusCode, response);
+
+
+        }
     }
 }

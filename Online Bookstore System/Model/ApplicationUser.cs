@@ -12,6 +12,7 @@ namespace Online_Bookstore_System.Model
         public virtual ICollection<Otp> Otps { get; set; } = new List<Otp>();
         public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
 
 
