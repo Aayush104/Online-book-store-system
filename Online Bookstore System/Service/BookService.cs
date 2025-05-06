@@ -6,6 +6,7 @@ using Online_Bookstore_System.Dto.ResponseDto;
 using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Model;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Online_Bookstore_System.Service
 {
@@ -184,6 +185,32 @@ namespace Online_Bookstore_System.Service
             
                 var book = await _bookRepository.GetBooksById(bookId);
 
+
+                var protectedItems = new GetBookDto
+                {
+                    BookId = _dataProtector.Protect(book.BookId.ToString()),
+                    Title = book.Title,
+                    Isbn = book.ISBN,
+                    Description = book.Description,
+                    Author = book.Author,
+                    Genre = book.Genre,
+                    Language = book.Language,
+                    BookPhoto = book.BookPhoto,
+                    Format = book.Format,
+                    Publisher = book.Publisher,
+                    PublicationDate = book.PublicationDate,
+                    Price = book.Price,
+                    Stock = book.Stock,
+                    IsAvailableInLibrary = book.IsAvailableInLibrary,
+                    OnSale = book.OnSale,
+                    DiscountPercentage = book.DiscountPercentage,
+                    DiscountStartDate = book.DiscountStartDate,
+                    DiscountEndDate = book.DiscountEndDate,
+                    ExclusiveEdition = book.ExclusiveEdition,
+                    AddedDate = book.AddedDate
+                };
+
+
                 if (book == null)
                 {
                     return new ApiResponseDto
@@ -199,7 +226,7 @@ namespace Online_Bookstore_System.Service
                     IsSuccess = true,
                     Message = "Book fetched successfully.",
                     StatusCode = 200,
-                    Data = book
+                    Data = protectedItems
                 };
             }
             catch (Exception ex)
