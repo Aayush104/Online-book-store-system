@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Online_Bookstore_System.DataSecurity;
 using Online_Bookstore_System.Dto.OrderDto;
 using Online_Bookstore_System.Dto.ResponseDto;
@@ -12,10 +14,19 @@ namespace Online_Bookstore_System.Service
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IDataProtector _dataProtector;
+        private readonly IMailService _mailService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public OrderService(IOrderRepository orderRepository, IDataProtectionProvider dataProtector, DataSecurityProvider securityProvider)
+        public OrderService(
+            IOrderRepository orderRepository,
+            IDataProtectionProvider dataProtector,
+            DataSecurityProvider securityProvider,
+            IMailService mailService,
+            UserManager<ApplicationUser> userManager)
         {
             _orderRepository = orderRepository;
+            _mailService = mailService;
+            _userManager = userManager;
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);
         }
 
@@ -41,6 +52,7 @@ namespace Online_Bookstore_System.Service
                 };
             }
 
+           
             var claimCode = Guid.NewGuid().ToString().Substring(0, 8);
 
             var order = new Order
@@ -55,13 +67,12 @@ namespace Online_Bookstore_System.Service
             decimal totalAmount = 0;
             int totalQuantity = 0;
 
+            // Decrypt book IDs and calculate totals
             foreach (var item in request.Items)
             {
                 long bookId;
-
                 try
                 {
-                    
                     string decryptedBookId = _dataProtector.Unprotect(item.BookId);
                     bookId = Convert.ToInt64(decryptedBookId);
                 }
@@ -75,8 +86,6 @@ namespace Online_Bookstore_System.Service
                     };
                 }
 
-              
-               
                 order.OrderItems.Add(new OrderItem
                 {
                     BookId = bookId,
@@ -88,32 +97,59 @@ namespace Online_Bookstore_System.Service
                 totalQuantity += item.Quantity;
             }
 
-
+           
             decimal discount = 0;
-            string discountMessage = "No discount applied.";
+            var messageParts = new List<string>();
 
             // 5% discount on 5 or more books
-            if (totalQuantity >= 5)
+            bool hasQuantityDiscount = totalQuantity >= 5;
+            if (hasQuantityDiscount)
             {
                 discount += 0.05m;
-                discountMessage = "You got a 5% discount for ordering 5 or more books.";
+                messageParts.Add("5% discount for ordering 5 or more books");
             }
 
-            // 10% discount on every 10th successful order
+            // 10% loyalty discount on every 10th successful order
             int successfulOrders = await _orderRepository.GetSuccessfulOrderCountAsync(userId);
-            if (successfulOrders > 0  && successfulOrders % 10 == 0)
+            bool hasLoyaltyDiscount = successfulOrders > 0 && successfulOrders % 10 == 0;
+            if (hasLoyaltyDiscount)
             {
                 discount += 0.10m;
-                discountMessage = discount > 0.05m
-                    ? "You got a 5% discount for ordering 5 or more books and an additional 10% loyalty discount for 10 completed orders."
-                    : "You got a 10% loyalty discount for completing 10 orders.";
+                messageParts.Add("10% loyalty discount for completing 10 orders");
             }
 
-            decimal discountAmount = totalAmount * discount;
+          
+            string discountMessage;
+            if (messageParts.Any())
+            {
+                discountMessage = "You got a " + string.Join(" and a ", messageParts) + ".";
+            }
+            else
+            {
+                discountMessage = "No discount applied.";
+            }
 
+            // Calculate final amounts
+            decimal discountAmount = totalAmount * discount;
             order.TotalAmount = totalAmount - discountAmount;
             order.DiscountApplied = discountAmount;
 
+            // Send order confirmation email
+            var user = await _userManager.FindByIdAsync(userId);
+            var mailDto = new OrderMailDto
+            {
+                ToEmail = user.Email,
+                FullName = user.FullName,
+                ClaimCode = claimCode,
+                OrderDate = DateTime.UtcNow,
+                TotalBooks = totalQuantity,
+                Subtotal = totalAmount,
+                Discount = discountAmount,
+                FinalAmount = order.TotalAmount
+            };
+            await _mailService.SendOrderMail(mailDto);
+
+           
             await _orderRepository.AddOrderAsync(order);
 
             return new ApiResponseDto
@@ -121,9 +157,7 @@ namespace Online_Bookstore_System.Service
                 IsSuccess = true,
                 StatusCode = 200,
                 Message = $"Order placed successfully. {discountMessage}",
-                Data = new
-                {  DiscountAmount = order.DiscountApplied
-                }
+                Data = new { DiscountAmount = order.DiscountApplied }
             };
         }
     }
