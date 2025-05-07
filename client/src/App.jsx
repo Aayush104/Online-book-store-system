@@ -21,7 +21,7 @@ import AdminBooks from "./pages/admin/Books";
 
 // Import any other user pages
 import UserBooks from "./pages/user/Books";
-import UserCart from "./pages/user/Cart";
+import Cart from "./pages/user/Cart";
 import UserOrders from "./pages/user/Orders";
 
 // Import any other staff pages
@@ -48,8 +48,8 @@ function App() {
             {/* User routes with UserLayout */}
             <Route path="/user" element={<UserLayout />}>
               <Route index element={<UserHome />} />
-              <Route path="books" element={<UserBooks />} />
-              <Route path="cart" element={<UserCart />} />
+              {/* <Route path="books" element={<UserBooks />} /> */}
+              <Route path="cart" element={<Cart />} />
               <Route path="orders" element={<UserOrders />} />
               {/* Add more user routes as needed */}
             </Route>

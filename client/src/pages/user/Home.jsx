@@ -1,7 +1,13 @@
 import React from "react";
+import BookComponent from "../../components/Book";
 
 const Home = () => {
-  return <div>Home</div>;
+  console.log("first");
+  return (
+    <div className=" ">
+      <BookComponent />
+    </div>
+  );
 };
 
 export default Home;
