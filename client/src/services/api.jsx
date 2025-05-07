@@ -120,30 +120,22 @@ const api = {
 
   // POST with files - Send data that includes files (like images)
   postWithFile: (endpoint, data) => {
-    // Create special form data object for files
-    const formData = new FormData();
+    // No need to create a new FormData if it's already FormData
+    if (!(data instanceof FormData)) {
+      console.error("postWithFile expects FormData but received:", typeof data);
+    }
 
-    // Go through each piece of data
-    Object.keys(data).forEach((key) => {
-      // If it's a file, add it as a file
-      if (data[key] instanceof File) {
-        formData.append(key, data[key]);
+    // Log the FormData contents for debugging
+    console.log("FormData sending to API:");
+    if (data instanceof FormData) {
+      for (let pair of data.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
       }
-      // If it's an array (multiple items), add each item
-      else if (Array.isArray(data[key])) {
-        data[key].forEach((item) => {
-          formData.append(key, item);
-        });
-      }
-      // If it's regular data (not null/undefined), add it normally
-      else if (data[key] !== null && data[key] !== undefined) {
-        formData.append(key, data[key]);
-      }
-    });
+    }
 
     // Send the request with special headers for files
     return axiosInstance
-      .post(endpoint, formData, {
+      .post(endpoint, data, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((response) => response.data);
@@ -151,30 +143,22 @@ const api = {
 
   // PUT with files - Update data that includes files
   putWithFile: (endpoint, data) => {
-    // Create special form data object for files
-    const formData = new FormData();
+    // No need to create a new FormData if it's already FormData
+    if (!(data instanceof FormData)) {
+      console.error("putWithFile expects FormData but received:", typeof data);
+    }
 
-    // Go through each piece of data (same as postWithFile)
-    Object.keys(data).forEach((key) => {
-      // If it's a file, add it as a file
-      if (data[key] instanceof File) {
-        formData.append(key, data[key]);
+    // Log the FormData contents for debugging
+    console.log("FormData sending to API:");
+    if (data instanceof FormData) {
+      for (let pair of data.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
       }
-      // If it's an array (multiple items), add each item
-      else if (Array.isArray(data[key])) {
-        data[key].forEach((item) => {
-          formData.append(key, item);
-        });
-      }
-      // If it's regular data (not null/undefined), add it normally
-      else if (data[key] !== null && data[key] !== undefined) {
-        formData.append(key, data[key]);
-      }
-    });
+    }
 
     // Send the request with special headers for files
     return axiosInstance
-      .put(endpoint, formData, {
+      .put(endpoint, data, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((response) => response.data);

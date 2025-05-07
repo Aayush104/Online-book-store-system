@@ -132,8 +132,23 @@ const Login = () => {
           duration: 3000,
         });
 
+        localStorage.setItem("token", response.data);
+        const userRole = JSON.parse(atob(response.data.split(".")[1])).Role;
+        const userName = JSON.parse(atob(response.data.split(".")[1])).Name;
+        const userEmail = JSON.parse(atob(response.data.split(".")[1])).Email;
+        const userId = JSON.parse(atob(response.data.split(".")[1])).UserId;
+        console.log(userRole);
         // Redirect to dashboard or home
-        navigate("/dashboard");
+
+        if (userRole == "PublicUser") {
+          navigate("/user");
+        } else if (userRole == "Admin") {
+          navigate("/admin");
+        } else if (userRole == "Staff") {
+          navigate("/staff");
+        } else {
+          navigate("/login");
+        }
       }
     } catch (error) {
       console.error("Login failed:", error);
