@@ -34,5 +34,26 @@ namespace Online_Bookstore_System.Controllers
 
 
         }
+
+        [HttpGet("GetAllPendingOrders")]
+
+        public async Task<IActionResult> GetAllPendingOrders()
+        {
+
+            var response = await _orderService.GetAllOrderAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+
+
+        [HttpGet("GetAllCompletedOrders")]
+
+        public async Task<IActionResult> GetAllCompletedOrders()
+        {
+
+            var response = await _orderService.GetAllCompletedOrderAsync();
+            return StatusCode(response.StatusCode, response);
+        }
     }
+
+
 }
