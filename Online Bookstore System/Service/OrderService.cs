@@ -30,6 +30,44 @@ namespace Online_Bookstore_System.Service
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);
         }
 
+        public async Task<ApiResponseDto> CancelOrderAsync(string userId, int orderId)
+        {
+            try
+            {
+                var isCancelled = await _orderRepository.CancelOrderAsync(userId, orderId);
+
+                if (!isCancelled)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        StatusCode = 404,
+                        Message = "No order found with the specified UserId and OrderId.",
+                        Data = null
+                    };
+                }
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    StatusCode = 200,
+                    Message = "Order cancelled successfully.",
+                    Data = isCancelled
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    StatusCode = 500,
+                    Message = $"An error occurred while cancelling the order: {ex.Message}",
+                    Data = null
+                };
+            }
+        }
+ 
+
         public async Task<ApiResponseDto> GetAllCompletedOrderAsync()
         {
             try
@@ -59,6 +97,54 @@ namespace Online_Bookstore_System.Service
             try
             {
                 var orders = await _orderRepository.GetAllPendingOrder(); 
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    StatusCode = 200,
+                    Message = "Orders retrieved successfully.",
+                    Data = orders
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while retrieving orders: {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> GetAllOrderByIdAsync(string userId)
+        {
+            try
+            {
+                var orders = await _orderRepository.GetAllOrderById(userId);
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    StatusCode = 200,
+                    Message = "Orders retrieved successfully.",
+                    Data = orders
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while retrieving orders: {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> GetOrderbyClaimCode(string claimCode)
+        {
+            try
+            {
+                var orders = await _orderRepository.GetAllOrderByClaimCode(claimCode);
                 return new ApiResponseDto
                 {
                     IsSuccess = true,

@@ -53,6 +53,50 @@ namespace Online_Bookstore_System.Controllers
             var response = await _orderService.GetAllCompletedOrderAsync();
             return StatusCode(response.StatusCode, response);
         }
+
+
+        [HttpGet("GetOrderById")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> GetAllOrderById()
+        {
+            var userIdClaim = HttpContext.User.FindFirst("userId");
+
+            if (userIdClaim == null) return Unauthorized("User not found");
+
+            var userId = userIdClaim?.Value;
+
+            var response = await _orderService.GetAllOrderByIdAsync(userId);
+            return StatusCode(response.StatusCode, response);
+
+        }
+
+        [HttpGet("GetOrderbyClaimCode/{claimCode}")]
+
+        public async Task<IActionResult> GetOrderbyClaimCode(string claimCode)
+        {
+
+            var response = await _orderService.GetOrderbyClaimCode(claimCode);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut("CancelOrder/{orderId}")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            var userIdClaim = HttpContext.User.FindFirst("userId");
+
+            if (userIdClaim == null) return Unauthorized("User not found");
+
+            var userId = userIdClaim?.Value;
+
+            var response = await _orderService.CancelOrderAsync(userId, orderId);
+            return StatusCode(response.StatusCode, response);
+
+        }
+
+
+
     }
 
 
