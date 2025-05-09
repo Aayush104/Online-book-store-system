@@ -16,35 +16,46 @@ public class AnnouncementCheckerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        try
         {
-            using var scope = _serviceProvider.CreateScope();
-            var announcementRepo = scope.ServiceProvider.GetRequiredService<IAnnouncementReposoitory>();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            var dueAnnouncements = await announcementRepo.GetUpcomingAnnouncement();
-
-            foreach (var announce in dueAnnouncements)
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var notificationObject = new
+                using var scope = _serviceProvider.CreateScope();
+                var announcementRepo = scope.ServiceProvider.GetRequiredService<IAnnouncementReposoitory>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                var dueAnnouncements = await announcementRepo.GetUpcomingAnnouncement();
+
+                foreach (var announce in dueAnnouncements)
                 {
-                    type = "announcement",
-                    content = $"{announce.Title}: {announce.Description}",
-                    id = Guid.NewGuid().ToString(),
-                    timestamp = DateTime.UtcNow,
-                    title = announce.Title,
-                    description = announce.Description
-                };
+                    var notificationObject = new
+                    {
+                        type = "announcement",
+                        content = $"{announce.Title}: {announce.Description}",
+                        id = Guid.NewGuid().ToString(),
+                        timestamp = DateTime.UtcNow,
+                        title = announce.Title,
+                        description = announce.Description
+                    };
 
-                await _hubContext.Clients.All.SendAsync("ReceiveNotification", notificationObject);
+                    await _hubContext.Clients.All.SendAsync("ReceiveNotification", notificationObject, cancellationToken: stoppingToken);
 
-               
-                announce.IsAnnounced = true;
-                dbContext.Announces.Update(announce);
-                await dbContext.SaveChangesAsync();
+                    announce.IsAnnounced = true;
+                    dbContext.Announces.Update(announce);
+                    await dbContext.SaveChangesAsync(stoppingToken);
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
-
-            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken); 
+        }
+        catch (TaskCanceledException)
+        {
+            // Expected on shutdown, ignore or log as info
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected exceptions
+            Console.WriteLine($"Error in AnnouncementCheckerService: {ex.Message}");
         }
     }
 }
