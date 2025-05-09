@@ -34,10 +34,11 @@ namespace Online_Bookstore_System.Service
             {
                 Title = announceDto.Title,
                 Description = announceDto.Description,
-                CreatedAt = DateTime.UtcNow
+                AnnouncemnetDateTime = announceDto.AnnouncementDateTime,
+               
             };
 
-
+           
 
             await _announcementReposoitory.DoAnnounceAsync(announce);
 

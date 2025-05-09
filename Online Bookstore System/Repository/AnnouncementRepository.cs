@@ -18,5 +18,13 @@ namespace Online_Bookstore_System.Repository
             await _dbContext.Announces.AddAsync(announce);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<List<Announce>> GetUpcomingAnnouncement()
+        {
+            return await _dbContext.Announces
+                   .Where(x => !x.IsAnnounced && x.AnnouncemnetDateTime <= DateTime.UtcNow)
+                   .ToListAsync();
+        }
+
     }
 }
