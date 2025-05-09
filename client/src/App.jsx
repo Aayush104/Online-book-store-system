@@ -26,6 +26,7 @@ import UserOrders from "./pages/user/Orders";
 
 // Import any other staff pages
 import StaffOrders from "./pages/Staff/Orders";
+import Wishlist from "./pages/user/Wishlist";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
               {/* <Route path="books" element={<UserBooks />} /> */}
               <Route path="cart" element={<Cart />} />
               <Route path="orders" element={<UserOrders />} />
+              <Route path="wishlist" element={<Wishlist />} />
               {/* Add more user routes as needed */}
             </Route>
 
