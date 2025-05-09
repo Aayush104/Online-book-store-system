@@ -62,7 +62,7 @@ namespace Online_Bookstore_System.Service
 
                 if (existingItem != null)
                 {
-                    existingItem.Quantity += request.Quantity;
+                    existingItem.Quantity = request.Quantity;
                     await _cartRepository.UpdateCartItemAsync(existingItem);
 
                     return new ApiResponseDto

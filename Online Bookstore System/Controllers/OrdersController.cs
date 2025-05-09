@@ -96,6 +96,13 @@ namespace Online_Bookstore_System.Controllers
         }
 
 
+        [HttpPost("CompleteOrderByClaimCode")]
+        
+        public async Task<IActionResult> CompleteOrder(CompleteOrderDto completeOrderDto)
+        {
+            var response = await _orderService.CompleteOrderAsync(completeOrderDto);
+            return StatusCode(response.StatusCode, response);
+        }
 
     }
 

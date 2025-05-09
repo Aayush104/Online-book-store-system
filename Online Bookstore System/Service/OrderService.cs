@@ -66,7 +66,43 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
- 
+
+        public async Task<ApiResponseDto> CompleteOrderAsync(CompleteOrderDto completeOrderDto)
+        {
+            try
+            {
+                var isCompleted = await _orderRepository.CompleteOrderAsync(completeOrderDto.ClaimCode);
+
+                if (!isCompleted)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        StatusCode = 404,
+                        Message = "No order found with the specified claimcode.",
+                        Data = null
+                    };
+                }
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    StatusCode = 200,
+                    Message = "Order Completed successfully.",
+                    Data = isCompleted
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    StatusCode = 500,
+                    Message = $"An error occurred while completing the order: {ex.Message}",
+                    Data = null
+                };
+            }
+        }
 
         public async Task<ApiResponseDto> GetAllCompletedOrderAsync()
         {

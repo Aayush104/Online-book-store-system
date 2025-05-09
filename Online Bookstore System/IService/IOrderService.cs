@@ -12,5 +12,9 @@ namespace Online_Bookstore_System.IService
         Task<ApiResponseDto> GetAllOrderByIdAsync(string userId);
         Task<ApiResponseDto> GetOrderbyClaimCode(string claimCode);
         Task<ApiResponseDto> CancelOrderAsync(string userId, int orderId);
+        Task<ApiResponseDto> CompleteOrderAsync(CompleteOrderDto completeOrderDto);
+
+
+
     }
 }

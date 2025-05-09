@@ -39,6 +39,19 @@ namespace Online_Bookstore_System.Repository
             return true;
         }
 
+        public async Task<bool> CompleteOrderAsync(string claimcode)
+        {
+            var order = await _appDbContext.Orders.FirstOrDefaultAsync(x => x.ClaimCode == claimcode);
+
+            if (order == null)
+                return false;
+
+            order.Status = "Completed";
+            _appDbContext.Orders.Update(order);
+            await _appDbContext.SaveChangesAsync();
+
+            return true;
+        }
 
         public async Task<List<GetAllOrderDto>> GetAllCompletedOrder()
         {
