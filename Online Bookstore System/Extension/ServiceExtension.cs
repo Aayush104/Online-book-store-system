@@ -23,6 +23,7 @@ namespace Online_Bookstore_System.Extension
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IAnnouncementService, AnouncementService>();
             services.AddScoped<DataSecurityProvider>();
+           services.AddHostedService<AnnouncementCheckerService>();
 
             var JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "YourFallbackSecretKey";
             var JWT_ISSUER = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "YourIssuer";

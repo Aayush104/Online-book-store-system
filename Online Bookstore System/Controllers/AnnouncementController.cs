@@ -16,7 +16,7 @@ namespace Online_Bookstore_System.Controllers
             _announcementService = announcementService;
         }
 
-        [HttpPost ("DoAnnouncement")]
+        [HttpPost ("SetAnnouncement")]
         public async Task <IActionResult> CreateAnnouncement(CreateAnnouncementDto announcement)
         {
             var response = await _announcementService.DoAnnouncementAsync(announcement);
@@ -25,6 +25,7 @@ namespace Online_Bookstore_System.Controllers
 
         }
 
+      
       
     }
 }

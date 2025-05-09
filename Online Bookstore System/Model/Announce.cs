@@ -17,6 +17,8 @@ namespace Online_Bookstore_System.Model
 
         public bool IsMarked { get; set; } = false;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime AnnouncemnetDateTime { get; set; }
+        public bool IsAnnounced { get; set; } = false;
+
     }
 }
