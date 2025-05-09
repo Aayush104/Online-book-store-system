@@ -104,6 +104,21 @@ namespace Online_Bookstore_System.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+
+        [HttpGet("GetOrderNotification")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> GetOrderNotification()
+        {
+
+
+            var userIdClaim = HttpContext.User.FindFirst("userId");
+
+            if (userIdClaim == null) return Unauthorized("User not found");
+
+            var userId = userIdClaim?.Value;
+            var response = await _orderService.GetOrderNotificationAsync( userId);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 
 

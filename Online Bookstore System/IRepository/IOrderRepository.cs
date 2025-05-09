@@ -10,10 +10,11 @@ namespace Online_Bookstore_System.IRepository
 
         Task <List<GetAllOrderDto>> GetAllPendingOrder();
         Task <List<GetAllOrderDto>> GetAllCompletedOrder();
+        Task <List<Order>> GetAllUserCompletedOrder();
         Task <List<GetAllOrderDto>> GetAllOrderById(string userId);
         Task <List<GetAllOrderDto>> GetAllOrderByClaimCode(string claimCode);
         Task <bool> CancelOrderAsync(string userId, int OrderId);
 
-        Task<bool> CompleteOrderAsync(string claimcode);
+        Task<string> CompleteOrderAsync(string claimcode);
     }
 }

@@ -21,6 +21,7 @@ namespace Online_Bookstore_System.Extension
             services.AddScoped<IWhiteListService, WhiteListService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IAnnouncementService, AnouncementService>();
             services.AddScoped<DataSecurityProvider>();
 
             var JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "YourFallbackSecretKey";

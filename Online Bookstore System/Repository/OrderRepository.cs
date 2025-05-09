@@ -39,19 +39,24 @@ namespace Online_Bookstore_System.Repository
             return true;
         }
 
-        public async Task<bool> CompleteOrderAsync(string claimcode)
+        public async Task<string> CompleteOrderAsync(string claimCode)
         {
-            var order = await _appDbContext.Orders.FirstOrDefaultAsync(x => x.ClaimCode == claimcode);
+            if (string.IsNullOrWhiteSpace(claimCode))
+                throw new ArgumentException("Claim code must be provided.", nameof(claimCode));
+
+            var order = await _appDbContext.Orders.FirstOrDefaultAsync(x => x.ClaimCode == claimCode);
 
             if (order == null)
-                return false;
+                throw new InvalidOperationException("Order not found for the provided claim code.");
 
             order.Status = "Completed";
+            order.OrderCompletedDate = DateTime.UtcNow;    
             _appDbContext.Orders.Update(order);
             await _appDbContext.SaveChangesAsync();
 
-            return true;
+            return order.UserId;
         }
+
 
         public async Task<List<GetAllOrderDto>> GetAllCompletedOrder()
         {
@@ -176,6 +181,17 @@ namespace Online_Bookstore_System.Repository
 
             return result; 
         }
+
+        public async Task<List<Order>> GetAllUserCompletedOrder()
+        {
+            var orders = await _appDbContext.Orders
+                .Where(o => o.Status == "Completed")
+                .ToListAsync();
+
+            return orders;
+           
+        }
+
 
 
         public async Task<int> GetSuccessfulOrderCountAsync(string memberId)
