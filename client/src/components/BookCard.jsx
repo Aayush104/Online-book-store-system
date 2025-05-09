@@ -41,12 +41,12 @@ const BookCard = ({ book, onViewDetails, onAddToCart, showLoginPrompt }) => {
 
   return (
     <div
-      className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-200 dark:border-neutral-700"
+      className="bg-background rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-200 dark:border-neutral-700"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Book Cover */}
-      <div className="relative aspect-[3/4] bg-gray-100 dark:bg-neutral-700">
+      <div className="relative aspect-[3/4] bg-white dark:bg-neutral-800">
         <img
           src={book.bookPhoto}
           alt={book.title}

@@ -7,19 +7,22 @@ const loadAuthFromStorage = () => {
     const userStr = localStorage.getItem("user");
 
     if (token && userStr) {
-      const user = JSON.parse(userStr);
-      return {
-        user,
-        token,
-        isAuthenticated: true,
-        loading: false,
-        error: null,
-      };
+      try {
+        const user = JSON.parse(userStr);
+        return {
+          user,
+          token,
+          isAuthenticated: true,
+          loading: false,
+          error: null,
+        };
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        // Don't clear localStorage here - we'll let the component decide what to do
+      }
     }
   } catch (error) {
-    // If there's an error parsing, clear localStorage
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    console.error("Error accessing localStorage:", error);
   }
 
   // Return default state if no valid data in localStorage
@@ -34,41 +37,49 @@ const loadAuthFromStorage = () => {
 
 // Load theme preference
 const loadThemePreference = () => {
-  const savedTheme = localStorage.getItem("theme");
+  try {
+    const savedTheme = localStorage.getItem("theme");
 
-  if (savedTheme === "light" || savedTheme === "dark") {
-    return savedTheme;
+    if (savedTheme === "light" || savedTheme === "dark") {
+      return savedTheme;
+    }
+
+    // If no saved preference, check system preference
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      return "dark";
+    }
+  } catch (error) {
+    console.error("Error loading theme preference:", error);
   }
 
-  // If no saved preference, check system preference
-  if (
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    return "dark";
-  }
-
-  return "light";
+  return "light"; // Default to light theme if error
 };
 
 // Apply theme to document
 const applyTheme = (theme) => {
-  const root = document.documentElement;
+  try {
+    const root = document.documentElement;
 
-  if (theme === "dark") {
-    root.classList.add("dark");
-    root.style.colorScheme = "dark";
-  } else {
-    root.classList.remove("dark");
-    root.style.colorScheme = "light";
+    if (theme === "dark") {
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+    } else {
+      root.classList.remove("dark");
+      root.style.colorScheme = "light";
+    }
+
+    localStorage.setItem("theme", theme);
+  } catch (error) {
+    console.error("Error applying theme:", error);
   }
-
-  localStorage.setItem("theme", theme);
 };
 
 const initialState = {
   ...loadAuthFromStorage(),
-  theme: loadThemePreference(), // Add theme to initial state
+  theme: loadThemePreference(),
 };
 
 // Apply initial theme
@@ -91,6 +102,14 @@ const userSlice = createSlice({
 
     // Login user
     loginUser: (state, action) => {
+      if (!action.payload || !action.payload.token) {
+        console.error(
+          "Attempted to login with invalid payload:",
+          action.payload
+        );
+        return;
+      }
+
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
@@ -98,8 +117,12 @@ const userSlice = createSlice({
       state.error = null;
 
       // Save to localStorage
-      localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      try {
+        localStorage.setItem("token", action.payload.token);
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+      } catch (error) {
+        console.error("Error saving auth data to localStorage:", error);
+      }
     },
 
     // Logout user
@@ -111,19 +134,34 @@ const userSlice = createSlice({
       state.error = null;
 
       // Clear localStorage
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      try {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } catch (error) {
+        console.error("Error removing auth data from localStorage:", error);
+      }
     },
 
     // Update user information
     updateUser: (state, action) => {
+      if (!state.user || !action.payload) {
+        console.error(
+          "Cannot update user: No user in state or invalid payload"
+        );
+        return;
+      }
+
       state.user = {
         ...state.user,
         ...action.payload,
       };
 
       // Update localStorage
-      localStorage.setItem("user", JSON.stringify(state.user));
+      try {
+        localStorage.setItem("user", JSON.stringify(state.user));
+      } catch (error) {
+        console.error("Error updating user in localStorage:", error);
+      }
     },
 
     // Clear error
@@ -134,6 +172,11 @@ const userSlice = createSlice({
     // Set theme
     setTheme: (state, action) => {
       const theme = action.payload;
+      if (theme !== "light" && theme !== "dark") {
+        console.error("Invalid theme value:", theme);
+        return;
+      }
+
       state.theme = theme;
       applyTheme(theme);
     },
@@ -143,6 +186,17 @@ const userSlice = createSlice({
       const newTheme = state.theme === "light" ? "dark" : "light";
       state.theme = newTheme;
       applyTheme(newTheme);
+    },
+
+    // Refresh auth state from localStorage
+    refreshAuthState: (state) => {
+      const authState = loadAuthFromStorage();
+
+      if (authState.token && authState.user) {
+        state.user = authState.user;
+        state.token = authState.token;
+        state.isAuthenticated = true;
+      }
     },
   },
 });
@@ -156,6 +210,7 @@ export const {
   clearError,
   setTheme,
   toggleTheme,
+  refreshAuthState,
 } = userSlice.actions;
 
 // Selectors

@@ -288,7 +288,6 @@ const Books = () => {
     }
   };
 
-  // Improved status badge renderer
   const renderStatusBadge = (
     isInStock,
     isOnSale,
@@ -296,28 +295,28 @@ const Books = () => {
     viewType = "table"
   ) => {
     const gridBadgeClasses =
-      "px-3 py-1 text-xs font-bold rounded-full shadow-sm flex items-center justify-center gap-1";
+      "px-3 py-1.5 text-xs font-bold rounded-full shadow-sm flex items-center justify-center gap-1.5";
     const tableBadgeClasses =
-      "px-2 py-1 text-xs font-semibold rounded-full flex items-center gap-1";
+      "px-2.5 py-1.5 text-xs font-semibold rounded-full flex items-center gap-1.5 shadow-sm";
 
     return (
-      <div className="flex flex-col space-y-1.5">
+      <div className="flex flex-col space-y-2">
         {isInStock ? (
           <span
             className={`${
               viewType === "grid" ? gridBadgeClasses : tableBadgeClasses
-            } bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800`}
+            } bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-50 border border-green-200 dark:border-green-600 w-fit`}
           >
-            <CheckIcon className="h-3 w-3" />
+            <CheckIcon className="h-3.5 w-3.5" />
             <span>In Stock</span>
           </span>
         ) : (
           <span
             className={`${
               viewType === "grid" ? gridBadgeClasses : tableBadgeClasses
-            } bg-red-100 text-red-800 dark:bg-red-900/60 dark:text-red-200 border border-red-200 dark:border-red-800`}
+            } bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-50 border border-red-200 dark:border-red-600 w-fit`}
           >
-            <XMarkIcon className="h-3 w-3" />
+            <XMarkIcon className="h-3.5 w-3.5" />
             <span>Out of Stock</span>
           </span>
         )}
@@ -326,7 +325,7 @@ const Books = () => {
           <span
             className={`${
               viewType === "grid" ? gridBadgeClasses : tableBadgeClasses
-            } bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-200 border border-amber-200 dark:border-amber-800`}
+            } bg-amber-100 text-amber-800 dark:bg-amber-700 dark:text-amber-50 border border-amber-200 dark:border-amber-600 w-fit`}
           >
             <span className="font-bold">{discountPercentage}% </span>
             <span>OFF</span>
@@ -359,7 +358,7 @@ const Books = () => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full md:w-64 pl-10 pr-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              className="w-full md:w-64 pl-10 pr-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
             />
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400 dark:text-neutral-500" />
           </div>
@@ -379,7 +378,7 @@ const Books = () => {
               onClick={() => setViewMode("table")}
               className={`p-2 ${
                 viewMode === "table"
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-primary-600 text-white"
                   : "bg-white text-neutral-700 hover:bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
               }`}
               aria-label="Table view"
@@ -390,7 +389,7 @@ const Books = () => {
               onClick={() => setViewMode("grid")}
               className={`p-2 ${
                 viewMode === "grid"
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-primary-600 text-white"
                   : "bg-white text-neutral-700 hover:bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
               }`}
               aria-label="Grid view"
@@ -401,7 +400,7 @@ const Books = () => {
 
           <button
             onClick={handleAddBook}
-            className="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+            className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-600 dark:hover:bg-primary-700"
           >
             <PlusIcon className="w-5 h-5 mr-2" /> Add Book
           </button>
@@ -421,7 +420,7 @@ const Books = () => {
                 name="genre"
                 value={filters.genre}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
                 placeholder="Filter by genre"
               />
             </div>
@@ -435,7 +434,7 @@ const Books = () => {
                 name="author"
                 value={filters.author}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
                 placeholder="Filter by author"
               />
             </div>
@@ -449,7 +448,7 @@ const Books = () => {
                 name="publisher"
                 value={filters.publisher}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
                 placeholder="Filter by publisher"
               />
             </div>
@@ -463,7 +462,7 @@ const Books = () => {
                 name="language"
                 value={filters.language}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
                 placeholder="Filter by language"
               />
             </div>
@@ -476,7 +475,7 @@ const Books = () => {
                 name="format"
                 value={filters.format}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
               >
                 <option value="">All Formats</option>
                 <option value="Paperback">Paperback</option>
@@ -497,7 +496,7 @@ const Books = () => {
                   name="minPrice"
                   value={filters.minPrice}
                   onChange={handleFilterChange}
-                  className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                  className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
                   placeholder="Min"
                   min="0"
                 />
@@ -506,7 +505,7 @@ const Books = () => {
                   name="maxPrice"
                   value={filters.maxPrice}
                   onChange={handleFilterChange}
-                  className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                  className="w-full px-3 py-2 border border-neutral-200 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
                   placeholder="Max"
                   min="0"
                 />
@@ -521,7 +520,7 @@ const Books = () => {
                   id="inStock"
                   checked={filters.inStock === true}
                   onChange={handleFilterChange}
-                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-neutral-300 rounded dark:border-neutral-600"
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded dark:border-neutral-600"
                 />
                 <label
                   htmlFor="inStock"
@@ -537,7 +536,7 @@ const Books = () => {
                   id="onSale"
                   checked={filters.onSale === true}
                   onChange={handleFilterChange}
-                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-neutral-300 rounded dark:border-neutral-600"
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded dark:border-neutral-600"
                 />
                 <label
                   htmlFor="onSale"
@@ -565,7 +564,7 @@ const Books = () => {
         {/* Loading Indicator */}
         {loading && (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
           </div>
         )}
 
@@ -581,7 +580,7 @@ const Books = () => {
             </p>
             <button
               onClick={handleAddBook}
-              className="mt-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              className="mt-2 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             >
               Add Your First Book
             </button>
@@ -701,21 +700,21 @@ const Books = () => {
                       <div className="flex space-x-2 justify-end">
                         <button
                           onClick={() => handleViewDetails(book.bookId)}
-                          className="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300"
+                          className="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 bg-white/0 hover:bg-green-50 dark:hover:bg-green-950/30 p-1.5 rounded-full transition-colors"
                           title="View Details"
                         >
                           <EyeIcon className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleEditBook(book.bookId)}
-                          className="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300"
+                          className="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 bg-white/0 hover:bg-green-50 dark:hover:bg-green-950/30 p-1.5 rounded-full transition-colors"
                           title="Edit Book"
                         >
                           <PencilSquareIcon className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleDeleteBook(book.bookId)}
-                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          className="text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300 bg-white/0 hover:bg-red-50 dark:hover:bg-red-950/30 p-1.5 rounded-full transition-colors"
                           title="Delete Book"
                         >
                           <TrashIcon className="h-5 w-5" />
@@ -789,21 +788,21 @@ const Books = () => {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleViewDetails(book.bookId)}
-                        className="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300 p-1 rounded-full hover:bg-emerald-50 dark:hover:bg-neutral-700"
+                        className="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 bg-white dark:bg-neutral-700 hover:bg-green-50 dark:hover:bg-green-950/30 p-1.5 rounded-full shadow-sm transition-colors"
                         title="View Details"
                       >
                         <EyeIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleEditBook(book.bookId)}
-                        className="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300 p-1 rounded-full hover:bg-emerald-50 dark:hover:bg-neutral-700"
+                        className="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300 bg-white dark:bg-neutral-700 hover:bg-green-50 dark:hover:bg-green-950/30 p-1.5 rounded-full shadow-sm transition-colors"
                         title="Edit Book"
                       >
                         <PencilSquareIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleDeleteBook(book.bookId)}
-                        className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 rounded-full hover:bg-red-50 dark:hover:bg-neutral-700"
+                        className="text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300 bg-white dark:bg-neutral-700 hover:bg-red-50 dark:hover:bg-red-950/30 p-1.5 rounded-full shadow-sm transition-colors"
                         title="Delete Book"
                       >
                         <TrashIcon className="h-5 w-5" />
@@ -865,7 +864,7 @@ const Books = () => {
                       setPageSize(Number(e.target.value));
                       setCurrentPage(1);
                     }}
-                    className="text-sm border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
+                    className="text-sm border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
                   >
                     <option value="10">10 per page</option>
                     <option value="25">25 per page</option>
@@ -908,7 +907,7 @@ const Books = () => {
                       onClick={() => goToPage(page)}
                       className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                         currentPage === page
-                          ? "z-10 bg-emerald-600 text-white border-emerald-600 dark:bg-emerald-600"
+                          ? "z-10 bg-primary-600 text-white border-primary-600 dark:bg-primary-600"
                           : "bg-white text-neutral-700 hover:bg-neutral-50 border-neutral-300 dark:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700 dark:hover:bg-neutral-700"
                       }`}
                     >
