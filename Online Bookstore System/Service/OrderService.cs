@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Online_Bookstore_System.DataSecurity;
 using Online_Bookstore_System.Dto.OrderDto;
 using Online_Bookstore_System.Dto.ResponseDto;
+using Online_Bookstore_System.Hubs;
 using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Model;
@@ -16,17 +19,20 @@ namespace Online_Bookstore_System.Service
         private readonly IDataProtector _dataProtector;
         private readonly IMailService _mailService;
         private readonly UserManager<ApplicationUser> _userManager;
+     
+        private readonly IHubContext<Notificationhub> _Context;
 
         public OrderService(
             IOrderRepository orderRepository,
             IDataProtectionProvider dataProtector,
             DataSecurityProvider securityProvider,
             IMailService mailService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, IHubContext<Notificationhub> Context)
         {
             _orderRepository = orderRepository;
             _mailService = mailService;
             _userManager = userManager;
+            _Context = Context;
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);
         }
 
@@ -71,25 +77,52 @@ namespace Online_Bookstore_System.Service
         {
             try
             {
-                var isCompleted = await _orderRepository.CompleteOrderAsync(completeOrderDto.ClaimCode);
+                var userId = await _orderRepository.CompleteOrderAsync(completeOrderDto.ClaimCode);
 
-                if (!isCompleted)
+                if (userId == null)
                 {
                     return new ApiResponseDto
                     {
                         IsSuccess = false,
                         StatusCode = 404,
-                        Message = "No order found with the specified claimcode.",
+                        Message = "No order found with the specified claim code.",
                         Data = null
                     };
                 }
+
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        StatusCode = 404,
+                        Message = "User not found.",
+                        Data = null
+                    };
+                }
+
+                var fullName = user.FullName ?? "User"; 
+
+                var notificationObject = new
+                {
+                    type = "Order",
+                    content = "Order Completed",
+                    id = Guid.NewGuid().ToString(),
+                    timestamp = DateTime.UtcNow,
+                    title = "Order Completed",
+                    description = $"The order of {fullName} has been completed. Now it's your turn!"
+                };
+
+                await _Context.Clients.All.SendAsync("ReceiveNotification", notificationObject);
 
                 return new ApiResponseDto
                 {
                     IsSuccess = true,
                     StatusCode = 200,
-                    Message = "Order Completed successfully.",
-                    Data = isCompleted
+                    Message = "Order completed successfully.",
+                    Data = userId
                 };
             }
             catch (Exception ex)
@@ -103,6 +136,7 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
+
 
         public async Task<ApiResponseDto> GetAllCompletedOrderAsync()
         {
@@ -199,6 +233,79 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
+        public async Task<ApiResponseDto> GetOrderNotificationAsync(string userId)
+        {
+            try
+            {
+                // 1. Load the calling user
+                var currentUser = await _userManager.FindByIdAsync(userId);
+                if (currentUser == null || !currentUser.CreatedAt.HasValue)
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        StatusCode = 404,
+                        Message = "User not found or creation date not set.",
+                        Data = null
+                    };
+
+                var referenceDate = currentUser.CreatedAt.Value;
+
+              
+                var allCompleted = await _orderRepository.GetAllUserCompletedOrder();
+
+                var recentOrders = allCompleted
+                    .Where(o => o.OrderCompletedDate.HasValue
+                             && o.OrderCompletedDate.Value > referenceDate
+                             && o.UserId != userId)
+                    .ToList();
+
+                var notifications = new List<object>();
+
+                foreach (var order in recentOrders)
+                {
+                   
+                    var otherUser = await _userManager.FindByIdAsync(order.UserId);
+                    if (otherUser == null)
+                        continue;
+
+                    var fullName = otherUser.FullName ?? "(Unnamed)";
+
+                    
+                    var completedAt = order.OrderCompletedDate.Value;
+
+                    var notificationObject = new
+                    {
+                        type = "Order",
+                        content = "Order Completed",
+                        id = Guid.NewGuid().ToString(),
+                        timestamp = completedAt,               
+                        title = "Order Completed",
+                        description = $"The order for {fullName} was completed on {completedAt:G}. Now Its your turn"
+                    };
+
+                    notifications.Add(notificationObject);
+                }
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    StatusCode = 200,
+                    Message = "Notifications generated successfully.",
+                    Data = notifications
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    StatusCode = 500,
+                    Message = $"An error occurred: {ex.Message}",
+                    Data = null
+                };
+            }
+        }
+
 
         public async Task<ApiResponseDto> PlaceOrderAsync(string userId, PlaceOrderDto request)
         {

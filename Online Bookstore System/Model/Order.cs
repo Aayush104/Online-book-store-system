@@ -19,6 +19,8 @@ namespace Online_Bookstore_System.Model
         public decimal TotalAmount { get; set; }
         public decimal DiscountApplied { get; set; }
 
+        public DateTime? OrderCompletedDate { get; set; }
+
         [Required]
         public string UserId { get; set; }
 

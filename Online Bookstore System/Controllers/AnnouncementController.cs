@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Bookstore_System.Dto.AnnouncementDto;
+using Online_Bookstore_System.Dto.Pagination;
+using Online_Bookstore_System.IService;
 
 namespace Online_Bookstore_System.Controllers
 {
@@ -7,13 +10,21 @@ namespace Online_Bookstore_System.Controllers
     [ApiController]
     public class AnnouncementController : ControllerBase
     {
-        //[HttpPost]
-        //public IActionResult CreateAnnouncement([FromBody] AnnouncementDto announcement) { /* create timed announcement */ return Ok(); }
+        private readonly IAnnouncementService _announcementService;
+        public AnnouncementController(IAnnouncementService announcementService)
+        {
+            _announcementService = announcementService;
+        }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteAnnouncement(int id) { /* delete announcement */ return Ok(); }
+        [HttpPost ("DoAnnouncement")]
+        public async Task <IActionResult> CreateAnnouncement(CreateAnnouncementDto announcement)
+        {
+            var response = await _announcementService.DoAnnouncementAsync(announcement);
 
-        //[HttpGet]
-        //public IActionResult GetActiveAnnouncements() { /* list active announcements */ return Ok(); }
+            return StatusCode(response.StatusCode, response);
+
+        }
+
+      
     }
 }

@@ -47,6 +47,7 @@ namespace Online_Bookstore_System.Service
                     Email = staffRegistrationDto.Email,
                     UserName = staffRegistrationDto.Email,
                     PhoneNumber = staffRegistrationDto.PhoneNumber,
+                    CreatedAt = DateTime.UtcNow,    
                 };
 
                 var result = await _userManager.CreateAsync(user);
@@ -144,8 +145,9 @@ namespace Online_Bookstore_System.Service
                     UserName = registrationDto.Email,
                     PhoneNumber = registrationDto.PhoneNumber, 
                     Address = registrationDto.Address,
-                    
-                
+                    CreatedAt = DateTime.UtcNow,
+
+
                 };
 
                 var result = await _userManager.CreateAsync(user, registrationDto.Password);

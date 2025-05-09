@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Online_Bookstore_System.Data;
 using Online_Bookstore_System.Extension;
+using Online_Bookstore_System.Hubs;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Model;
 using Online_Bookstore_System.Service;
@@ -17,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices();
 builder.Services.AddApplicationRepository();
+builder.Services.AddSignalR();
+
 
 builder.Services.AddControllers();
 
@@ -103,5 +106,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<Notificationhub>("/notificationhub");
+
 
 app.Run();

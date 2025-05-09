@@ -8,6 +8,7 @@ namespace Online_Bookstore_System.Model
         [Required]
         public string FullName { get; set; }  
         public string? Address { get; set; }
+        public DateTime? CreatedAt { get; set;}
 
         public virtual ICollection<Otp> Otps { get; set; } = new List<Otp>();
         public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
