@@ -7,17 +7,22 @@ public class AnnouncementCheckerService : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IHubContext<Notificationhub> _hubContext;
+    private readonly ILogger<AnnouncementCheckerService> _logger;
 
-    public AnnouncementCheckerService(IServiceProvider serviceProvider, IHubContext<Notificationhub> hubContext)
+    public AnnouncementCheckerService(IServiceProvider serviceProvider, IHubContext<Notificationhub> hubContext, ILogger<AnnouncementCheckerService> logger)
     {
         _serviceProvider = serviceProvider;
         _hubContext = hubContext;
+       _logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+
         try
         {
+
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 using var scope = _serviceProvider.CreateScope();
@@ -38,24 +43,25 @@ public class AnnouncementCheckerService : BackgroundService
                         description = announce.Description
                     };
 
-                    await _hubContext.Clients.All.SendAsync("ReceiveNotification", notificationObject, cancellationToken: stoppingToken);
+                    await _hubContext.Clients.All.SendAsync("ReceiveNotification", notificationObject);
+
 
                     announce.IsAnnounced = true;
                     dbContext.Announces.Update(announce);
-                    await dbContext.SaveChangesAsync(stoppingToken);
+                    await dbContext.SaveChangesAsync();
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
+
         }
-        catch (TaskCanceledException)
-        {
-            // Expected on shutdown, ignore or log as info
-        }
+
         catch (Exception ex)
         {
             // Log unexpected exceptions
+            _logger.LogError(ex, "Error in AnnouncementCheckerService");
             Console.WriteLine($"Error in AnnouncementCheckerService: {ex.Message}");
         }
     }
 }
+
