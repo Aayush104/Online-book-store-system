@@ -110,7 +110,7 @@ namespace Online_Bookstore_System.Service
                     var otp = OtpGenerator.GenerateOtp();
                     await _otpService.StoreOtpAsync(existingUser.Id, "Registration", otp);
                     await _mailService.SendOtpMail(existingUser.Email, existingUser.FullName, otp);
-                    return new ApiResponseDto { IsSuccess = false, Message = _dataProtector.Protect(existingUser.Id), StatusCode = 401 };
+                    return new ApiResponseDto { IsSuccess = false, Message="Enter an Otp To verify your account" ,Data = _dataProtector.Protect(existingUser.Id), StatusCode = 401 };
                 }
 
                 var token = _tokenService.GenerateToken(existingUser, userRole.ToList());
@@ -160,12 +160,8 @@ namespace Online_Bookstore_System.Service
                 var otp = OtpGenerator.GenerateOtp();
                 await _otpService.StoreOtpAsync(user.Id, "Registration", otp);
                 await _mailService.SendOtpMail(user.Email, user.FullName, otp);
-
-
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, "PublicUser");
-                }
+                await _userManager.AddToRoleAsync(user, "PublicUser");
+               
 
                 return new ApiResponseDto { IsSuccess = true, Message = "User created successfully.", StatusCode = 200, Data = _dataProtector.Protect(user.Id) };
 
