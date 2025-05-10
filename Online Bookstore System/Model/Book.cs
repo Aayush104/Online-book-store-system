@@ -64,5 +64,7 @@ namespace Online_Bookstore_System.Model
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
     }
 }

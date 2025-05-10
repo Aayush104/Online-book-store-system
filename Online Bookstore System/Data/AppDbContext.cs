@@ -22,6 +22,7 @@ namespace Online_Bookstore_System.Data
         public DbSet<Order> Orders{ get; set; }
         public DbSet<OrderItem> OrderItems{ get; set; }
         public DbSet<Announce> Announces { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -77,6 +78,18 @@ namespace Online_Bookstore_System.Data
          .WithMany(u => u.OrderItems)
          .HasForeignKey(o => o.OrderId)
          .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Review>()
+          .HasOne(o => o.User)
+          .WithMany(u => u.Reviews)
+          .HasForeignKey(o => o.UserId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Review>()
+            .HasOne(o => o.Book)
+            .WithMany(u => u.Reviews)
+            .HasForeignKey(o => o.BookId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }

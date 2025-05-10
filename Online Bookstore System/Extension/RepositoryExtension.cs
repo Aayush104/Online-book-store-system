@@ -16,6 +16,7 @@ namespace Online_Bookstore_System.Extension
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IAnnouncementReposoitory, AnnouncementRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
             return services;
         }
     }

@@ -14,7 +14,7 @@ namespace Online_Bookstore_System.Model
         public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();
         public ICollection<Order> Orders { get; set; } = new List<Order>();
-
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
 
     }
