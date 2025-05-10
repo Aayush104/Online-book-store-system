@@ -958,8 +958,8 @@ const Books = () => {
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
         book={selectedBook}
-        onAddToCart={() => {}} // Implement cart functionality if needed for admin
-        onAddToWishlist={() => {}} // Implement wishlist functionality if needed for admin
+        onAddToCart={() => {}}
+        onAddToWishlist={() => {}}
       />
     </div>
   );

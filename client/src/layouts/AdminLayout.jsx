@@ -1,25 +1,63 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ThemeToggle from "../components/ThemeToggle";
 import {
-  BookOpenIcon,
-  ChartBarIcon,
-  UserGroupIcon,
-  MegaphoneIcon,
-  Cog6ToothIcon,
-  BellIcon,
-  UserIcon,
-  ArrowLeftOnRectangleIcon,
-  Bars3Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+  BookOpen,
+  BarChart3,
+  Users,
+  Megaphone,
+  Settings,
+  Bell,
+  User,
+  LogOut,
+  Menu,
+  X,
+  ChevronLeft,
+} from "lucide-react";
+import { selectTheme, logoutUser } from "../features/userSlice";
 
 const AdminLayout = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [greeting, setGreeting] = useState("");
+  const theme = useSelector(selectTheme);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Update isDarkMode state whenever theme changes
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const isDark = document.documentElement.classList.contains("dark");
+      setIsDarkMode(isDark);
+    }
+  }, [theme]);
+
+  // Add MutationObserver to track DOM changes for theme
+  useEffect(() => {
+    if (typeof document !== "undefined" && window.MutationObserver) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            mutation.type === "attributes" &&
+            mutation.attributeName === "class"
+          ) {
+            setIsDarkMode(document.documentElement.classList.contains("dark"));
+          }
+        });
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, []);
 
   // Get user from Redux store
   const user = useSelector((state) => state.user?.currentUser) || {
@@ -39,32 +77,37 @@ const AdminLayout = () => {
     }
   }, []);
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    window.location.href = "/login";
+  };
+
   // Navigation items
   const navItems = [
     {
       name: "Dashboard",
       path: "/admin",
-      icon: <ChartBarIcon className="w-5 h-5" />,
+      icon: <BarChart3 size={20} />,
     },
     {
       name: "Books",
       path: "/admin/books",
-      icon: <BookOpenIcon className="w-5 h-5" />,
+      icon: <BookOpen size={20} />,
     },
     {
       name: "Staffs",
       path: "/admin/staffs",
-      icon: <UserGroupIcon className="w-5 h-5" />,
+      icon: <Users size={20} />,
     },
     {
       name: "Announcements",
       path: "/admin/announcements",
-      icon: <MegaphoneIcon className="w-5 h-5" />,
+      icon: <Megaphone size={20} />,
     },
     {
       name: "Settings",
       path: "/admin/settings",
-      icon: <Cog6ToothIcon className="w-5 h-5" />,
+      icon: <Settings size={20} />,
     },
   ];
 
@@ -83,7 +126,7 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-neutral-50 dark:bg-neutral-900">
+    <div className="min-h-screen w-full bg-[var(--background)] text-[var(--text-primary)] transition-colors duration-200">
       {/* Mobile menu backdrop */}
       {mobileMenuOpen && (
         <div
@@ -98,27 +141,42 @@ const AdminLayout = () => {
           ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} 
           ${collapsed ? "w-20" : "w-64"} 
           fixed inset-y-0 left-0 z-30 lg:translate-x-0
-          transition-all duration-300 ease-in-out bg-white dark:bg-neutral-800 
-          border-r border-neutral-200 dark:border-neutral-700 flex flex-col h-screen
+          transition-all duration-300 ease-in-out 
+          ${
+            isDarkMode
+              ? "bg-[#21242c] border-r border-neutral-700"
+              : "bg-white border-r border-neutral-200"
+          }
+          flex flex-col h-screen
         `}
       >
         {/* Logo & App Name */}
-        <div className="h-16 flex items-center px-4 border-b border-neutral-200 dark:border-neutral-700">
-          <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
-            <BookOpenIcon className="h-6 w-6 text-white" />
+        <div
+          className={`h-16 flex items-center px-4 ${
+            isDarkMode
+              ? "border-b border-neutral-700"
+              : "border-b border-neutral-200"
+          }`}
+        >
+          <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+            <BookOpen size={20} className="text-white" />
           </div>
           {!collapsed && (
             <div className="ml-3">
-              <div className="text-base font-display font-bold text-neutral-900 dark:text-neutral-100">
+              <div
+                className={`text-base font-display font-bold ${
+                  isDarkMode ? "text-white" : "text-neutral-900"
+                }`}
+              >
                 BookHaven
               </div>
-              <div className="text-xs text-emerald-600 dark:text-emerald-400">
+              <div className="text-xs text-primary-600 dark:text-primary-400">
                 Admin Panel
               </div>
             </div>
           )}
           <button className="ml-auto lg:hidden" onClick={toggleMobileMenu}>
-            <XMarkIcon className="h-6 w-6 text-neutral-500 dark:text-neutral-400" />
+            <X size={20} className="text-[var(--text-secondary)]" />
           </button>
         </div>
 
@@ -136,8 +194,10 @@ const AdminLayout = () => {
                     transition-colors text-sm font-medium
                     ${
                       isActive
-                        ? "bg-emerald-600 text-white"
-                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        ? "bg-primary-600 text-white"
+                        : isDarkMode
+                        ? "text-gray-400 hover:bg-neutral-700 hover:text-white"
+                        : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
                     }
                   `}
                 >
@@ -152,27 +212,37 @@ const AdminLayout = () => {
         </nav>
 
         {/* User Profile at Bottom */}
-        <div className="p-4 border-t border-neutral-200 dark:border-neutral-700">
+        <div
+          className={`p-4 ${
+            isDarkMode
+              ? "border-t border-neutral-700"
+              : "border-t border-neutral-200"
+          }`}
+        >
           <div
             className={`flex ${collapsed ? "justify-center" : "items-center"}`}
           >
             {!collapsed ? (
               <>
-                <div className="w-9 h-9 bg-neutral-200 dark:bg-neutral-700 rounded-full flex items-center justify-center">
-                  <UserIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="w-9 h-9 bg-primary-600 rounded-full flex items-center justify-center">
+                  <User size={18} className="text-white" />
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                    {user.name}
+                  <p
+                    className={`text-sm font-medium ${
+                      isDarkMode ? "text-white" : "text-neutral-900"
+                    }`}
+                  >
+                    Admin User
                   </p>
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400">
-                    {user.role}
+                  <p className="text-xs text-primary-600 dark:text-primary-400">
+                    Administrator
                   </p>
                 </div>
               </>
             ) : (
-              <div className="w-9 h-9 bg-neutral-200 dark:bg-neutral-700 rounded-full flex items-center justify-center">
-                <UserIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <div className="w-9 h-9 bg-primary-600 rounded-full flex items-center justify-center">
+                <User size={18} className="text-white" />
               </div>
             )}
           </div>
@@ -183,11 +253,16 @@ const AdminLayout = () => {
             className={`mt-4 w-full flex ${
               collapsed ? "justify-center" : ""
             } items-center py-2.5 px-3 text-sm 
-            text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 
-            rounded-lg transition-colors border border-neutral-200 dark:border-neutral-700`}
+            ${
+              isDarkMode
+                ? "text-gray-400 hover:bg-neutral-700 hover:text-white border border-neutral-700"
+                : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 border border-neutral-200"
+            }
+            rounded-lg transition-colors`}
           >
-            <ArrowLeftOnRectangleIcon
-              className={`w-5 h-5 ${collapsed ? "" : "mr-2"} ${
+            <ChevronLeft
+              size={18}
+              className={`${collapsed ? "" : "mr-2"} ${
                 collapsed ? "transform rotate-180" : ""
               }`}
             />
@@ -203,25 +278,25 @@ const AdminLayout = () => {
         } transition-all duration-300 min-h-screen`}
       >
         {/* Topbar */}
-        <header className="h-16 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-10 shadow-sm">
+        <header className="h-16 bg-[var(--surface)] border-b border-[var(--border)] flex items-center justify-between px-4 lg:px-6 sticky top-0 z-10 shadow-sm">
           {/* Left Side: Mobile menu toggle and Title/Greeting */}
           <div className="flex items-center">
             {/* Mobile menu button */}
             <button
-              className="lg:hidden p-2 mr-2 rounded-md text-neutral-600 hover:bg-neutral-100
-               dark:text-neutral-300 dark:hover:bg-neutral-700"
+              className="lg:hidden p-2 mr-2 rounded-md text-[var(--text-secondary)] hover:bg-neutral-100
+               dark:hover:bg-neutral-700"
               onClick={toggleMobileMenu}
             >
-              <Bars3Icon className="h-6 w-6" />
+              <Menu size={20} />
             </button>
 
             {/* Title + Greeting */}
             <div>
-              <h1 className="text-lg font-display font-bold text-neutral-900 dark:text-neutral-100">
+              <h1 className="text-lg font-display font-bold text-[var(--text-primary)]">
                 {getCurrentPageTitle()}
               </h1>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                {greeting}, Admin
+              <p className="text-xs text-[var(--text-secondary)]">
+                {greeting}, {user.name}
               </p>
             </div>
           </div>
@@ -232,32 +307,39 @@ const AdminLayout = () => {
             <ThemeToggle />
 
             {/* Notifications */}
-            <button
-              className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 relative"
-              aria-label="Notifications"
-            >
-              <BellIcon className="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
-              <span className="absolute top-0 right-0 h-5 w-5 rounded-full bg-emerald-600 text-xs text-white flex items-center justify-center transform -translate-y-1/4 translate-x-1/4 font-medium">
-                2
-              </span>
-            </button>
+            <div className="relative">
+              <div
+                className={`flex items-center justify-center h-8 w-8 rounded-full ${
+                  isDarkMode
+                    ? "bg-neutral-800 text-white"
+                    : "bg-white text-neutral-800 border border-neutral-200"
+                }`}
+              >
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-600 text-xs text-white">
+                  2
+                </span>
+                <Bell size={16} />
+              </div>
+            </div>
 
             {/* User Button */}
-            <div className="flex items-center">
-              <div className="flex items-center gap-2 p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors">
-                <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center">
-                  <UserIcon className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-sm font-medium text-neutral-800 dark:text-neutral-200 hidden sm:inline-block pr-1">
-                  Admin
-                </span>
+            <div
+              className={`flex items-center gap-2 p-2 rounded-lg border transition-colors duration-200 ${
+                isDarkMode
+                  ? "bg-neutral-800 text-white border-neutral-700 hover:bg-neutral-700"
+                  : "bg-white text-neutral-800 border-neutral-200 hover:bg-neutral-100"
+              }`}
+            >
+              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary-600 text-white">
+                <User size={16} />
               </div>
+              <span className="text-sm">Admin</span>
             </div>
           </div>
         </header>
 
         {/* Main Content Container */}
-        <main className="flex-1 p-4 md:p-6 bg-neutral-50 dark:bg-neutral-900 overflow-auto">
+        <main className="flex-1 p-4 md:p-6 bg-[var(--background)] overflow-auto">
           <Outlet />
         </main>
       </div>

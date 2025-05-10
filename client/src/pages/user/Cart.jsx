@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CartService from "../../services/CartService";
+import OrderService from "../../services/OrderService";
 import { useToast } from "../../components/Toast";
 import { selectTheme } from "../../features/userSlice";
 import {
@@ -23,6 +24,8 @@ const Cart = () => {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [editingQuantity, setEditingQuantity] = useState(null);
   const [tempQuantity, setTempQuantity] = useState("");
+  const [orderComplete, setOrderComplete] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
 
   useEffect(() => {
     // Fetch cart items when component mounts
@@ -144,33 +147,61 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
+    if (items.length === 0) {
+      showToast({
+        type: "warning",
+        title: "Empty Cart",
+        message: "Your cart is empty. Please add items before checking out.",
+        duration: 3000,
+      });
+      return;
+    }
+
     setIsCheckingOut(true);
     try {
-      // In a real implementation, this would call an API endpoint
-      console.log("Proceeding to checkout...");
+      // Format the data for the API according to the schema
+      const orderItems = items.map((item) => ({
+        bookId: item.bookId,
+        quantity: item.quantity,
+        unitPrice: item.price,
+      }));
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Create the payload
+      const orderData = {
+        items: orderItems,
+      };
 
-      showToast({
-        type: "success",
-        title: "Order Placed",
-        message:
-          "Your order has been placed successfully. Check your email for claim code.",
-        duration: 5000,
-      });
+      // Place the order
+      const response = await OrderService.placeOrder(items);
 
-      // Redirect to orders page or confirmation page
-      setIsCheckingOut(false);
-      navigate("/user/orders");
+      if (response.isSuccess) {
+        setOrderComplete(true);
+        setOrderDetails(response.data);
+
+        showToast({
+          type: "success",
+          title: "Order Placed Successfully",
+          message: "Check your email for the claim code and order details.",
+          duration: 5000,
+        });
+        navigate("/user/orders");
+        // Clear the cart items since order is placed
+        setItems([]);
+      } else {
+        throw new Error(response.message || "Failed to place order");
+      }
     } catch (error) {
-      setIsCheckingOut(false);
+      console.error("Failed to place order:", error);
       showToast({
         type: "error",
         title: "Checkout Failed",
-        message: "There was an error processing your order. Please try again.",
+        message:
+          error.message ||
+          "There was an error processing your order. Please try again.",
         duration: 4000,
       });
+    } finally {
+      setIsCheckingOut(false);
     }
   };
 
@@ -186,6 +217,109 @@ const Cart = () => {
   const stackableDiscountAmount = hasStackable ? subtotal * 0.1 : 0;
   const totalDiscount = orderDiscountAmount + stackableDiscountAmount;
   const finalTotal = subtotal - totalDiscount;
+
+  // If order is complete, show the order confirmation
+  if (orderComplete && orderDetails) {
+    return (
+      <div className="min-h-screen w-full bg-[var(--background)]">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-lg shadow-lg p-8 border border-[var(--border)]">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-16 h-16 bg-success-100 dark:bg-success-900 rounded-full flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-success-600 dark:text-success-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <h1 className="text-2xl font-bold text-center text-[var(--text-primary)] mb-2">
+              Order Confirmed!
+            </h1>
+
+            <p className="text-center text-[var(--text-secondary)] mb-6">
+              Thank you for your order. We've sent a confirmation email with
+              your claim code.
+            </p>
+
+            <div className="border border-[var(--border)] rounded-lg p-4 mb-6">
+              <h2 className="font-semibold text-[var(--text-primary)] mb-3">
+                Order Summary
+              </h2>
+
+              <div className="space-y-2 text-[var(--text-secondary)]">
+                <div className="flex justify-between">
+                  <span>Order Number:</span>
+                  <span className="font-medium text-[var(--text-primary)]">
+                    #{orderDetails.orderId}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Claim Code:</span>
+                  <span className="font-medium text-[var(--text-primary)]">
+                    {orderDetails.claimCode}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Date:</span>
+                  <span className="font-medium text-[var(--text-primary)]">
+                    {new Date(orderDetails.orderDate).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Total Amount:</span>
+                  <span className="font-medium text-[var(--text-primary)]">
+                    ${orderDetails.totalAmount.toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Status:</span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning-100 text-warning-800 dark:bg-warning-900 dark:text-warning-300">
+                    Pending Pickup
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-sm text-[var(--text-secondary)] mb-6">
+              Please visit our store with your membership ID and the claim code
+              above to pick up your books.
+            </p>
+
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+              <button
+                onClick={() => navigate("/user/orders")}
+                className="flex-1 py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+              >
+                View My Orders
+              </button>
+
+              <button
+                onClick={() => navigate("/user")}
+                className="flex-1 py-2 px-4 bg-[var(--background)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--surface-hover)] transition-colors"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-[var(--background)]">
@@ -387,7 +521,7 @@ const Cart = () => {
 
                 <button
                   onClick={handleCheckout}
-                  disabled={isCheckingOut}
+                  disabled={isCheckingOut || items.length === 0}
                   className="w-full py-3 px-4 mt-6 border border-transparent rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                 >
                   {isCheckingOut ? (
@@ -396,9 +530,46 @@ const Cart = () => {
                       Processing...
                     </div>
                   ) : (
-                    "Proceed to Checkout"
+                    "Place Order"
                   )}
                 </button>
+
+                <div className="mt-6 p-4 rounded-lg bg-primary-50 dark:bg-neutral-700 border border-primary-100 dark:border-neutral-600">
+                  <h3 className="font-medium mb-2 text-[var(--text-primary)] dark:text-primary-400 text-sm">
+                    Order Information
+                  </h3>
+                  <ul className="text-sm space-y-2 text-[var(--text-secondary)] dark:text-primary-300">
+                    <li className="flex items-start">
+                      <span className="mr-2 text-primary-500 dark:text-primary-400">
+                        •
+                      </span>
+                      <span>Orders can be picked up in-store only</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2 text-primary-500 dark:text-primary-400">
+                        •
+                      </span>
+                      <span>
+                        You'll receive a claim code via email after ordering
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2 text-primary-500 dark:text-primary-400">
+                        •
+                      </span>
+                      <span>
+                        Present your member ID and claim code at the store to
+                        complete your purchase
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2 text-primary-500 dark:text-primary-400">
+                        •
+                      </span>
+                      <span>Orders can be cancelled before pickup</span>
+                    </li>
+                  </ul>
+                </div>
 
                 <div className="mt-6 p-4 rounded-lg bg-primary-50 dark:bg-neutral-700 border border-primary-100 dark:border-neutral-600">
                   <h3 className="font-medium mb-2 text-[var(--text-primary)] dark:text-primary-400 text-sm">
