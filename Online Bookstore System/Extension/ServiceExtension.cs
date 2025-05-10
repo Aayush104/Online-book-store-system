@@ -22,6 +22,7 @@ namespace Online_Bookstore_System.Extension
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IAnnouncementService, AnouncementService>();
+            services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<DataSecurityProvider>();
            services.AddHostedService<AnnouncementCheckerService>();
 
