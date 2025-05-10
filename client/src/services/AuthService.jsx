@@ -26,7 +26,7 @@ export const login = async (email, password) => {
       const { token, user } = response.data;
 
       // Dispatch to Redux store (this also handles localStorage)
-      dispatch(loginUser({ token, user }));
+      // dispatch(loginUser({ token, user }));
 
       return response;
     } else {
@@ -163,6 +163,84 @@ export const getToken = () => {
   return state.user.token;
 };
 
+// Create Staff service
+export const createStaff = async (staffData) => {
+  const { dispatch } = store;
+
+  try {
+    dispatch(setLoading(true));
+    dispatch(clearError());
+
+    const response = await api.post("/Auth/CreateStaff", staffData);
+    console.log("Staff creation response:", response);
+
+    if (response.isSuccess) {
+      return response;
+    } else {
+      const errorMessage = response.message || "Staff creation failed";
+      dispatch(setError(errorMessage));
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    console.log("Staff creation error:", error);
+
+    let errorMessage = "Staff creation failed";
+
+    if (error.response) {
+      // The server responded with an error status
+      errorMessage =
+        error.response.data?.message || error.response.data || errorMessage;
+    } else if (error.message) {
+      // Network error or custom error
+      errorMessage = error.message;
+    }
+
+    dispatch(setError(errorMessage));
+    throw error;
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+// Reset Password service
+export const resetPassword = async (email) => {
+  const { dispatch } = store;
+
+  try {
+    dispatch(setLoading(true));
+    dispatch(clearError());
+
+    const response = await api.post("/Auth/ResetPassword", { email });
+    console.log("Password reset response:", response);
+
+    if (response.isSuccess) {
+      return response;
+    } else {
+      const errorMessage = response.message || "Password reset request failed";
+      dispatch(setError(errorMessage));
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    console.log("Password reset error:", error);
+
+    let errorMessage = "Password reset request failed";
+
+    if (error.response) {
+      // The server responded with an error status
+      errorMessage =
+        error.response.data?.message || error.response.data || errorMessage;
+    } else if (error.message) {
+      // Network error or custom error
+      errorMessage = error.message;
+    }
+
+    dispatch(setError(errorMessage));
+    throw error;
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 const AuthService = {
   login,
   register,
@@ -171,6 +249,8 @@ const AuthService = {
   isAuthenticated,
   getCurrentUser,
   getToken,
+  createStaff,
+  resetPassword,
 };
 
 export default AuthService;

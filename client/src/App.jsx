@@ -27,6 +27,7 @@ import UserOrders from "./pages/user/Orders";
 // Import any other staff pages
 import StaffOrders from "./pages/Staff/Orders";
 import Wishlist from "./pages/user/Wishlist";
+import Staffs from "./pages/admin/Staffs";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="books" element={<AdminBooks />} />
+              <Route path="staffs" element={<Staffs />} />
               {/* Add more admin routes as needed */}
             </Route>
 
