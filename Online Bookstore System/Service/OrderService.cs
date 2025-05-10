@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Online_Bookstore_System.Data;
 using Online_Bookstore_System.DataSecurity;
 using Online_Bookstore_System.Dto.OrderDto;
 using Online_Bookstore_System.Dto.ResponseDto;
@@ -10,6 +11,7 @@ using Online_Bookstore_System.Hubs;
 using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Model;
+using System.Net;
 
 namespace Online_Bookstore_System.Service
 {
@@ -19,6 +21,7 @@ namespace Online_Bookstore_System.Service
         private readonly IDataProtector _dataProtector;
         private readonly IMailService _mailService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly AppDbContext _dbContext;
      
         private readonly IHubContext<Notificationhub> _Context;
 
@@ -27,13 +30,15 @@ namespace Online_Bookstore_System.Service
             IDataProtectionProvider dataProtector,
             DataSecurityProvider securityProvider,
             IMailService mailService,
-            UserManager<ApplicationUser> userManager, IHubContext<Notificationhub> Context)
+            UserManager<ApplicationUser> userManager, IHubContext<Notificationhub> Context, AppDbContext dbContext)
         {
             _orderRepository = orderRepository;
             _mailService = mailService;
             _userManager = userManager;
             _Context = Context;
+            _dbContext = dbContext;
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);
+
         }
 
         public async Task<ApiResponseDto> CancelOrderAsync(string userId, int orderId)
@@ -428,6 +433,17 @@ namespace Online_Bookstore_System.Service
 
            
             await _orderRepository.AddOrderAsync(order);
+
+            var bookIds = order.OrderItems.Select(oi => oi.BookId).ToList();
+
+            
+            var userCartItems = await _dbContext.Carts
+                .Where(c => c.UserId == userId && bookIds.Contains(c.BookId))
+                .ToListAsync();
+
+           
+            _dbContext.Carts.RemoveRange(userCartItems);
+            await _dbContext.SaveChangesAsync();
 
             return new ApiResponseDto
             {

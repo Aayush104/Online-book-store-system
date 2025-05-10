@@ -26,6 +26,7 @@ namespace Online_Bookstore_System.Service
                 claims.Add(new Claim("Role", role));
             }
 
+
             var JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
             var JWT_ISSUER = Environment.GetEnvironmentVariable("JWT_ISSUER");
             var JWT_AUDIENCE = Environment.GetEnvironmentVariable("JWT_AUDIENCE");

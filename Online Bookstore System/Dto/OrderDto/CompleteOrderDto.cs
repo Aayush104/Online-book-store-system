@@ -2,6 +2,7 @@
 {
     public class CompleteOrderDto
     {
+
         public string ClaimCode { get; set; }
     }
 }
