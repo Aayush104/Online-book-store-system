@@ -4,6 +4,7 @@ using Online_Bookstore_System.DataSecurity;
 using Online_Bookstore_System.Dto.AuthDto;
 using Online_Bookstore_System.Dto.ResponseDto;
 using Online_Bookstore_System.Helper;
+using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Model;
 using System.Data;
@@ -13,7 +14,7 @@ namespace Online_Bookstore_System.Service
 {
     public class AuthService : IAuthService
     {
-        //private readonly IAuthRepository _authService; 
+        private readonly IAuthRepository _authRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IDataProtector _dataProtector;
@@ -21,13 +22,14 @@ namespace Online_Bookstore_System.Service
         private readonly IOtpService _otpService;
         private readonly ITokenService _tokenService;
 
-        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDataProtectionProvider dataProtector, DataSecurityProvider securityProvider, IMailService mailService, IOtpService otpService, ITokenService tokenService)
+        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDataProtectionProvider dataProtector, DataSecurityProvider securityProvider, IMailService mailService, IOtpService otpService, ITokenService tokenService, IAuthRepository authRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mailService = mailService;
             _otpService = otpService;
             _tokenService = tokenService;
+            _authRepository = authRepository;
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);   
         }
 
@@ -85,6 +87,39 @@ namespace Online_Bookstore_System.Service
                 return new ApiResponseDto { IsSuccess = false, Message = "An error occurred during staff Creation", StatusCode = 500, Data = ex.Message };
             }
         }
+        public async Task<ApiResponseDto> GetStaffAsync()
+        {
+            try
+            {
+                var staff = await _userManager.GetUsersInRoleAsync("Staff");
+
+                var response = staff.Select(user => new GetStaffDto
+                {
+                    StaffId = _dataProtector.Protect(user.Id),
+                    StaffName = user.FullName, 
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber
+                }).ToList();
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Staff fetched successfully.",
+                    StatusCode = 200,
+                    Data = response
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while fetching staff. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
 
         public async Task<ApiResponseDto> LoginUserAsync(LoginDto loginDto)
         {
@@ -112,6 +147,17 @@ namespace Online_Bookstore_System.Service
                     await _mailService.SendOtpMail(existingUser.Email, existingUser.FullName, otp);
                     return new ApiResponseDto { IsSuccess = false, Message="Enter an Otp To verify your account" ,Data = _dataProtector.Protect(existingUser.Id), StatusCode = 401 };
                 }
+
+                if (!existingUser.EmailConfirmed && role == "Staff")
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Your account has been deactivated by an administrator.",
+                        StatusCode = 401
+                    };
+                }
+
 
                 var token = _tokenService.GenerateToken(existingUser, userRole.ToList());
                 return token != null
@@ -227,6 +273,65 @@ namespace Online_Bookstore_System.Service
             }
         }
 
+        public async Task<ApiResponseDto> SetStaffStatusAsync(string userId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "User ID is required.",
+                        StatusCode = 400
+                    };
+                }
+
+                string id;
+                try
+                {
+                    id = _dataProtector.Unprotect(userId);
+                }
+                catch
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid or tampered user ID.",
+                        StatusCode = 400
+                    };
+                }
+
+                var user = await _userManager.FindByIdAsync(id);
+                if (user == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "User not found.",
+                        StatusCode = 404
+                    };
+                }
+
+                var result = await _authRepository.UpdateStaffStatus(user);
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = $"EmailConfirmed status has been set to {user.EmailConfirmed}.",
+                    StatusCode = 200
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while updating the staff status. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
 
     }
 }

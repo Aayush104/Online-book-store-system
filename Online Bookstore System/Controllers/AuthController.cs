@@ -15,6 +15,7 @@ namespace Online_Bookstore_System.Controllers
 
         private readonly IAuthService _authService;
         private readonly IOtpService _otpService;
+
         public AuthController(IAuthService authService, IOtpService otpService)
         {
             _authService = authService;
@@ -83,5 +84,20 @@ namespace Online_Bookstore_System.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("GetAllStaff")]
+
+        public async Task<IActionResult> GetAllStaff()
+        {
+            var response = await _authService.GetStaffAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut("SetStaffStatus/{userId}")]
+
+        public async Task<IActionResult> SetStaffStatus(string userId)
+        {
+            var response = await _authService.SetStaffStatusAsync(userId);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }
