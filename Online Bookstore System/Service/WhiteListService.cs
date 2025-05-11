@@ -35,6 +35,18 @@ namespace Online_Bookstore_System.Service
                     };
                 }
 
+                var validation = await _whiteListRepository.GetValidationAsync(userId, convertedBookId);
+
+                if (validation)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "This Book has been already added to whishlist.",
+                        StatusCode = 400
+                    };
+                }
+
                 await _whiteListRepository.AddWhiteListAsync(userId, convertedBookId);
 
                 return new ApiResponseDto

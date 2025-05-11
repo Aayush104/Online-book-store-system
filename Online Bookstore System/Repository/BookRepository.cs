@@ -28,6 +28,27 @@ namespace Online_Bookstore_System.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Book>> GetBestSellersBooks()
+        {
+            var topBookIds = await _context.OrderItems
+                .Where(oi => oi.Order != null && oi.Order.Status == "Completed")
+                .GroupBy(oi => oi.BookId)
+                .OrderByDescending(g => g.Sum(oi => oi.Quantity))
+                .Take(4)
+                .Select(g => g.Key)
+                .ToListAsync();
+
+            var books = await _context.Books
+                .Where(b => topBookIds.Contains(b.BookId))
+                .ToListAsync();
+
+            books = topBookIds
+                .Select(id => books.First(b => b.BookId == id))
+                .ToList();
+
+            return books;
+        }
+
 
 
         public async Task<int> GetBookNumber()
@@ -132,6 +153,16 @@ namespace Online_Bookstore_System.Repository
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<Book>> GetNewReleaseBooks()
+        {
+            var threeMonthsAgo = DateTime.UtcNow.AddMonths(-3);
+
+            return await _context.Books
+                .Where(b => b.PublicationDate >= threeMonthsAgo)
+                .OrderByDescending(b => b.PublicationDate)
+                .Take(4)
+                .ToListAsync();
+        }
 
         public async Task<PagedResult<Book>> GetPaginatedBooksAsync(PaginationParams paginationParams)
         {
@@ -155,6 +186,15 @@ namespace Online_Bookstore_System.Repository
                 TotalPages = totalPages,
                 Items = items
             };
+        }
+
+        public async Task<List<Book>> SpecialDealsBookAsync()
+        {
+            return await _context.Books
+                .Where(b => b.OnSale && b.DiscountPercentage.HasValue)
+                .OrderByDescending (b => b.DiscountPercentage)  
+                .Take(4)   
+                .ToListAsync(); 
         }
 
         public async Task UpdateBook(Book book)

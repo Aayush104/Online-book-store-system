@@ -35,6 +35,15 @@ namespace Online_Bookstore_System.Repository
          .ToListAsync();
         }
 
+        public async Task<bool> GetValidationAsync(string userId, long bookId)
+        {
+            var bookmark = await _context.BookMarks
+               .FirstOrDefaultAsync(b => b.UserId == userId && b.BookId == bookId);
+            if (bookmark == null) return false;
+
+            return true;    
+        }
+
         public async Task<bool> RemoveBookmarkAsync(string userId, long bookId)
         {
             var bookmark = await _context.BookMarks

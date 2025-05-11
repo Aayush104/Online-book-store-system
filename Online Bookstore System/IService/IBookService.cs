@@ -14,6 +14,9 @@ namespace Online_Bookstore_System.IService
 
         Task<ApiResponseDto> UpdateBookAsync(string id, UpdateBookDto updateBookDto);
         Task<ApiResponseDto> DeleteBookAsync(string id);
+        Task<ApiResponseDto> GetNewReleasesBooksAsync();
+        Task<ApiResponseDto> BestSellersBooksAsync();
+        Task<ApiResponseDto> SpecialDealsBookAsync();
 
 
     }

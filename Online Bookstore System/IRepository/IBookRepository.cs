@@ -1,5 +1,6 @@
 ﻿using Online_Bookstore_System.Dto.Pagination;
 using Online_Bookstore_System.Model;
+using Online_Bookstore_System.Repository;
 
 namespace Online_Bookstore_System.IRepository
 {
@@ -10,7 +11,9 @@ namespace Online_Bookstore_System.IRepository
         Task<PagedResult<Book>> GetPaginatedBooksAsync(PaginationParams paginationParams);
         Task<Book> GetBooksById(int BookId);
         Task<List<Book>> GetBooksAsync(BookFilterParams filterParams);
-
+        Task<List<Book>> GetNewReleaseBooks();
+        Task<List<Book>> GetBestSellersBooks();
+        Task<List<Book>> SpecialDealsBookAsync();
         Task UpdateBook(Book book);
         Task DeleteBook(Book book);
 
