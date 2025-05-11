@@ -12,11 +12,11 @@ namespace Online_Bookstore_System.Service
     public class AnouncementService : IAnnouncementService
     {
         private readonly IAnnouncementReposoitory _announcementReposoitory;
-        private readonly IHubContext<Notificationhub> _Context;
+      
         public AnouncementService(IAnnouncementReposoitory announcementReposoitory, IHubContext<Notificationhub> Context)
         {
             _announcementReposoitory = announcementReposoitory;
-            _Context = Context;
+            
         }
         public async  Task<ApiResponseDto> DoAnnouncementAsync(CreateAnnouncementDto announceDto)
         {

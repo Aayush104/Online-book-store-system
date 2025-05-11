@@ -12,8 +12,8 @@ using Online_Bookstore_System.Data;
 namespace Online_Bookstore_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250504133044_BookMarkTable")]
-    partial class BookMarkTable
+    [Migration("20250511142044_AnotherMigration")]
+    partial class AnotherMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,26 +49,6 @@ namespace Online_Bookstore_System.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "b3e23d8c-905f-4bcf-9ef6-27c6b4a235fa",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "f69ad00d-43d9-4d63-a496-4b0aa8f1b37b",
-                            Name = "Staff",
-                            NormalizedName = "STAFF"
-                        },
-                        new
-                        {
-                            Id = "91b5a2e0-1c4a-4db8-a74f-f706303cc258",
-                            Name = "PublicUser",
-                            NormalizedName = "PUBLICUSER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -156,13 +136,6 @@ namespace Online_Bookstore_System.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "754ea22b-c181-4069-9f95-be2ea98f24e8",
-                            RoleId = "b3e23d8c-905f-4bcf-9ef6-27c6b4a235fa"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -184,6 +157,38 @@ namespace Online_Bookstore_System.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Online_Bookstore_System.Model.Announce", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AnnouncemnetDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<bool>("IsAnnounced")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMarked")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Announces");
+                });
+
             modelBuilder.Entity("Online_Bookstore_System.Model.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -198,6 +203,9 @@ namespace Online_Bookstore_System.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -253,26 +261,6 @@ namespace Online_Bookstore_System.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "754ea22b-c181-4069-9f95-be2ea98f24e8",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "48395391-b5d8-45db-a7f3-e8e14488258a",
-                            Email = "Admin123@gmail.com",
-                            EmailConfirmed = true,
-                            FullName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN123@GMAIL.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEITXz6MI0JPla0CU6Dt+pl6/9mFmmzstgHqxXp4OMWJRfZTefhKbDqiu97EtDWLG+g==",
-                            PhoneNumber = "9876543210",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "df09f920-8605-4d06-871c-c0883d07c589",
-                            TwoFactorEnabled = false,
-                            UserName = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("Online_Bookstore_System.Model.Book", b =>
@@ -381,6 +369,107 @@ namespace Online_Bookstore_System.Migrations
                     b.ToTable("BookMarks");
                 });
 
+            modelBuilder.Entity("Online_Bookstore_System.Model.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("Online_Bookstore_System.Model.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
+
+                    b.Property<string>("ClaimCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("DiscountApplied")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("OrderCompletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Online_Bookstore_System.Model.OrderItem", b =>
+                {
+                    b.Property<int>("OrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderItemId"));
+
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("OrderItemId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
             modelBuilder.Entity("Online_Bookstore_System.Model.Otp", b =>
                 {
                     b.Property<int>("Id")
@@ -413,6 +502,40 @@ namespace Online_Bookstore_System.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Otps");
+                });
+
+            modelBuilder.Entity("Online_Bookstore_System.Model.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("Star")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -485,6 +608,55 @@ namespace Online_Bookstore_System.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Online_Bookstore_System.Model.Cart", b =>
+                {
+                    b.HasOne("Online_Bookstore_System.Model.Book", "Book")
+                        .WithMany("Carts")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Online_Bookstore_System.Model.ApplicationUser", "User")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Online_Bookstore_System.Model.Order", b =>
+                {
+                    b.HasOne("Online_Bookstore_System.Model.ApplicationUser", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Online_Bookstore_System.Model.OrderItem", b =>
+                {
+                    b.HasOne("Online_Bookstore_System.Model.Book", "Book")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Online_Bookstore_System.Model.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Online_Bookstore_System.Model.Otp", b =>
                 {
                     b.HasOne("Online_Bookstore_System.Model.ApplicationUser", "User")
@@ -496,16 +668,52 @@ namespace Online_Bookstore_System.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Online_Bookstore_System.Model.Review", b =>
+                {
+                    b.HasOne("Online_Bookstore_System.Model.Book", "Book")
+                        .WithMany("Reviews")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Online_Bookstore_System.Model.ApplicationUser", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Online_Bookstore_System.Model.ApplicationUser", b =>
                 {
                     b.Navigation("Bookmarks");
 
+                    b.Navigation("Carts");
+
+                    b.Navigation("Orders");
+
                     b.Navigation("Otps");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Online_Bookstore_System.Model.Book", b =>
                 {
                     b.Navigation("Bookmarks");
+
+                    b.Navigation("Carts");
+
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("Online_Bookstore_System.Model.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }
