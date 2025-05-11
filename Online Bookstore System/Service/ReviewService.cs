@@ -89,6 +89,7 @@ namespace Online_Bookstore_System.Service
                     BookId = bookId,
                     UserId = userId,
                     Comment = doReviewDto.Comment,
+                    Star = doReviewDto.Star,
                     CreatedAt = DateTime.UtcNow,
                 };
 

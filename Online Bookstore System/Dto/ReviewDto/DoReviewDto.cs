@@ -4,6 +4,7 @@
     {
         public string BookId { get; set; }
 
+        public int? Star { get; set; }
         public string Comment { get; set; }   
     }
 }

@@ -13,6 +13,8 @@ namespace Online_Bookstore_System.Model
         [Required]
         public string UserId { get; set; }
 
+        public int? Star { get; set; }
+
         [Required]
         public long BookId { get; set; }
 
