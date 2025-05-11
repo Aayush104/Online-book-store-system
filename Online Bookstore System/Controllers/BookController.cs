@@ -47,28 +47,33 @@ namespace Online_Bookstore_System.Controllers
         }
 
 
-        //// GET: api/Book/categories
-        //[HttpGet("categories")]
-        //public IActionResult GetBookCategories()
-        //{
-        //    // Logic to return category-wise groupings like Bestsellers, Award Winners, etc.
-        //    return Ok(new { message = "Book categories tabs returned." });
-        //}
+        [HttpGet("NewReleases")]
 
-        //// GET: api/Book/search?query=searchText
-        //[HttpGet("search")]
-        //public IActionResult SearchBooks([FromQuery] string query)
-        //{
-        //    // Logic to search books by title, ISBN, or description
-        //    return Ok(new { message = $"Books matching search: {query}." });
-        //}
+        public async Task<IActionResult> GetNewReleasesBooks()
+        {
+            var response = await _bookService.GetNewReleasesBooksAsync();
 
-        //// GET: api/Book/filters
-        //[HttpGet("filters")]
-        //public IActionResult GetFilterOptions()
-        //{
-        //    // Logic to return available filters (authors, genres, publishers, languages, etc.)
-        //    return Ok(new { message = "Filter options returned." });
-        //}
+            return StatusCode(response.StatusCode, response);
+        }
+
+
+        [HttpGet("BestSellers")]
+
+        public async Task<IActionResult> BestSellersBook()
+        {
+            var response = await _bookService.BestSellersBooksAsync();
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+
+        [HttpGet("SpecialDeals")]
+
+        public async Task<IActionResult> SpecialDealsBook()
+        {
+            var response = await _bookService.SpecialDealsBookAsync();
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

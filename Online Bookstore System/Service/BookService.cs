@@ -6,6 +6,7 @@ using Online_Bookstore_System.Dto.ResponseDto;
 using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.IService;
 using Online_Bookstore_System.Model;
+using System.Net;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Online_Bookstore_System.Service
@@ -418,5 +419,151 @@ namespace Online_Bookstore_System.Service
             }
         }
 
+        public async Task<ApiResponseDto> GetNewReleasesBooksAsync()
+        {
+            try
+            {
+                var books = await _bookRepository.GetNewReleaseBooks();
+
+                var protectedBooks = books.Select(book => new GetBookDto
+                {
+                    BookId = _dataProtector.Protect(book.BookId.ToString()),
+                    Title = book.Title,
+                    Isbn = book.ISBN,
+                    Description = book.Description,
+                    Author = book.Author,
+                    Genre = book.Genre,
+                    Language = book.Language,
+                    BookPhoto = book.BookPhoto,
+                    Format = book.Format,
+                    Publisher = book.Publisher,
+                    PublicationDate = book.PublicationDate,
+                    Price = book.Price,
+                    Stock = book.Stock,
+                    IsAvailableInLibrary = book.IsAvailableInLibrary,
+                    OnSale = book.OnSale,
+                    DiscountPercentage = book.DiscountPercentage,
+                    DiscountStartDate = book.DiscountStartDate,
+                    DiscountEndDate = book.DiscountEndDate,
+                    ExclusiveEdition = book.ExclusiveEdition,
+                    AddedDate = book.AddedDate
+                }).ToList();
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "New release books fetched successfully.",
+                    StatusCode = 200,
+                    Data = protectedBooks
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while fetching new release books. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async  Task<ApiResponseDto> BestSellersBooksAsync()
+        {
+            try
+            {
+                var books = await _bookRepository.GetBestSellersBooks();
+
+                var protectedBooks = books.Select(book => new GetBookDto
+                {
+                    BookId = _dataProtector.Protect(book.BookId.ToString()),
+                    Title = book.Title,
+                    Isbn = book.ISBN,
+                    Description = book.Description,
+                    Author = book.Author,
+                    Genre = book.Genre,
+                    Language = book.Language,
+                    BookPhoto = book.BookPhoto,
+                    Format = book.Format,
+                    Publisher = book.Publisher,
+                    PublicationDate = book.PublicationDate,
+                    Price = book.Price,
+                    Stock = book.Stock,
+                    IsAvailableInLibrary = book.IsAvailableInLibrary,
+                    OnSale = book.OnSale,
+                    DiscountPercentage = book.DiscountPercentage,
+                    DiscountStartDate = book.DiscountStartDate,
+                    DiscountEndDate = book.DiscountEndDate,
+                    ExclusiveEdition = book.ExclusiveEdition,
+                    AddedDate = book.AddedDate
+                }).ToList();
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "New release books fetched successfully.",
+                    StatusCode = 200,
+                    Data = protectedBooks
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while fetching new release books. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> SpecialDealsBookAsync()
+        {
+            try
+            {
+                var books = await _bookRepository.SpecialDealsBookAsync();
+
+                var protectedBooks = books.Select(book => new GetBookDto
+                {
+                    BookId = _dataProtector.Protect(book.BookId.ToString()),
+                    Title = book.Title,
+                    Isbn = book.ISBN,
+                    Description = book.Description,
+                    Author = book.Author,
+                    Genre = book.Genre,
+                    Language = book.Language,
+                    BookPhoto = book.BookPhoto,
+                    Format = book.Format,
+                    Publisher = book.Publisher,
+                    PublicationDate = book.PublicationDate,
+                    Price = book.Price,
+                    Stock = book.Stock,
+                    IsAvailableInLibrary = book.IsAvailableInLibrary,
+                    OnSale = book.OnSale,
+                    DiscountPercentage = book.DiscountPercentage,
+                    DiscountStartDate = book.DiscountStartDate,
+                    DiscountEndDate = book.DiscountEndDate,
+                    ExclusiveEdition = book.ExclusiveEdition,
+                    AddedDate = book.AddedDate
+                }).ToList();
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "New release books fetched successfully.",
+                    StatusCode = 200,
+                    Data = protectedBooks
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while fetching new release books. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
     }
 }
