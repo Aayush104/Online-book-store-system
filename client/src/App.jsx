@@ -28,6 +28,7 @@ import UserOrders from "./pages/user/Orders";
 import StaffOrders from "./pages/Staff/Orders";
 import Wishlist from "./pages/user/Wishlist";
 import Staffs from "./pages/admin/Staffs";
+import SingleBook from "./pages/user/SingleBook";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
               <Route path="cart" element={<Cart />} />
               <Route path="orders" element={<UserOrders />} />
               <Route path="wishlist" element={<Wishlist />} />
+              <Route path="book/:bookId" element={<SingleBook />} />
               {/* Add more user routes as needed */}
             </Route>
 

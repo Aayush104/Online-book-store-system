@@ -556,7 +556,7 @@ const HomePage = () => {
         <div className="space-y-4 w-full">
           {books.map((book) => (
             <Link
-              to={`/book/${book.bookId}`}
+              to={`/user/book/${book.bookId}`}
               key={book.bookId}
               className="block w-full"
             >
