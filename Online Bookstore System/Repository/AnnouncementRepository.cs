@@ -22,7 +22,7 @@ namespace Online_Bookstore_System.Repository
         public async Task<List<Announce>> GetUpcomingAnnouncement()
         {
             return await _dbContext.Announces
-                   .Where(x => !x.IsAnnounced && x.AnnouncemnetDateTime <= DateTime.UtcNow)
+                .Where(x => x.IsAnnounced == false && x.AnnouncemnetDateTime <= DateTime.UtcNow)
                    .ToListAsync();
         }
 

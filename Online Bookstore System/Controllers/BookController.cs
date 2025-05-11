@@ -39,7 +39,7 @@ namespace Online_Bookstore_System.Controllers
 
         [HttpGet("SearchFilterBooks")]
 
-        public async Task<IActionResult> GetBooksById([FromQuery] BookFilterParams filterParams)
+        public async Task<IActionResult> SearchFilterBooks([FromQuery] BookFilterParams filterParams)
         {
             var response = await _bookService.GetFilterBooksAsync(filterParams);
 
