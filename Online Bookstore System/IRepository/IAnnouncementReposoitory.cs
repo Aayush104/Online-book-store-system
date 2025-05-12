@@ -6,5 +6,8 @@ namespace Online_Bookstore_System.IRepository
     {
         Task DoAnnounceAsync(Announce announce);
         Task<List<Announce>> GetUpcomingAnnouncement();
+        Task<List<Announce>> GetActiveAnnouncementsAsync();
+
+     
     }
 }

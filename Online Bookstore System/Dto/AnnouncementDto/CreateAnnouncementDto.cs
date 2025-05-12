@@ -6,5 +6,6 @@
         public string Description { get; set; } 
 
         public DateTime AnnouncementDateTime { get; set; } 
+        public DateTime AnnouncementEndDateTime { get; set; } 
     }
 }
