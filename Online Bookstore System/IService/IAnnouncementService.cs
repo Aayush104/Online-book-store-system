@@ -6,5 +6,6 @@ namespace Online_Bookstore_System.IService
     public interface IAnnouncementService
     {
         Task<ApiResponseDto> DoAnnouncementAsync(CreateAnnouncementDto announceDto);
+        Task<ApiResponseDto> GetActiveAnnouncementsAsync();
     }
 }

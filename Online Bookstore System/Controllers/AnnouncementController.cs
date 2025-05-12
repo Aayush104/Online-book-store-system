@@ -25,7 +25,16 @@ namespace Online_Bookstore_System.Controllers
 
         }
 
-      
-      
+        [HttpGet("active-announcements")]
+        public async Task<IActionResult> GetActiveAnnouncements(CreateAnnouncementDto announcement)
+        {
+            var response = await _announcementService.GetActiveAnnouncementsAsync();
+
+            return StatusCode(response.StatusCode, response);
+
+        }
+
+
+
     }
 }

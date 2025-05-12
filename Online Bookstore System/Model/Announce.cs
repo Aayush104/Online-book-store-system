@@ -15,10 +15,12 @@ namespace Online_Bookstore_System.Model
         [MaxLength(1000)]
         public string Description { get; set; }
 
-        public bool IsMarked { get; set; } = false;
+        public bool Expired { get; set; } = false;
 
         public bool IsAnnounced { get; set; } = false;
         public DateTime AnnouncemnetDateTime { get; set; }
+        public DateTime AnnouncemnetEndDateTime { get; set; }
+
       
 
     }
