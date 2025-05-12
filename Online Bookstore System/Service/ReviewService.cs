@@ -122,7 +122,6 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
-
         public async Task<ApiResponseDto> GetReviewAsync(string bookId)
         {
             try
@@ -148,16 +147,28 @@ namespace Online_Bookstore_System.Service
                         IsSuccess = true,
                         Message = "No reviews found for this book.",
                         StatusCode = 200,
-                        Data = new List<GetReviewDto>()
+                        Data = new
+                        {
+                            AverageStar = 0,
+                            Reviews = new List<GetReviewDto>()
+                        }
                     };
                 }
 
                 var reviewDtos = new List<GetReviewDto>();
+                double totalStars = 0;
+                int starCount = 0;
 
                 foreach (var review in reviews)
-
                 {
                     var user = await _userManager.FindByIdAsync(review.UserId);
+
+                    if (review.Star.HasValue)
+                    {
+                        totalStars += review.Star.Value;
+                        starCount++;
+                    }
+
                     reviewDtos.Add(new GetReviewDto
                     {
                         ReviewId = review.Id,
@@ -168,12 +179,18 @@ namespace Online_Bookstore_System.Service
                     });
                 }
 
+                double averageStar = starCount > 0 ? totalStars / starCount : 0;
+
                 return new ApiResponseDto
                 {
                     IsSuccess = true,
                     Message = "Reviews fetched successfully.",
                     StatusCode = 200,
-                    Data = reviewDtos
+                    Data = new
+                    {
+                        AverageStar = Math.Round(averageStar),
+                        Reviews = reviewDtos
+                    }
                 };
             }
             catch (Exception ex)
@@ -186,6 +203,7 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
+
 
         public async Task<ApiResponseDto> RemoveReviewAsync(int reviewId)
         {

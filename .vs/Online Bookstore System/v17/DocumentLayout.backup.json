@@ -3,44 +3,88 @@
   "WorkspaceRootPath": "D:\\Online Bookstore System\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\repository\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\repository\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\repository\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\repository\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\irepository\\iorderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\irepository\\iorderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\bookcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\bookcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\iservice\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\iservice\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\whitelistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\whitelistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\claimcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\claimcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\bookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\bookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\dto\\orderdto\\completeorderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\dto\\orderdto\\completeorderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\dto\\bookdto\\bookmarkdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\dto\\bookdto\\bookmarkdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\extension\\serviceextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\extension\\serviceextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\mailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\mailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\wishlistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\wishlistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\reviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\reviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\announcementcheckerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\announcementcheckerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\repository\\announcementrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\repository\\announcementrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\model\\announce.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\model\\announce.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\service\\anouncementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\service\\anouncementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\irepository\\iannouncementreposoitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\irepository\\iannouncementreposoitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\iservice\\iannouncementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\iservice\\iannouncementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\controllers\\announcementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\controllers\\announcementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\dto\\announcementdto\\createannouncementdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\dto\\announcementdto\\createannouncementdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\migrations\\20250512074409_for migrtion1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\migrations\\20250512074409_for migrtion1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|d:\\online bookstore system\\online bookstore system\\migrations\\20250512072740_for migrtion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C18A66BB-C763-4FB2-9A94-E69C5C1DD80C}|Online Bookstore System\\Online Bookstore System.csproj|solutionrelative:online bookstore system\\migrations\\20250512072740_for migrtion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -49,8 +93,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 66,
-          "SelectedChildIndex": 13,
+          "DockedHeight": 67,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -70,80 +114,41 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ClaimController.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\ClaimController.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\ClaimController.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\ClaimController.cs",
-              "RelativeToolTip": "Online Bookstore System\\Controllers\\ClaimController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-09T06:43:37.433Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CompleteOrderDto.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\OrderDto\\CompleteOrderDto.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\Dto\\OrderDto\\CompleteOrderDto.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\OrderDto\\CompleteOrderDto.cs",
-              "RelativeToolTip": "Online Bookstore System\\Dto\\OrderDto\\CompleteOrderDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-09T06:42:48.334Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "CartService.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\CartService.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\Service\\CartService.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\CartService.cs",
-              "RelativeToolTip": "Online Bookstore System\\Service\\CartService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE0AAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-09T05:49:46.323Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "CartController.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\CartController.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\CartController.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\CartController.cs",
-              "RelativeToolTip": "Online Bookstore System\\Controllers\\CartController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-09T05:49:33.913Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "OrderRepository.cs",
               "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Repository\\OrderRepository.cs",
               "RelativeDocumentMoniker": "Online Bookstore System\\Repository\\OrderRepository.cs",
               "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Repository\\OrderRepository.cs",
               "RelativeToolTip": "Online Bookstore System\\Repository\\OrderRepository.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAAgwC8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAuwM8AAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T16:53:44.261Z",
+              "WhenOpened": "2025-05-12T11:05:02.85Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "OrdersController.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\OrdersController.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\OrdersController.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\OrdersController.cs",
+              "RelativeToolTip": "Online Bookstore System\\Controllers\\OrdersController.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAYwEMAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T11:03:50.321Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "IOrderRepository.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\IRepository\\IOrderRepository.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\IRepository\\IOrderRepository.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\IRepository\\IOrderRepository.cs",
-              "RelativeToolTip": "Online Bookstore System\\IRepository\\IOrderRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA4AAAAAAAAAA==",
+              "Title": "BookController.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\BookController.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\BookController.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\BookController.cs",
+              "RelativeToolTip": "Online Bookstore System\\Controllers\\BookController.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAYwBgAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T16:53:05.741Z",
+              "WhenOpened": "2025-05-12T11:03:45.904Z",
               "EditorCaption": ""
             },
             {
@@ -154,62 +159,234 @@
               "RelativeDocumentMoniker": "Online Bookstore System\\Service\\OrderService.cs",
               "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\OrderService.cs",
               "RelativeToolTip": "Online Bookstore System\\Service\\OrderService.cs",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAmwE4AAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAALUAAAAAAAAAAAAQwMEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T16:52:15.351Z",
+              "WhenOpened": "2025-05-12T09:07:16.742Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "MailService.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\MailService.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\Service\\MailService.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\MailService.cs",
-              "RelativeToolTip": "Online Bookstore System\\Service\\MailService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "BookmarkDto.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\BookDto\\BookmarkDto.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Dto\\BookDto\\BookmarkDto.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\BookDto\\BookmarkDto.cs",
+              "RelativeToolTip": "Online Bookstore System\\Dto\\BookDto\\BookmarkDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAoAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T16:52:14.426Z"
+              "WhenOpened": "2025-05-12T09:05:25.052Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\AuthService.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Service\\AuthService.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\AuthService.cs",
+              "RelativeToolTip": "Online Bookstore System\\Service\\AuthService.cs",
+              "ViewState": "AgIAAMcAAAAAAAAAAAAlwLIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T08:44:31.484Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ServiceExtension.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Extension\\ServiceExtension.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Extension\\ServiceExtension.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Extension\\ServiceExtension.cs",
+              "RelativeToolTip": "Online Bookstore System\\Extension\\ServiceExtension.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T08:46:00.809Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "IOrderService.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\IService\\IOrderService.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\IService\\IOrderService.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\IService\\IOrderService.cs",
-              "RelativeToolTip": "Online Bookstore System\\IService\\IOrderService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABRAAAAAAAAAA==",
+              "Title": "WhiteListService.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\WhiteListService.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Service\\WhiteListService.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\WhiteListService.cs",
+              "RelativeToolTip": "Online Bookstore System\\Service\\WhiteListService.cs",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAgwG0AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T16:41:21.757Z",
+              "WhenOpened": "2025-05-12T08:43:19.475Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "OrdersController.cs",
-              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\OrdersController.cs",
-              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\OrdersController.cs",
-              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\OrdersController.cs*",
-              "RelativeToolTip": "Online Bookstore System\\Controllers\\OrdersController.cs*",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAMwGcAAAA9AAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "BookService.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\BookService.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Service\\BookService.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\BookService.cs",
+              "RelativeToolTip": "Online Bookstore System\\Service\\BookService.cs",
+              "ViewState": "AgIAAPkAAAAAAAAAAAAowAYBAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T16:37:32.878Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T08:43:05.906Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "WishlistController.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\WishlistController.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\WishlistController.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\WishlistController.cs",
+              "RelativeToolTip": "Online Bookstore System\\Controllers\\WishlistController.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwDwAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T08:42:43.265Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ReviewsController.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\ReviewsController.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\ReviewsController.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\ReviewsController.cs",
+              "RelativeToolTip": "Online Bookstore System\\Controllers\\ReviewsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T08:42:42.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AnnouncementRepository.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Repository\\AnnouncementRepository.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Repository\\AnnouncementRepository.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Repository\\AnnouncementRepository.cs",
+              "RelativeToolTip": "Online Bookstore System\\Repository\\AnnouncementRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:37:12.693Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "IAnnouncementReposoitory.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\IRepository\\IAnnouncementReposoitory.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\IRepository\\IAnnouncementReposoitory.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\IRepository\\IAnnouncementReposoitory.cs",
+              "RelativeToolTip": "Online Bookstore System\\IRepository\\IAnnouncementReposoitory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:36:14.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "IAnnouncementService.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\IService\\IAnnouncementService.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\IService\\IAnnouncementService.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\IService\\IAnnouncementService.cs",
+              "RelativeToolTip": "Online Bookstore System\\IService\\IAnnouncementService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:33:35.992Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AnnouncementCheckerService.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\AnnouncementCheckerService.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Service\\AnnouncementCheckerService.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\AnnouncementCheckerService.cs",
+              "RelativeToolTip": "Online Bookstore System\\Service\\AnnouncementCheckerService.cs",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAYwG0AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:28:12.123Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "CreateAnnouncementDto.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\AnnouncementDto\\CreateAnnouncementDto.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Dto\\AnnouncementDto\\CreateAnnouncementDto.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Dto\\AnnouncementDto\\CreateAnnouncementDto.cs",
+              "RelativeToolTip": "Online Bookstore System\\Dto\\AnnouncementDto\\CreateAnnouncementDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:20:48.538Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AnnouncementController.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\AnnouncementController.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Controllers\\AnnouncementController.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Controllers\\AnnouncementController.cs",
+              "RelativeToolTip": "Online Bookstore System\\Controllers\\AnnouncementController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:20:45.645Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Announce.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Model\\Announce.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Model\\Announce.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Model\\Announce.cs",
+              "RelativeToolTip": "Online Bookstore System\\Model\\Announce.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA6wBcAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:20:17.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AnouncementService.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\AnouncementService.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Service\\AnouncementService.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Service\\AnouncementService.cs",
+              "RelativeToolTip": "Online Bookstore System\\Service\\AnouncementService.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAApwE4AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:11:01.896Z"
             }
           ]
         },
         {
-          "DockedHeight": 6,
-          "SelectedChildIndex": -1,
+          "DockedHeight": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "20250512074409_For Migrtion1.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Migrations\\20250512074409_For Migrtion1.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Migrations\\20250512074409_For Migrtion1.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Migrations\\20250512074409_For Migrtion1.cs",
+              "RelativeToolTip": "Online Bookstore System\\Migrations\\20250512074409_For Migrtion1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:44:10.099Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "20250512072740_For Migrtion.cs",
+              "DocumentMoniker": "D:\\Online Bookstore System\\Online Bookstore System\\Migrations\\20250512072740_For Migrtion.cs",
+              "RelativeDocumentMoniker": "Online Bookstore System\\Migrations\\20250512072740_For Migrtion.cs",
+              "ToolTip": "D:\\Online Bookstore System\\Online Bookstore System\\Migrations\\20250512072740_For Migrtion.cs",
+              "RelativeToolTip": "Online Bookstore System\\Migrations\\20250512072740_For Migrtion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:27:40.603Z"
+            },
+            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
             }
           ]
         }

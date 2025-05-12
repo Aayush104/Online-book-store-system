@@ -143,29 +143,7 @@ namespace Online_Bookstore_System.Service
         }
 
 
-        public async Task<ApiResponseDto> GetAllCompletedOrderAsync()
-        {
-            try
-            {
-                var orders = await _orderRepository.GetAllCompletedOrder();
-                return new ApiResponseDto
-                {
-                    IsSuccess = true,
-                    StatusCode = 200,
-                    Message = "Orders retrieved successfully.",
-                    Data = orders
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResponseDto
-                {
-                    IsSuccess = false,
-                    Message = $"An error occurred while retrieving orders: {ex.Message}",
-                    StatusCode = 500
-                };
-            }
-        }
+     
 
         public async Task<ApiResponseDto> GetAllOrderAsync()
         {
