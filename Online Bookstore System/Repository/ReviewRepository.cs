@@ -60,6 +60,8 @@ namespace Online_Bookstore_System.Repository
 
         public async Task<List<Review>> GetReviews(long bookId)
         {
+
+                    
             return await _context.Reviews.Where(x => x.BookId == bookId).ToListAsync();
             
         }

@@ -35,7 +35,7 @@ namespace Online_Bookstore_System.Controllers
 
         }
 
-        [HttpGet("GetAllPendingOrders")]
+        [HttpGet("GetAllOrders")]
 
         public async Task<IActionResult> GetAllPendingOrders()
         {
@@ -45,14 +45,7 @@ namespace Online_Bookstore_System.Controllers
         }
 
 
-        [HttpGet("GetAllCompletedOrders")]
-
-        public async Task<IActionResult> GetAllCompletedOrders()
-        {
-
-            var response = await _orderService.GetAllCompletedOrderAsync();
-            return StatusCode(response.StatusCode, response);
-        }
+      
 
 
         [HttpGet("GetOrderById")]

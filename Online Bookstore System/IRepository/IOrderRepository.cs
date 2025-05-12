@@ -9,7 +9,7 @@ namespace Online_Bookstore_System.IRepository
         Task AddOrderAsync(Order order);
 
         Task <List<GetAllOrderDto>> GetAllPendingOrder();
-        Task <List<GetAllOrderDto>> GetAllCompletedOrder();
+   
         Task <List<Order>> GetAllUserCompletedOrder();
         Task <List<GetAllOrderDto>> GetAllOrderById(string userId);
         Task <List<GetAllOrderDto>> GetAllOrderByClaimCode(string claimCode);
