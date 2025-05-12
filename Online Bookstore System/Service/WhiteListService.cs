@@ -83,11 +83,11 @@ namespace Online_Bookstore_System.Service
                     };
                 }
 
-                var result = bookmarks.Select(b => new
+                var result = bookmarks.Select(b => new BookmarkDto
                 {
-                    b.Id,
-                    b.BookId,
-                    b.BookmarkedOn,
+                    Id = b.Id,
+                    BookId = _dataProtector.Protect(b.BookId.ToString()),
+                    BookmarkedOn = b.BookmarkedOn,
                     BookTitle = b.Book?.Title,
                     BookAuthor = b.Book?.Author,
                     ISBN = b.Book?.ISBN,
@@ -118,6 +118,7 @@ namespace Online_Bookstore_System.Service
                 };
             }
         }
+
 
         public async Task<ApiResponseDto> RemoveWhiteListAsync(string BookId, string userId)
         {
