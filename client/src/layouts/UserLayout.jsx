@@ -17,6 +17,7 @@ import Footer from "../components/Footer";
 import { Outlet } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, selectTheme } from "../features/userSlice";
+import AnnouncementBanner from "../components/AnnouncementBanner";
 
 const UserLayout = ({ children }) => {
   const dispatch = useDispatch();
@@ -424,6 +425,8 @@ const UserLayout = ({ children }) => {
           </div>
         )}
       </header>
+
+      <AnnouncementBanner />
 
       {/* Main Content */}
       <main className="flex-1 mx-auto px-3 sm:px-4 py-6 max-w-7xl">

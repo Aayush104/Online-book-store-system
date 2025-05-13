@@ -29,6 +29,7 @@ import StaffOrders from "./pages/Staff/Orders";
 import Wishlist from "./pages/user/Wishlist";
 import Staffs from "./pages/admin/Staffs";
 import SingleBook from "./pages/user/SingleBook";
+import AnnouncementManagement from "./pages/admin/Announcement";
 
 function App() {
   return (
@@ -46,6 +47,10 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path="books" element={<AdminBooks />} />
               <Route path="staffs" element={<Staffs />} />
+              <Route
+                path="announcements"
+                element={<AnnouncementManagement />}
+              />
               {/* Add more admin routes as needed */}
             </Route>
 
