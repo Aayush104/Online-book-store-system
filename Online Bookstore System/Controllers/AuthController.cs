@@ -99,5 +99,22 @@ namespace Online_Bookstore_System.Controllers
             var response = await _authService.SetStaffStatusAsync(userId);
             return StatusCode(response.StatusCode, response);
         }
+
+
+        [HttpGet("GetStaffById/{userId}")]
+        public async Task<IActionResult> GetStaffById(string userId)
+        {
+            var response = await _authService.GetStaffByIdAsync(userId);
+            return StatusCode(response.StatusCode, response);
+
+
+        }
+        [HttpPut("UpdateStaff")]
+        public async Task<IActionResult> UpdateStaff([FromBody] StaffUpdateDto staffDto)
+        {
+
+
+        }
+
     }
 }

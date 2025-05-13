@@ -98,7 +98,9 @@ namespace Online_Bookstore_System.Service
                     StaffId = _dataProtector.Protect(user.Id),
                     StaffName = user.FullName, 
                     Email = user.Email,
-                    PhoneNumber = user.PhoneNumber
+                    PhoneNumber = user.PhoneNumber,
+                    CreatedAt = user.CreatedAt,   
+
                 }).ToList();
 
                 return new ApiResponseDto
@@ -116,6 +118,65 @@ namespace Online_Bookstore_System.Service
                     IsSuccess = false,
                     Message = $"An error occurred while fetching staff. {ex.Message}",
                     StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> GetStaffByIdAsync(string userId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "User ID is required.",
+                        StatusCode = 400,
+                        Data = null
+                    };
+                }
+
+                var unprotectedUserId = _dataProtector.Unprotect(userId);
+
+                var user = await _userManager.FindByIdAsync(unprotectedUserId);
+                if (user == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "User not found.",
+                        StatusCode = 404,
+                        Data = null
+                    };
+                }
+
+                var staffDetails = new
+                {
+                    StaffId = user.Id,
+                    StaffName = user.FullName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    FullName = user.FullName,
+                    CreatedAt = user.CreatedAt, 
+                };
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Staff details fetched successfully.",
+                    StatusCode = 200,
+                    Data = staffDetails
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while fetching staff: {ex.Message}",
+                    StatusCode = 500,
+                    Data = null
                 };
             }
         }
