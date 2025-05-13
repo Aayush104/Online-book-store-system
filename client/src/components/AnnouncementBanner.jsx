@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from "react";
-import api from "../services/api";
+import signalRService from "../services/signalRService";
 
-// Simple component to display active announcements
 const AnnouncementBanner = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [dismissed, setDismissed] = useState(false);
 
-  // Function to check for real-time announcements from SignalR
   useEffect(() => {
-    // Set up connection to SignalR hub
-    const connectToSignalR = async () => {
-      const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/notificationhub")
-        .withAutomaticReconnect()
-        .build();
+    // Initialize SignalR connection
+    signalRService.initConnection().catch((err) => {
+      console.error("Failed to connect to SignalR:", err);
+    });
 
-      // Handler for receiving notifications
-      connection.on("ReceiveNotification", (notification) => {
-        if (notification.type === "announcement") {
+    // Add listener for new announcements
+    const unsubscribe = signalRService.addListener(
+      "notification",
+      (notification) => {
+        console.log("Received notification in banner:", notification);
+
+        // Check for type: "announcement" OR type: "Order"
+        if (
+          notification.type === "announcement" ||
+          notification.type === "Order"
+        ) {
+          console.log(
+            "Processing notification for banner display:",
+            notification
+          );
+
           // Add new announcement to the list
           setAnnouncements((prev) => {
-            // Check if this announcement already exists
+            // Check if this notification already exists
             const exists = prev.some((a) => a.id === notification.id);
             if (!exists) {
               // Add to the beginning of the list
@@ -29,7 +38,7 @@ const AnnouncementBanner = () => {
                 {
                   id: notification.id,
                   title: notification.title,
-                  description: notification.description,
+                  description: notification.description || notification.content,
                   timestamp: notification.timestamp,
                 },
                 ...prev,
@@ -44,38 +53,8 @@ const AnnouncementBanner = () => {
           // Set focus to the new announcement
           setActiveIndex(0);
         }
-      });
-
-      // Start the connection
-      try {
-        await connection.start();
-        console.log("SignalR connected");
-      } catch (err) {
-        console.error("SignalR connection error:", err);
       }
-
-      // Clean up on unmount
-      return () => {
-        if (connection.state === "Connected") {
-          connection.stop();
-        }
-      };
-    };
-
-    // Initial fetch of active announcements
-    const fetchAnnouncements = async () => {
-      try {
-        const response = await api.get("/api/Announcement");
-        if (response.data && response.data.length > 0) {
-          setAnnouncements(response.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch announcements:", error);
-      }
-    };
-
-    fetchAnnouncements();
-    connectToSignalR();
+    );
 
     // Check local storage for dismissed state
     const dismissedTime = localStorage.getItem("announcementDismissed");
@@ -89,20 +68,27 @@ const AnnouncementBanner = () => {
       }
     }
 
+    // Clean up on unmount
+    return () => {
+      unsubscribe(); // Remove the SignalR notification listener
+    };
+  }, []);
+
+  // Set up auto-rotation for announcements
+  useEffect(() => {
+    if (announcements.length <= 1) return;
+
     // Auto-rotate announcements every 5 seconds if more than one
-    let rotationInterval;
-    if (announcements.length > 1) {
-      rotationInterval = setInterval(() => {
-        setActiveIndex((prev) => (prev + 1) % announcements.length);
-      }, 5000);
-    }
+    const rotationInterval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % announcements.length);
+    }, 5000);
 
     return () => {
-      if (rotationInterval) clearInterval(rotationInterval);
+      clearInterval(rotationInterval);
     };
   }, [announcements.length]);
 
-  // If no announcements or dismissed, don't render
+  // If no announcements, don't render
   if (announcements.length === 0 || dismissed) {
     return null;
   }
@@ -122,8 +108,12 @@ const AnnouncementBanner = () => {
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
         <div className="flex-1">
           <span className="font-bold">{activeAnnouncement.title}</span>
-          {" - "}
-          <span>{activeAnnouncement.description}</span>
+          {activeAnnouncement.description && (
+            <>
+              {" - "}
+              <span>{activeAnnouncement.description}</span>
+            </>
+          )}
         </div>
 
         <div className="flex items-center space-x-2">
@@ -136,6 +126,7 @@ const AnnouncementBanner = () => {
                   )
                 }
                 className="p-1 opacity-75 hover:opacity-100 transition-opacity focus:outline-none"
+                aria-label="Previous announcement"
               >
                 <i className="fas fa-chevron-left text-sm"></i>
               </button>
@@ -150,6 +141,8 @@ const AnnouncementBanner = () => {
                         ? "bg-white"
                         : "bg-white bg-opacity-50"
                     }`}
+                    aria-label={`Announcement ${idx + 1}`}
+                    role="button"
                   ></div>
                 ))}
               </div>
@@ -159,6 +152,7 @@ const AnnouncementBanner = () => {
                   setActiveIndex((prev) => (prev + 1) % announcements.length)
                 }
                 className="p-1 opacity-75 hover:opacity-100 transition-opacity focus:outline-none"
+                aria-label="Next announcement"
               >
                 <i className="fas fa-chevron-right text-sm"></i>
               </button>
@@ -168,6 +162,7 @@ const AnnouncementBanner = () => {
           <button
             onClick={handleDismiss}
             className="p-1 opacity-75 hover:opacity-100 transition-opacity focus:outline-none"
+            aria-label="Dismiss announcement"
           >
             <i className="fas fa-times text-sm"></i>
           </button>

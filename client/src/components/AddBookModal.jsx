@@ -369,7 +369,7 @@ const AddBookModal = ({ isOpen, onClose, bookToEdit = null }) => {
                 <input
                   type="text"
                   name="ISBN"
-                  value={formData.Isbn || ""}
+                  value={formData.ISBN || formData.isbn || ""}
                   onChange={handleChange}
                   required
                   className={inputClassName}
