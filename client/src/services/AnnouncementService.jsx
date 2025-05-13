@@ -33,7 +33,7 @@ export const getAllAnnouncements = async () => {
   checkToken();
 
   try {
-    const response = await api.get("/Announcement/all");
+    const response = await api.get("/Announcement/active-announcements");
     logDebug("All announcements response:", response);
     return response;
   } catch (error) {

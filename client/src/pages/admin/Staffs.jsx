@@ -29,7 +29,7 @@ const Staffs = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
+    staffName: "",
     email: "",
     phoneNumber: "",
   });
@@ -39,75 +39,35 @@ const Staffs = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingStaffId, setEditingStaffId] = useState(null);
 
-  // Mock data for initial display
-  const mockStaffs = [
-    {
-      id: 1,
-      fullName: "John Doe",
-      email: "john.doe@example.com",
-      phoneNumber: "+977 9812345678",
-      role: "Store Manager",
-      joinDate: "2024-01-15",
-    },
-    {
-      id: 2,
-      fullName: "Jane Smith",
-      email: "jane.smith@example.com",
-      phoneNumber: "+977 9823456789",
-      role: "Book Specialist",
-      joinDate: "2024-02-20",
-    },
-    {
-      id: 3,
-      fullName: "Michael Johnson",
-      email: "michael.j@example.com",
-      phoneNumber: "+977 9834567890",
-      role: "Sales Associate",
-      joinDate: "2024-03-10",
-    },
-    {
-      id: 4,
-      fullName: "Emily Williams",
-      email: "emily.w@example.com",
-      phoneNumber: "+977 9845678901",
-      role: "Customer Service",
-      joinDate: "2024-03-15",
-    },
-  ];
-
   // Fetch staff data
   const fetchStaffs = async () => {
     setLoading(true);
     try {
       // For development, using mock data
       // In production, uncomment this and use API call
-      /*
-      const response = await api.get(`/api/Staff?page=${currentPage}&pageSize=10&search=${searchTerm}`);
+
+      const response = await api.get(
+        `https://localhost:7219/api/Auth/GetAllStaff`
+      );
+      console.log(response.isSuccess);
       if (response.isSuccess && response.data) {
-        setStaffs(response.data.items || []);
+        setStaffs(response.data || []);
         setTotalPages(response.data.totalPages || 1);
+        setLoading(false);
       } else {
-        showToast({ 
-          type: "error", 
-          message: "Failed to fetch staff data" 
+        showToast({
+          type: "error",
+          message: "Failed to fetch staff data",
         });
-        setStaffs(mockStaffs);
       }
-      */
 
       // Using mock data for now
-      setTimeout(() => {
-        setStaffs(mockStaffs);
-        setTotalPages(1);
-        setLoading(false);
-      }, 600);
     } catch (error) {
       console.error("Error fetching staff:", error);
       showToast({
         type: "error",
         message: "An error occurred while fetching staff data",
       });
-      setStaffs(mockStaffs);
       setLoading(false);
     }
   };
@@ -159,7 +119,7 @@ const Staffs = () => {
   // Open modal for creating new staff
   const openCreateModal = () => {
     setFormData({
-      fullName: "",
+      staffName: "",
       email: "",
       phoneNumber: "",
     });
@@ -170,7 +130,7 @@ const Staffs = () => {
   // Open modal for editing staff
   const openEditModal = (staff) => {
     setFormData({
-      fullName: staff.fullName,
+      staffName: staff.staffName,
       email: staff.email,
       phoneNumber: staff.phoneNumber,
     });
@@ -188,7 +148,7 @@ const Staffs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.fullName || !formData.email || !formData.phoneNumber) {
+    if (!formData.staffName || !formData.email || !formData.phoneNumber) {
       showToast({
         type: "error",
         message: "Please fill all the required fields",
@@ -380,10 +340,10 @@ const Staffs = () => {
                               : "bg-primary-100 text-primary-600"
                           }`}
                         >
-                          {staff.fullName?.charAt(0).toUpperCase() || "?"}
+                          {staff.staffName?.charAt(0).toUpperCase() || "?"}
                         </div>
                       </div>
-                      <span>{staff.fullName}</span>
+                      <span>{staff.staffName}</span>
                     </div>
                   </td>
                   <td className="py-3 px-6 text-left">{staff.email}</td>
@@ -396,7 +356,7 @@ const Staffs = () => {
                           : "bg-primary-100 text-primary-600"
                       }`}
                     >
-                      {staff.role}
+                      {staff.role || "Staff"}
                     </span>
                   </td>
                   <td className="py-3 px-6 text-left">{staff.joinDate}</td>
@@ -454,8 +414,8 @@ const Staffs = () => {
                 </label>
                 <input
                   type="text"
-                  name="fullName"
-                  value={formData.fullName}
+                  name="staffName"
+                  value={formData.staffName}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-[var(--border)] rounded-md bg-[var(--surface)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="Enter full name"
