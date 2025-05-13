@@ -110,9 +110,10 @@ namespace Online_Bookstore_System.Controllers
 
         }
         [HttpPut("UpdateStaff")]
-        public async Task<IActionResult> UpdateStaff([FromBody] StaffUpdateDto staffDto)
+        public async Task<IActionResult> UpdateStaff([FromBody] UpdateStaffDto staffDto)
         {
-
+            var response = await _authService.UpdateStaffAsync(staffDto);
+            return StatusCode(response.StatusCode, response);
 
         }
 

@@ -394,5 +394,61 @@ namespace Online_Bookstore_System.Service
             }
         }
 
+        public async Task<ApiResponseDto> UpdateStaffAsync(UpdateStaffDto staffDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(staffDto.UserId))
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "User ID is required.",
+                        StatusCode = 400
+                    };
+                }
+
+                var decrypteduserId = _dataProtector.Unprotect(staffDto.UserId);
+
+                var user = await _userManager.FindByIdAsync(decrypteduserId);
+                if (user == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "User not found.",
+                        StatusCode = 404
+                    };
+                }
+
+              
+                user.FullName = staffDto.FullName ?? user.FullName;
+                user.PhoneNumber = staffDto.PhoneNumber ?? user.PhoneNumber;
+                user.Address = staffDto.Address ?? user.Address;
+
+                await _userManager.UpdateAsync(user);
+
+              
+
+                return new ApiResponseDto
+                {
+                    IsSuccess = true,
+                    Message = "Staff details updated successfully.",
+                    StatusCode = 200
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred while updating staff details. {ex.Message}",
+                    StatusCode = 500
+                };
+            }
+        }
+
+
     }
+
 }
