@@ -140,11 +140,11 @@ const Login = () => {
         console.log(userRole);
         // Redirect to dashboard or home
 
-        if (userRole == "PublicUser") {
+        if (userRole === "PublicUser") {
           navigate("/user");
-        } else if (userRole == "Admin") {
+        } else if (userRole === "Admin") {
           navigate("/admin");
-        } else if (userRole == "Staff") {
+        } else if (userRole === "Staff") {
           navigate("/staff");
         } else {
           navigate("/login");
@@ -172,7 +172,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-neutral-50 dark:bg-neutral-900">
+    <div className="min-h-screen w-full bg-[var(--background)]">
       <div className="flex h-screen">
         {/* Left Side - Form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
@@ -180,18 +180,18 @@ const Login = () => {
             {/* Mobile Logo */}
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-2">
-                <BookOpenIcon className="h-8 w-8 text-emerald-600" />
-                <span className="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100">
+                <BookOpenIcon className="h-8 w-8 text-primary-600" />
+                <span className="text-2xl font-display font-bold text-[var(--text-primary)]">
                   BookHaven
                 </span>
               </div>
             </div>
 
-            <div className="p-8 rounded-2xl">
-              <h2 className="text-2xl font-display font-bold text-center text-neutral-900 dark:text-neutral-100 mb-6">
+            <div className="">
+              <h2 className="text-2xl font-display font-bold text-center text-[var(--text-primary)] mb-6">
                 Welcome Back
               </h2>
-              <p className="text-center text-neutral-600 dark:text-neutral-400 mb-8">
+              <p className="text-center text-[var(--text-secondary)] mb-8">
                 Login to access your library
               </p>
 
@@ -199,17 +199,17 @@ const Login = () => {
               <form onSubmit={handleLogin} className="space-y-6">
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                     Email Address
                   </label>
                   <div className="relative">
-                    <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
+                    <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--text-secondary)]" />
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                      className="w-full pl-10 pr-4 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -222,23 +222,23 @@ const Login = () => {
 
                 {/* Password */}
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                     Password
                   </label>
                   <div className="relative">
-                    <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
+                    <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--text-secondary)]" />
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-10 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                      className="w-full pl-10 pr-10 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                       placeholder="••••••••"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                     >
                       {showPassword ? (
                         <EyeSlashIcon className="h-5 w-5" />
@@ -263,11 +263,11 @@ const Login = () => {
                       type="checkbox"
                       checked={formData.rememberMe}
                       onChange={handleChange}
-                      className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-neutral-300 rounded"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-[var(--border)] rounded"
                     />
                     <label
                       htmlFor="remember-me"
-                      className="ml-2 block text-sm text-neutral-700 dark:text-neutral-300"
+                      className="ml-2 block text-sm text-[var(--text-secondary)]"
                     >
                       Remember me
                     </label>
@@ -277,7 +277,7 @@ const Login = () => {
                     <button
                       type="button"
                       onClick={() => navigate("/forgot-password")}
-                      className="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                      className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
                     >
                       Forgot password?
                     </button>
@@ -288,7 +288,7 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
+                  className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                 >
                   {loading ? "Signing in..." : "Sign in"}
                 </button>
@@ -296,11 +296,11 @@ const Login = () => {
 
               {/* Register Link */}
               <div className="mt-8 text-center">
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                <p className="text-sm text-[var(--text-secondary)]">
                   Don't have an account?{" "}
                   <button
                     onClick={() => navigate("/register")}
-                    className="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                    className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
                   >
                     Create one now
                   </button>
@@ -312,7 +312,7 @@ const Login = () => {
             <div className="mt-8 text-center">
               <button
                 onClick={() => navigate("/")}
-                className="inline-flex items-center text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors"
+                className="inline-flex items-center text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               >
                 <ArrowLeftIcon className="h-4 w-4 mr-2" />
                 Back to home
@@ -338,7 +338,7 @@ const Login = () => {
                   className="h-full w-full object-cover"
                 />
                 {/* Overlay with theme colors */}
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/80 via-emerald-800/50 to-emerald-700/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-primary-800/50 to-primary-700/30" />
               </div>
             ))}
           </div>

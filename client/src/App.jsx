@@ -13,7 +13,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/admin/Dashbaord";
 import Landing from "./pages/Landing";
-import UserHome from "./pages/user/Home";
+import UserHome from "./pages/user/Books";
+import Books from "./pages/user/Home";
 import StaffDashboard from "./pages/Staff/Dashboard";
 
 // Import any other admin pages
@@ -59,6 +60,7 @@ function App() {
               <Route index element={<UserHome />} />
               {/* <Route path="books" element={<UserBooks />} /> */}
               <Route path="cart" element={<Cart />} />
+              <Route path="books" element={<Books />} />
               <Route path="orders" element={<UserOrders />} />
               <Route path="wishlist" element={<Wishlist />} />
               <Route path="book/:bookId" element={<SingleBook />} />

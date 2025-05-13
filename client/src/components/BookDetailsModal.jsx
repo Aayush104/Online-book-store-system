@@ -17,6 +17,8 @@ import {
   FiStar,
   FiHome,
 } from "react-icons/fi";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const BookDetailsModal = ({
   isOpen,
@@ -54,12 +56,34 @@ const BookDetailsModal = ({
       return "Invalid date";
     }
   };
+  const [userRole, setUserRole] = useState(null);
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          // Decode the token to get user role
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          setUserRole(payload.Role || null);
+        }
+      } catch (error) {
+        console.error("Token verification failed:", error);
+        localStorage.removeItem("token");
+        setUserRole(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   const activeDiscount = isDiscountActive();
   const discountedPrice = calculateDiscountedPrice();
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 dark:bg-black dark:bg-opacity-80 z-50 flex justify-center items-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-gray-800/30 dark:bg-black/30 z-50 flex justify-center items-center p-4 overflow-y-auto">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
         <div className="relative">
           {/* Header with close button */}
@@ -156,25 +180,37 @@ const BookDetailsModal = ({
                   )}
                 </div>
 
-                {/* Action Buttons */}
-                {book.stock > 0 && (
+                {book.stock > 0 && userRole !== "Admin" && (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <button
-                      onClick={() => onAddToCart && onAddToCart(book.bookId)}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-800"
-                    >
-                      <FiShoppingCart className="mr-2" />
-                      Add to Cart
-                    </button>
-                    <button
-                      onClick={() =>
-                        onAddToWishlist && onAddToWishlist(book.bookId)
-                      }
-                      className="bg-white hover:bg-gray-100 text-indigo-600 border border-indigo-600 py-2 px-4 rounded-full flex items-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-indigo-400 dark:border-indigo-400"
-                    >
-                      <FiHeart className="mr-2" />
-                      Add to Wishlist
-                    </button>
+                    {userRole === "Customer" ? (
+                      // Regular customer buttons
+                      <>
+                        <button
+                          onClick={() => onAddToCart?.(book.bookId)}
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-200"
+                        >
+                          <FiShoppingCart className="mr-2" />
+                          Add to Cart
+                        </button>
+                        <button
+                          onClick={() => onBuyNow?.(book.bookId)}
+                          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-200"
+                        >
+                          <FiCreditCard className="mr-2" />
+                          Buy Now
+                        </button>
+                        <button
+                          onClick={() => onAddToWishlist?.(book.bookId)}
+                          className="bg-white hover:bg-gray-100 text-indigo-600 border border-indigo-600 py-2 px-4 rounded-full flex items-center transition-colors duration-200"
+                        >
+                          <FiHeart className="mr-2" />
+                          Add to Wishlist
+                        </button>
+                      </>
+                    ) : (
+                      // Guest buttons (when userRole is null/undefined or any other non-customer role)
+                      <></>
+                    )}
                   </div>
                 )}
               </div>

@@ -244,7 +244,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-neutral-50 dark:bg-neutral-900">
+    <div className="min-h-screen w-full bg-[var(--background)]">
       <div className="flex h-screen">
         {/* Left Side - Image Carousel */}
         <div className="hidden lg:flex lg:w-1/2 relative">
@@ -263,7 +263,7 @@ const Register = () => {
                   className="h-full w-full object-cover"
                 />
                 {/* Overlay with theme colors */}
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/80 via-emerald-800/50 to-emerald-700/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-primary-800/50 to-primary-700/30" />
               </div>
             ))}
           </div>
@@ -273,7 +273,7 @@ const Register = () => {
             {/* Logo */}
             <div className="flex items-center space-x-2">
               <BookOpenIcon className="h-8 w-8" />
-              <span className="text-2xl font-display font-bold">BookHaven</span>
+              <span className="text-2xl font-display font-bold">BookVerse</span>
             </div>
 
             {/* Quote Section */}
@@ -327,36 +327,34 @@ const Register = () => {
             {/* Mobile Logo */}
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-2">
-                <BookOpenIcon className="h-8 w-8 text-emerald-600" />
-                <span className="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100">
+                <BookOpenIcon className="h-8 w-8 text-primary-600" />
+                <span className="text-2xl font-display font-bold text-[var(--text-primary)]">
                   BookHaven
                 </span>
               </div>
             </div>
 
-            <div className=" p-8 rounded-2xl   ">
+            <div className="bg-[var(--surface)] p-8 rounded-2xl border border-[var(--border)]">
               {/* Progress Steps */}
               <div className="flex items-center justify-center mb-6">
                 <div className="flex items-center">
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${
-                      step === 1 ? "bg-emerald-600" : "bg-emerald-500"
+                      step === 1 ? "bg-primary-600" : "bg-primary-500"
                     }`}
                   >
                     {step === 1 ? "1" : <CheckCircleIcon className="w-5 h-5" />}
                   </div>
                   <div
                     className={`w-16 h-0.5 mx-2 ${
-                      step === 2
-                        ? "bg-emerald-600"
-                        : "bg-neutral-200 dark:bg-neutral-700"
+                      step === 2 ? "bg-primary-600" : "bg-[var(--border)]"
                     }`}
                   />
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center ${
                       step === 2
-                        ? "bg-emerald-600 text-white"
-                        : "bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400"
+                        ? "bg-primary-600 text-white"
+                        : "bg-[var(--surface)] border border-[var(--border)] text-[var(--text-secondary)]"
                     }`}
                   >
                     2
@@ -364,7 +362,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-display font-bold text-center text-neutral-900 dark:text-neutral-100 mb-6">
+              <h2 className="text-2xl font-display font-bold text-center text-[var(--text-primary)] mb-6">
                 {step === 1 ? "Create Account" : "Verify Email"}
               </h2>
 
@@ -373,17 +371,17 @@ const Register = () => {
                 <form onSubmit={handleRegister} className="space-y-4">
                   {/* Full Name */}
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                       Full Name
                     </label>
                     <div className="relative">
-                      <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
+                      <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--text-secondary)]" />
                       <input
                         type="text"
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-4 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                        className="w-full pl-10 pr-4 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                         placeholder="John Doe"
                       />
                     </div>
@@ -396,17 +394,17 @@ const Register = () => {
 
                   {/* Email */}
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                       Email Address
                     </label>
                     <div className="relative">
-                      <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
+                      <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--text-secondary)]" />
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-4 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                        className="w-full pl-10 pr-4 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -420,23 +418,23 @@ const Register = () => {
                   {/* Password Fields */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                      <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                         Password
                       </label>
                       <div className="relative">
-                        <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
+                        <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--text-secondary)]" />
                         <input
                           type={showPassword ? "text" : "password"}
                           name="password"
                           value={formData.password}
                           onChange={handleChange}
-                          className="w-full pl-10 pr-10 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                          className="w-full pl-10 pr-10 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                           placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                         >
                           {showPassword ? (
                             <EyeSlashIcon className="h-5 w-5" />
@@ -453,17 +451,17 @@ const Register = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                      <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                         Confirm Password
                       </label>
                       <div className="relative">
-                        <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
+                        <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--text-secondary)]" />
                         <input
                           type={showConfirmPassword ? "text" : "password"}
                           name="confirmPassword"
                           value={formData.confirmPassword}
                           onChange={handleChange}
-                          className="w-full pl-10 pr-10 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                          className="w-full pl-10 pr-10 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                           placeholder="••••••••"
                         />
                         <button
@@ -471,7 +469,7 @@ const Register = () => {
                           onClick={() =>
                             setShowConfirmPassword(!showConfirmPassword)
                           }
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                         >
                           {showConfirmPassword ? (
                             <EyeSlashIcon className="h-5 w-5" />
@@ -490,7 +488,7 @@ const Register = () => {
 
                   {/* Phone Number */}
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                       Phone Number
                     </label>
                     <div className="relative">
@@ -499,7 +497,7 @@ const Register = () => {
                         onClick={() =>
                           setIsCountryDropdownOpen(!isCountryDropdownOpen)
                         }
-                        className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 px-1 py-1 rounded"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center text-[var(--text-primary)] hover:bg-[var(--background)] px-1 py-1 rounded"
                       >
                         <span className="mr-1">{selectedCountry.flag}</span>
                         <span>{selectedCountry.dialCode}</span>
@@ -510,12 +508,12 @@ const Register = () => {
                         name="phoneNumber"
                         value={formData.phoneNumber}
                         onChange={handlePhoneChange}
-                        className="w-full pl-24 pr-4 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                        className="w-full pl-24 pr-4 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                         placeholder="Phone number"
                       />
 
                       {isCountryDropdownOpen && (
-                        <div className="absolute z-10 mt-1 w-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg">
+                        <div className="absolute z-10 mt-1 w-full bg-[var(--surface)] border border-[var(--border)] rounded-lg shadow-lg">
                           {countries.map((country) => (
                             <button
                               key={country.code}
@@ -524,13 +522,13 @@ const Register = () => {
                                 setSelectedCountry(country);
                                 setIsCountryDropdownOpen(false);
                               }}
-                              className="w-full flex items-center px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
+                              className="w-full flex items-center px-4 py-2 hover:bg-[var(--background)] text-[var(--text-primary)]"
                             >
                               <span className="mr-2">{country.flag}</span>
                               <span className="flex-1 text-left">
                                 {country.name}
                               </span>
-                              <span className="text-neutral-500 dark:text-neutral-400">
+                              <span className="text-[var(--text-secondary)]">
                                 {country.dialCode}
                               </span>
                             </button>
@@ -547,17 +545,17 @@ const Register = () => {
 
                   {/* Address */}
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                       Address
                     </label>
                     <div className="relative">
-                      <MapPinIcon className="absolute left-3 top-3 h-5 w-5 text-neutral-400" />
+                      <MapPinIcon className="absolute left-3 top-3 h-5 w-5 text-[var(--text-secondary)]" />
                       <textarea
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
-                        rows="2"
-                        className="w-full pl-10 pr-4 py-2.5 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none"
+                        rows="1"
+                        className="w-full pl-10 pr-4 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-none"
                         placeholder="Your address"
                       />
                     </div>
@@ -572,7 +570,7 @@ const Register = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
+                    className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                   >
                     {loading ? "Creating Account..." : "Create Account"}
                   </button>
@@ -583,13 +581,13 @@ const Register = () => {
               {step === 2 && (
                 <form onSubmit={handleVerifyOtp} className="space-y-6">
                   <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
-                      <EnvelopeIcon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                      <EnvelopeIcon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                     </div>
-                    <p className="text-neutral-600 dark:text-neutral-400">
+                    <p className="text-[var(--text-secondary)]">
                       We've sent a verification code to
                       <br />
-                      <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                      <span className="font-medium text-[var(--text-primary)]">
                         {formData.email}
                       </span>
                     </p>
@@ -602,7 +600,7 @@ const Register = () => {
                       onChange={(e) =>
                         setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
                       }
-                      className="w-full px-4 py-3 text-center text-2xl tracking-widest border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-4 py-3 text-center text-2xl tracking-widest border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                       placeholder="000000"
                       maxLength="6"
                     />
@@ -616,7 +614,7 @@ const Register = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
+                    className="w-full py-3 px-4 border border-transparent rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                   >
                     {loading ? "Verifying..." : "Verify Email"}
                   </button>
@@ -624,7 +622,7 @@ const Register = () => {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="w-full text-sm text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                    className="w-full text-sm text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
                   >
                     ← Back to registration
                   </button>
@@ -635,10 +633,10 @@ const Register = () => {
               <div className="mt-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-neutral-200 dark:border-neutral-700"></div>
+                    <div className="w-full border-t border-[var(--border)]"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400">
+                    <span className="px-2 bg-[var(--surface)] text-[var(--text-secondary)]">
                       Already have an account?
                     </span>
                   </div>
@@ -646,25 +644,25 @@ const Register = () => {
 
                 <button
                   onClick={() => navigate("/login")}
-                  className="mt-4 w-full py-3 px-4 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 font-medium transition-colors"
+                  className="mt-4 w-full py-3 px-4 border border-[var(--border)] rounded-lg text-[var(--text-primary)] bg-[var(--surface)] hover:bg-[var(--background)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 font-medium transition-colors"
                 >
                   Sign in instead
                 </button>
               </div>
 
               {/* Terms */}
-              <p className="mt-6 text-center text-xs text-neutral-500 dark:text-neutral-400">
+              <p className="mt-6 text-center text-xs text-[var(--text-secondary)]">
                 By creating an account, you agree to our{" "}
                 <a
                   href="#"
-                  className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                  className="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
                 >
                   Terms of Service
                 </a>{" "}
                 and{" "}
                 <a
                   href="#"
-                  className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                  className="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
                 >
                   Privacy Policy
                 </a>
