@@ -1,27 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Library, Mail, Phone, MapPin } from "lucide-react";
+import { useSelector } from "react-redux";
+import { selectTheme } from "../features/userSlice";
+
+// Import logo images directly from assets
+import darkLogo from "../assets/dark.png";
+import lightLogo from "../assets/light.png";
 
 const Footer = () => {
+  const theme = useSelector(selectTheme);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Update isDarkMode state whenever theme changes or on initial render
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const isDark = document.documentElement.classList.contains("dark");
+      setIsDarkMode(isDark);
+    }
+  }, [theme]);
+
+  // Add MutationObserver to track DOM changes for theme
+  useEffect(() => {
+    if (typeof document !== "undefined" && window.MutationObserver) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            mutation.type === "attributes" &&
+            mutation.attributeName === "class"
+          ) {
+            setIsDarkMode(document.documentElement.classList.contains("dark"));
+          }
+        });
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, []);
+
   return (
-    <footer className="bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700">
+    <footer className="bg-[var(--surface)] border-t border-[var(--border)]">
       <div className="mx-auto px-3 sm:px-4 py-12 max-w-[85vw]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Company Info */}
           <div className="md:col-span-5">
             <a href="/" className="flex items-center mb-6">
-              <div className="flex items-center justify-center w-10 h-10 bg-emerald-600 rounded-lg text-white">
-                <Library size={20} />
-              </div>
-              <div className="ml-2">
-                <span className="font-bold text-xl text-neutral-900 dark:text-white">
-                  BookHaven
-                </span>
-                <span className="block text-[10px] text-neutral-500 dark:text-neutral-400 -mt-1">
-                  Book store website
-                </span>
-              </div>
+              {/* Logo that changes based on theme */}
+              <img
+                src={isDarkMode ? darkLogo : lightLogo}
+                alt="BookVerse Logo"
+                className="h-20"
+              />
             </a>
-            <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-6">
+            <p className="text-[var(--text-secondary)] text-sm mb-6">
               A private book library expanding its reach by retailing books
               online. Browse our extensive catalog and enjoy exclusive benefits
               for our members.
@@ -32,9 +69,9 @@ const Footer = () => {
               <div className="flex items-start">
                 <MapPin
                   size={18}
-                  className="text-emerald-600 dark:text-emerald-400 mr-3 mt-0.5 flex-shrink-0"
+                  className="text-primary-600 dark:text-primary-400 mr-3 mt-0.5 flex-shrink-0"
                 />
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                <p className="text-sm text-[var(--text-secondary)]">
                   Itahari International College
                   <br />
                   Sundarharaincha, Morang
@@ -45,19 +82,19 @@ const Footer = () => {
               <div className="flex items-center">
                 <Phone
                   size={18}
-                  className="text-emerald-600 dark:text-emerald-400 mr-3 flex-shrink-0"
+                  className="text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0"
                 />
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                <p className="text-sm text-[var(--text-secondary)]">
                   +977 1234567890
                 </p>
               </div>
               <div className="flex items-center">
                 <Mail
                   size={18}
-                  className="text-emerald-600 dark:text-emerald-400 mr-3 flex-shrink-0"
+                  className="text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0"
                 />
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                  info@bookhaven.com
+                <p className="text-sm text-[var(--text-secondary)]">
+                  info@bookverse.com
                 </p>
               </div>
             </div>
@@ -66,7 +103,7 @@ const Footer = () => {
             <div className="flex mt-6 space-x-3">
               <a
                 href="#"
-                className="h-9 w-9 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-600 dark:text-neutral-400 hover:bg-emerald-500 hover:text-white transition-colors"
+                className="h-9 w-9 rounded-full bg-[var(--background)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-primary-500 hover:text-white transition-colors"
               >
                 <svg
                   className="h-5 w-5"
@@ -83,7 +120,7 @@ const Footer = () => {
               </a>
               <a
                 href="#"
-                className="h-9 w-9 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-600 dark:text-neutral-400 hover:bg-emerald-500 hover:text-white transition-colors"
+                className="h-9 w-9 rounded-full bg-[var(--background)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-primary-500 hover:text-white transition-colors"
               >
                 <svg
                   className="h-5 w-5"
@@ -96,7 +133,7 @@ const Footer = () => {
               </a>
               <a
                 href="#"
-                className="h-9 w-9 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-600 dark:text-neutral-400 hover:bg-emerald-500 hover:text-white transition-colors"
+                className="h-9 w-9 rounded-full bg-[var(--background)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-primary-500 hover:text-white transition-colors"
               >
                 <svg
                   className="h-5 w-5"
@@ -116,14 +153,14 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="md:col-span-2">
-            <h3 className="font-semibold text-lg text-neutral-600 dark:text-white mb-4">
+            <h3 className="font-semibold text-lg text-[var(--text-primary)] mb-4">
               Books
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a
                   href="/fiction"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Fiction
                 </a>
@@ -131,7 +168,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/non-fiction"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Non-Fiction
                 </a>
@@ -139,7 +176,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/bestsellers"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Bestsellers
                 </a>
@@ -147,7 +184,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/award-winners"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Award Winners
                 </a>
@@ -155,7 +192,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/new-releases"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   New Releases
                 </a>
@@ -165,14 +202,14 @@ const Footer = () => {
 
           {/* Categories */}
           <div className="md:col-span-2">
-            <h3 className="font-semibold text-lg text-neutral-900 dark:text-white mb-4">
+            <h3 className="font-semibold text-lg text-[var(--text-primary)] mb-4">
               Categories
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a
                   href="/mystery"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Mystery
                 </a>
@@ -180,7 +217,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/sci-fi"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Science Fiction
                 </a>
@@ -188,7 +225,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/biography"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Biography
                 </a>
@@ -196,7 +233,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/history"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   History
                 </a>
@@ -204,7 +241,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/children"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Children's Books
                 </a>
@@ -214,14 +251,14 @@ const Footer = () => {
 
           {/* Account */}
           <div className="md:col-span-3">
-            <h3 className="font-semibold text-lg text-neutral-900 dark:text-white mb-4">
+            <h3 className="font-semibold text-lg text-[var(--text-primary)] mb-4">
               My Account
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a
                   href="/user/settings"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Profile Settings
                 </a>
@@ -229,7 +266,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/user/orders"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   My Orders
                 </a>
@@ -237,7 +274,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/user/whitelist"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Wishlist
                 </a>
@@ -245,7 +282,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/user/cart"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Shopping Cart
                 </a>
@@ -253,7 +290,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/help"
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Help & Support
                 </a>
@@ -262,16 +299,16 @@ const Footer = () => {
 
             {/* Newsletter Signup */}
             <div className="mt-6">
-              <h4 className="font-medium text-sm text-neutral-500 dark:text-neutral-400 uppercase mb-2">
+              <h4 className="font-medium text-sm text-[var(--text-secondary)] uppercase mb-2">
                 Subscribe to Newsletter
               </h4>
               <div className="flex">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="px-4 py-2 flex-1 rounded-l-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="px-4 py-2 flex-1 rounded-l-md border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
                 />
-                <button className="px-4 py-2 bg-emerald-600 text-white rounded-r-md hover:bg-emerald-700 transition-colors text-sm font-medium">
+                <button className="px-4 py-2 bg-primary-600 text-white rounded-r-md hover:bg-primary-700 transition-colors text-sm font-medium">
                   Subscribe
                 </button>
               </div>
@@ -280,9 +317,9 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-neutral-200 dark:border-neutral-700 mt-10 pt-8 text-center">
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            &copy; {new Date().getFullYear()} BookHaven. All rights reserved.
+        <div className="border-t border-[var(--border)] mt-10 pt-8 text-center">
+          <p className="text-sm text-[var(--text-secondary)]">
+            &copy; {new Date().getFullYear()} BookVerse. All rights reserved.
           </p>
         </div>
       </div>
