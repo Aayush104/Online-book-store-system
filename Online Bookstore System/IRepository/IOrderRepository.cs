@@ -15,6 +15,6 @@ namespace Online_Bookstore_System.IRepository
         Task <List<GetAllOrderDto>> GetAllOrderByClaimCode(string claimCode);
         Task <bool> CancelOrderAsync(string userId, int OrderId);
 
-        Task<string> CompleteOrderAsync(string claimcode);
+        Task<(string UserId, List<OrderItem> OrderItems)> CompleteOrderAsync(string claimCode);
     }
 }

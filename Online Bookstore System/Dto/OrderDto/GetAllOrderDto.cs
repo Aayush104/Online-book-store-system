@@ -8,6 +8,9 @@
             public DateTime OrderDate { get; set; }
             public decimal TotalAmount { get; set; }
             public decimal DiscountApplied { get; set; }
+
+        public string? FullName { get; set; }
+        public string? Email { get; set; }
             public List<GetOrderItemDto> OrderItems { get; set; }
         
     }
