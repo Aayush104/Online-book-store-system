@@ -210,5 +210,10 @@ namespace Online_Bookstore_System.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateBooksStockAsync(IEnumerable<Book> books)
+        {
+            _context.Books.UpdateRange(books);
+            await _context.SaveChangesAsync();
+        }
     }
 }

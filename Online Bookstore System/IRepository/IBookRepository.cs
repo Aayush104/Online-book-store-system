@@ -19,5 +19,7 @@ namespace Online_Bookstore_System.IRepository
 
         Task<List<Book>> GetBooksByIdsAsync(IEnumerable<long> bookIds);
 
+        Task UpdateBooksStockAsync(IEnumerable<Book> books);
+
     }
 }

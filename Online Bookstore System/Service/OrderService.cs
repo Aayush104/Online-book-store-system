@@ -105,7 +105,20 @@ namespace Online_Bookstore_System.Service
              
                 var books = await _bookRepository.GetBooksByIdsAsync(bookIds);
 
-                
+
+                foreach (var oi in orderItems)
+                {
+                    var book = books.FirstOrDefault(b => b.BookId == oi.BookId);
+                    if (book != null)
+                    {
+                       
+                        var qty = oi.Quantity;
+                        book.Stock = Math.Max(0, book.Stock - qty);
+                    }
+                }
+
+                await _bookRepository.UpdateBooksStockAsync(books);
+
                 var bookTitles = books.Select(b => b.Title).ToList();
                 var booksList = string.Join(", ", bookTitles);
 
