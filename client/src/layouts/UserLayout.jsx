@@ -13,27 +13,89 @@ import {
 } from "lucide-react";
 import ThemeToggle from "../components/ThemeToggle";
 import Footer from "../components/Footer";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, selectTheme } from "../features/userSlice";
 import AnnouncementBanner from "../components/AnnouncementBanner";
+import darkLogo from "../assets/dark.png";
+import lightLogo from "../assets/light.png";
+import StatsService from "../services/StatsService";
 
 const UserLayout = ({ children }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [wishlistCount, setWishlistCount] = useState(15);
-  const [cartCount, setCartCount] = useState(2);
+  const [wishlistCount, setWishlistCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  // Mock user data (this would come from your auth system)
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
     avatar: "/api/placeholder/40/40",
-  };
+    role: "",
+    id: "",
+  });
 
   const theme = useSelector(selectTheme);
+
+  // Check for token and user role on component mount
+  useEffect(() => {
+    // Get token from localStorage
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      // Decode JWT token
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userRole = payload.Role;
+      const userName = payload.Name;
+      const userEmail = payload.Email;
+      const userId = payload.UserId;
+
+      // Set user data
+      setUser({
+        name: userName,
+        email: userEmail,
+        avatar: "/api/placeholder/40/40",
+        role: userRole,
+        id: userId,
+      });
+
+      // If not a public user, redirect to login
+      if (userRole !== "PublicUser") {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // Fetch cart and wishlist counts
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Fetch cart and wishlist count
+        const cartsAndWishlistResponse =
+          await StatsService.getCartsAndWishlistCount();
+
+        if (cartsAndWishlistResponse) {
+          // Update counts from API response
+          setWishlistCount(cartsAndWishlistResponse.wishlistCount || 0);
+          setCartCount(cartsAndWishlistResponse.cartCount || 0);
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -54,7 +116,6 @@ const UserLayout = ({ children }) => {
     }
   };
 
-  // FIXED: Modified logout function to use Redux instead of directly clearing localStorage
   const handleLogout = () => {
     // Use Redux action to properly logout
     dispatch(logoutUser());
@@ -85,17 +146,12 @@ const UserLayout = ({ children }) => {
             {/* Logo */}
             <div className="flex items-center">
               <a href="/" className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 bg-primary-600 rounded-lg text-white">
-                  <Library size={20} />
-                </div>
-                <div className="ml-2">
-                  <span className="font-bold text-xl font-display text-[var(--text-primary)]">
-                    BookHaven
-                  </span>
-                  <span className="block text-[10px] text-[var(--text-secondary)] -mt-1">
-                    Book store website
-                  </span>
-                </div>
+                {/* Logo based on theme */}
+                <img
+                  src={theme === "dark" ? darkLogo : lightLogo}
+                  alt="BookHaven Logo"
+                  className="h-14 w-auto"
+                />
               </a>
             </div>
 

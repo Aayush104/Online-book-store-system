@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   ArrowRightIcon,
@@ -10,9 +10,11 @@ import {
   Heart,
   ShoppingCart,
   Star,
+  Clock,
 } from "lucide-react";
 import CartService from "../../services/CartService";
 import WishlistService from "../../services/WishlistService";
+import AnnouncementService from "../../services/AnnouncementService";
 import { useToast } from "../../components/Toast";
 
 // Direct API URL instead of using BookService
@@ -40,8 +42,13 @@ const Books = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplayEnabled, setAutoplayEnabled] = useState(true);
 
-  // Hero slider data
-  const heroSlides = [
+  // State for active announcements
+  const [activeAnnouncements, setActiveAnnouncements] = useState([]);
+  const [announcementsLoaded, setAnnouncementsLoaded] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState({});
+
+  // Default hero slider data
+  const defaultHeroSlides = [
     {
       id: 1,
       image:
@@ -49,7 +56,7 @@ const Books = () => {
       title: "Discover Your Next Great Read",
       subtitle: "Explore our vast collection of books from all genres",
       ctaText: "Browse Collection",
-      ctaLink: "/books",
+      ctaLink: "/user/books",
       color: "from-blue-600/90 to-indigo-800/90",
     },
     {
@@ -60,7 +67,7 @@ const Books = () => {
       subtitle:
         "Get your hands on exclusive signed copies and special editions",
       ctaText: "View Exclusives",
-      ctaLink: "/exclusives",
+      ctaLink: "/user/exclusives",
       color: "from-purple-600/90 to-indigo-800/90",
     },
     {
@@ -70,10 +77,13 @@ const Books = () => {
       title: "Summer Reading Sale",
       subtitle: "Up to 40% off on selected titles this season",
       ctaText: "Shop Sale",
-      ctaLink: "/deals",
+      ctaLink: "/user/deals",
       color: "from-primary-600/90 to-emerald-800/90",
     },
   ];
+
+  // Combined hero slides (announcements + default)
+  const [heroSlides, setHeroSlides] = useState(defaultHeroSlides);
 
   // Animation variants
   const fadeInUp = {
@@ -121,6 +131,103 @@ const Books = () => {
       }
     }
   }, []);
+
+  // Fetch active announcements and update hero slides
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await AnnouncementService.getActiveAnnouncements();
+
+        if (response.isSuccess && response.data && response.data.length > 0) {
+          // Map announcements to hero slide format
+          const announcementSlides = response.data.map(
+            (announcement, index) => {
+              // Parse dates
+              const endDate = new Date(announcement.endDate);
+
+              // Calculate time remaining
+              const timeRemainingObj = calculateTimeRemaining(endDate);
+              setTimeRemaining((prev) => ({
+                ...prev,
+                [announcement.id]: timeRemainingObj,
+              }));
+
+              // Generate a color based on the announcement id or index
+              const colorOptions = [
+                "from-red-600/90 to-orange-700/90",
+                "from-green-600/90 to-teal-700/90",
+                "from-blue-600/90 to-indigo-700/90",
+                "from-purple-600/90 to-pink-700/90",
+              ];
+
+              const color = colorOptions[index % colorOptions.length];
+
+              return {
+                id: `announcement-${announcement.id}`,
+                image:
+                  announcement.image ||
+                  "https://images.unsplash.com/photo-1519682337058-a94d519337bc?q=80&w=2070&auto=format&fit=crop",
+                title: announcement.title,
+                subtitle: announcement.description,
+                ctaText: "Explore Now",
+                ctaLink: "/user/deals",
+                color: color,
+                isAnnouncement: true,
+                endDate: endDate,
+                announcementId: announcement.id,
+              };
+            }
+          );
+
+          // Combine announcement slides with default slides
+          setHeroSlides([...announcementSlides, ...defaultHeroSlides]);
+          setActiveAnnouncements(response.data);
+        }
+        setAnnouncementsLoaded(true);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+        setAnnouncementsLoaded(true);
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
+
+  // Update time remaining for announcements
+  useEffect(() => {
+    if (activeAnnouncements.length === 0) return;
+
+    const interval = setInterval(() => {
+      activeAnnouncements.forEach((announcement) => {
+        const endDate = new Date(announcement.endDate);
+        const timeRemainingObj = calculateTimeRemaining(endDate);
+
+        setTimeRemaining((prev) => ({
+          ...prev,
+          [announcement.id]: timeRemainingObj,
+        }));
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [activeAnnouncements]);
+
+  // Calculate time remaining helper function
+  const calculateTimeRemaining = (endDate) => {
+    const total = endDate - new Date();
+    if (total <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0, expired: true };
+    }
+
+    const days = Math.floor(total / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (total % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((total % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((total % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds, expired: false };
+  };
 
   // Fetch wishlist items if user is logged in
   useEffect(() => {
@@ -340,6 +447,11 @@ const Books = () => {
     }
   };
 
+  // Format time for countdown display
+  const formatTime = (time) => {
+    return time < 10 ? `0${time}` : time;
+  };
+
   // Book card component
   const BookCard = ({ book }) => {
     const isBookmarked = wishlistItems.includes(book.bookId);
@@ -482,7 +594,7 @@ const Books = () => {
             <p className="text-[var(--text-secondary)]">{subtitle}</p>
           </div>
           <Link
-            to={viewAllLink}
+            to={viewAllLink.startsWith("/user") ? viewAllLink : `/user/books`}
             className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
           >
             View All <ArrowRightIcon className="ml-1 h-4 w-4" />
@@ -509,63 +621,133 @@ const Books = () => {
     <div className="min-h-screen bg-[var(--background)]">
       {/* Hero Carousel */}
       <section className="relative">
-        <div className="relative h-[500px] md:h-[600px] overflow-hidden">
-          {heroSlides.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentSlide ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <img
-                src={slide.image}
-                alt={slide.title}
-                className="w-full h-full object-cover"
-              />
-              <div
-                className={`absolute inset-0 bg-gradient-to-r ${slide.color}`}
-              />
-
-              <div className="absolute inset-0 flex items-center">
-                <div className="max-w-7xl mx-auto px-6 w-full">
+        <div className="relative h-[500px] md:h-[600px] overflow-hidden w-full">
+          <AnimatePresence mode="wait">
+            {heroSlides.map(
+              (slide, index) =>
+                index === currentSlide && (
                   <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={
-                      index === currentSlide
-                        ? { opacity: 1, y: 0 }
-                        : { opacity: 0, y: 30 }
-                    }
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="max-w-xl text-white"
+                    key={slide.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0 w-full"
                   >
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-                      {slide.title}
-                    </h1>
-                    <p className="text-lg sm:text-xl mb-8 text-white/90">
-                      {slide.subtitle}
-                    </p>
-                    <Link
-                      to={slide.ctaLink}
-                      className="px-6 py-3 bg-white text-primary-800 font-medium rounded-lg hover:bg-primary-50 transition-colors"
-                    >
-                      {slide.ctaText}
-                    </Link>
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r ${slide.color}`}
+                    />
+
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="container mx-auto px-6 w-full">
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
+                          className="max-w-xl text-white"
+                        >
+                          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
+                            {slide.title}
+                          </h1>
+                          <p className="text-lg sm:text-xl mb-4 text-white/90">
+                            {slide.subtitle}
+                          </p>
+
+                          {/* Countdown timer for announcements */}
+                          {slide.isAnnouncement &&
+                            slide.announcementId &&
+                            timeRemaining[slide.announcementId] &&
+                            !timeRemaining[slide.announcementId].expired && (
+                              <div className="mb-6">
+                                <div className="flex items-center gap-1 text-white/90 mb-2">
+                                  <Clock size={16} />
+                                  <span className="text-sm font-medium">
+                                    Offer ends in:
+                                  </span>
+                                </div>
+                                <div className="flex space-x-3">
+                                  {timeRemaining[slide.announcementId].days >
+                                    0 && (
+                                    <div className="bg-black/30 px-3 py-2 rounded text-center">
+                                      <div className="text-xl font-bold">
+                                        {
+                                          timeRemaining[slide.announcementId]
+                                            .days
+                                        }
+                                      </div>
+                                      <div className="text-xs text-white/80">
+                                        Days
+                                      </div>
+                                    </div>
+                                  )}
+                                  <div className="bg-black/30 px-3 py-2 rounded text-center">
+                                    <div className="text-xl font-bold">
+                                      {formatTime(
+                                        timeRemaining[slide.announcementId]
+                                          .hours
+                                      )}
+                                    </div>
+                                    <div className="text-xs text-white/80">
+                                      Hours
+                                    </div>
+                                  </div>
+                                  <div className="bg-black/30 px-3 py-2 rounded text-center">
+                                    <div className="text-xl font-bold">
+                                      {formatTime(
+                                        timeRemaining[slide.announcementId]
+                                          .minutes
+                                      )}
+                                    </div>
+                                    <div className="text-xs text-white/80">
+                                      Mins
+                                    </div>
+                                  </div>
+                                  <div className="bg-black/30 px-3 py-2 rounded text-center">
+                                    <div className="text-xl font-bold">
+                                      {formatTime(
+                                        timeRemaining[slide.announcementId]
+                                          .seconds
+                                      )}
+                                    </div>
+                                    <div className="text-xs text-white/80">
+                                      Secs
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                          <Link
+                            to={slide.ctaLink}
+                            className="px-6 py-3 bg-white text-primary-800 font-medium rounded-lg hover:bg-primary-50 transition-colors"
+                          >
+                            {slide.ctaText}
+                          </Link>
+                        </motion.div>
+                      </div>
+                    </div>
                   </motion.div>
-                </div>
-              </div>
-            </div>
-          ))}
+                )
+            )}
+          </AnimatePresence>
 
           {/* Navigation buttons */}
           <button
             onClick={prevSlide}
             className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors z-10"
+            aria-label="Previous slide"
           >
             <ChevronLeft size={24} />
           </button>
           <button
             onClick={nextSlide}
             className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors z-10"
+            aria-label="Next slide"
           >
             <ChevronRight size={24} />
           </button>
@@ -576,11 +758,12 @@ const Books = () => {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                className={`transition-all ${
                   index === currentSlide
-                    ? "w-8 bg-white"
-                    : "bg-white/50 hover:bg-white/70"
-                }`}
+                    ? "w-8 h-2.5 bg-white"
+                    : "w-2.5 h-2.5 bg-white/50 hover:bg-white/70"
+                } rounded-full`}
+                aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
@@ -668,7 +851,7 @@ const Books = () => {
               title="Featured Books"
               subtitle="Handpicked selections from our catalogue"
               books={featuredBooks}
-              viewAllLink="/books"
+              viewAllLink="/user/books"
             />
 
             {/* Bestsellers Section */}
@@ -676,7 +859,7 @@ const Books = () => {
               title="Bestsellers"
               subtitle="Our most popular titles that readers love"
               books={bestSellers}
-              viewAllLink="/bestsellers"
+              viewAllLink="/user/bestsellers"
             />
 
             {/* New Releases Section */}
@@ -684,7 +867,7 @@ const Books = () => {
               title="New Releases"
               subtitle="Hot off the press and ready for your bookshelf"
               books={newReleases}
-              viewAllLink="/new-releases"
+              viewAllLink="/user/new-releases"
             />
 
             {/* Special Deals Section */}
@@ -692,7 +875,7 @@ const Books = () => {
               title="Special Deals"
               subtitle="Limited-time offers at unbeatable prices"
               books={specialDeals}
-              viewAllLink="/deals"
+              viewAllLink="/user/deals"
             />
           </>
         )}

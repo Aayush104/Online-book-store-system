@@ -42,19 +42,13 @@ export const checkReviewEligibility = async (bookId) => {
  * @param {string} comment - The review comment
  * @returns {Promise} - The API response
  */
-export const submitReview = async (bookId, comment) => {
-  logDebug("Submitting review for book", {
-    bookId,
-    commentLength: comment.length,
-  });
-  checkToken();
-  console.log(comment);
-  console.log(bookId);
+export const submitReview = async (bookId, comment, rating) => {
   try {
     // Create the request payload
     const reviewData = {
       BookId: bookId,
       Comment: comment,
+      Star: rating,
     };
 
     const response = await api.post("/Reviews/DoReview", reviewData, {

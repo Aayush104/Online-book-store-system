@@ -40,6 +40,7 @@ const Wishlist = () => {
         }
       } catch (error) {
         console.error("Failed to fetch wishlist:", error);
+        setItems([]);
         setError(
           error.message || "Failed to load your wishlist. Please try again."
         );
@@ -152,7 +153,7 @@ const Wishlist = () => {
             Your Wishlist
           </h1>
           <Link
-            to="/user"
+            to="/user/books"
             className="inline-flex items-center text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-2" />
@@ -175,7 +176,7 @@ const Wishlist = () => {
               Try Again
             </button>
           </div>
-        ) : items.length === 0 ? (
+        ) : items?.length === 0 ? (
           <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] p-8 text-center">
             <div className="flex justify-center mb-4">
               <BookOpenIcon className="h-16 w-16 text-[var(--text-secondary)]" />
@@ -187,7 +188,7 @@ const Wishlist = () => {
               Browse our collection and bookmark your favorite books!
             </p>
             <button
-              onClick={() => navigate("/user")}
+              onClick={() => navigate("/user/books")}
               className="px-6 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition"
             >
               Browse Books

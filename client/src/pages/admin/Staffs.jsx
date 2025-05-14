@@ -359,7 +359,9 @@ const Staffs = () => {
                       {staff.role || "Staff"}
                     </span>
                   </td>
-                  <td className="py-3 px-6 text-left">{staff.joinDate}</td>
+                  <td className="py-3 px-6 text-left">
+                    {new Date(staff.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="py-3 px-6 text-center">
                     <div className="flex justify-center items-center space-x-3">
                       <button

@@ -67,13 +67,56 @@ const Orders = () => {
     sortDirection,
     dateRangeFilter,
   ]);
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    avatar: "/api/placeholder/40/40",
+    role: "",
+    id: "",
+  });
+  // Check for token and user role on component mount
+  useEffect(() => {
+    // Get token from localStorage
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      // Decode JWT token
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userRole = payload.Role;
+      const userName = payload.Name;
+      const userEmail = payload.Email;
+      const userId = payload.UserId;
+
+      // Set user data
+      setUser({
+        name: userName,
+        email: userEmail,
+        avatar: "/api/placeholder/40/40",
+        role: userRole,
+        id: userId,
+      });
+
+      // If not a public user, redirect to login
+      if (userRole !== "PublicUser") {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const fetchOrders = async () => {
     setIsLoading(true);
     setError(null);
     try {
       // Changed from getOrderById to getMyOrders to get all user orders
-      const response = await OrderService.getOrderById();
+      const response = await OrderService.getOrderById(user.id);
       if (response.isSuccess && response.data) {
         console.log(response.data);
         setOrders(response.data);

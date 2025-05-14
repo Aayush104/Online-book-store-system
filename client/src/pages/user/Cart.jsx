@@ -353,7 +353,7 @@ const Cart = () => {
               Browse our collection and discover your next favorite book!
             </p>
             <button
-              onClick={() => navigate("/user")}
+              onClick={() => navigate("/user/books")}
               className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors font-medium"
             >
               Continue Shopping
@@ -473,7 +473,7 @@ const Cart = () => {
               {/* Continue shopping button */}
               <div className="mt-6">
                 <button
-                  onClick={() => navigate("/user")}
+                  onClick={() => navigate("/user/books")}
                   className="inline-flex items-center text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   <ArrowLeftIcon className="h-4 w-4 mr-2" />

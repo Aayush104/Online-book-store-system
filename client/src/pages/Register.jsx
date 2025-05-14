@@ -334,7 +334,7 @@ const Register = () => {
               </div>
             </div>
 
-            <div className="bg-[var(--surface)] p-8 rounded-2xl border border-[var(--border)]">
+            <div className=" p-8 ">
               {/* Progress Steps */}
               <div className="flex items-center justify-center mb-6">
                 <div className="flex items-center">

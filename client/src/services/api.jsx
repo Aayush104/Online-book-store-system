@@ -1,4 +1,3 @@
-// api.js - Improved version with fixes for token persistence
 import axios from "axios";
 
 // Base URL for all API calls
