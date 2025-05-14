@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useCallback } from "react";
 import {
   FiClock,
   FiCheck,
@@ -17,11 +16,13 @@ import {
   FiCalendar,
   FiDollarSign,
   FiShoppingBag,
+  FiSlash,
 } from "react-icons/fi";
 import OrderService from "../../services/OrderService";
 import { useToast } from "../../components/Toast";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../features/userSlice";
+import { useEffect, useState, useCallback, useMemo } from "react";
 
 const Orders = () => {
   // Custom toast hook
@@ -34,8 +35,7 @@ const Orders = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // State variables
-  const [pendingOrders, setPendingOrders] = useState([]);
-  const [completedOrders, setCompletedOrders] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
   const [activeTab, setActiveTab] = useState("pending");
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,11 +44,14 @@ const Orders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [processingOrderId, setProcessingOrderId] = useState(null);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [itemDetailsModal, setItemDetailsModal] = useState(false);
+  const [selectedOrderItems, setSelectedOrderItems] = useState(false);
 
   // Stats state
   const [orderStats, setOrderStats] = useState({
     pendingCount: 0,
     completedTodayCount: 0,
+    cancelledCount: 0,
     weeklyCount: 0,
     totalOrderValue: 0,
   });
@@ -98,6 +101,28 @@ const Orders = () => {
     }
   }, []);
 
+  // Get orders by status
+  const getOrdersByStatus = useCallback(
+    (status) => {
+      return allOrders.filter((order) => order.status === status);
+    },
+    [allOrders]
+  );
+
+  // Get pending, completed, and cancelled orders
+  const pendingOrders = useMemo(
+    () => getOrdersByStatus("Pending"),
+    [getOrdersByStatus]
+  );
+  const completedOrders = useMemo(
+    () => getOrdersByStatus("Completed"),
+    [getOrdersByStatus]
+  );
+  const cancelledOrders = useMemo(
+    () => getOrdersByStatus("Cancelled"),
+    [getOrdersByStatus]
+  );
+
   // Calculate order statistics
   const calculateOrderStats = useCallback(() => {
     // Get today's date at midnight
@@ -114,11 +139,11 @@ const Orders = () => {
     ).length;
 
     // Count all orders in the last 7 days
-    const lastWeekOrders = [...pendingOrders, ...completedOrders].filter(
+    const lastWeekOrders = allOrders.filter(
       (order) => new Date(order.orderDate) >= weekAgo
     ).length;
 
-    // Calculate total value of all orders
+    // Calculate total value of all orders (excluding cancelled)
     const totalValue = [...pendingOrders, ...completedOrders].reduce(
       (total, order) => total + parseFloat(order.totalAmount || 0),
       0
@@ -127,64 +152,43 @@ const Orders = () => {
     setOrderStats({
       pendingCount: pendingOrders.length,
       completedTodayCount: completedToday,
+      cancelledCount: cancelledOrders.length,
       weeklyCount: lastWeekOrders,
       totalOrderValue: totalValue,
     });
-  }, [pendingOrders, completedOrders]);
+  }, [allOrders, pendingOrders, completedOrders, cancelledOrders]);
 
-  // Fetch pending orders from API
-  const fetchPendingOrders = useCallback(async () => {
+  // Fetch all orders from API
+  const fetchAllOrders = useCallback(async () => {
     try {
-      const response = await OrderService.getAllPendingOrders();
+      setLoading(true);
+      const response = await OrderService.getAllOrders();
       if (response && response.data) {
-        setPendingOrders(response.data);
+        setAllOrders(response.data);
       } else {
-        setPendingOrders([]);
+        setAllOrders([]);
       }
     } catch (error) {
-      console.error("Error fetching pending orders:", error);
+      console.error("Error fetching orders:", error);
       showToast({
         type: "error",
-        message: "Failed to fetch pending orders",
+        message: "Failed to fetch orders",
       });
-      setPendingOrders([]);
-    }
-  }, [showToast]);
-
-  // Fetch completed orders from API
-  const fetchCompletedOrders = useCallback(async () => {
-    try {
-      const response = await OrderService.getAllCompletedOrders();
-      if (response && response.data) {
-        setCompletedOrders(response.data);
-      } else {
-        setCompletedOrders([]);
-      }
-    } catch (error) {
-      console.error("Error fetching completed orders:", error);
-      showToast({
-        type: "error",
-        message: "Failed to fetch completed orders",
-      });
-      setCompletedOrders([]);
+      setAllOrders([]);
+    } finally {
+      setLoading(false);
     }
   }, [showToast]);
 
   // Load data on initial render
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      await Promise.all([fetchPendingOrders(), fetchCompletedOrders()]);
-      setLoading(false);
-    };
-
-    loadData();
-  }, [fetchPendingOrders, fetchCompletedOrders]);
+    fetchAllOrders();
+  }, [fetchAllOrders]);
 
   // Update stats when orders change
   useEffect(() => {
     calculateOrderStats();
-  }, [pendingOrders, completedOrders, calculateOrderStats]);
+  }, [allOrders, calculateOrderStats]);
 
   // Handle search with claim code
   const handleSearch = async (e) => {
@@ -230,8 +234,8 @@ const Orders = () => {
           message: `Order ${claimCode} has been processed successfully`,
         });
 
-        // Update the orders lists
-        await Promise.all([fetchPendingOrders(), fetchCompletedOrders()]);
+        // Refresh all orders after processing
+        await fetchAllOrders();
 
         // Close modal if open
         if (isModalOpen) {
@@ -250,6 +254,49 @@ const Orders = () => {
         type: "error",
         message:
           error.message || "An error occurred while processing the order",
+      });
+    } finally {
+      setIsProcessing(false);
+      setProcessingOrderId(null);
+    }
+  };
+
+  // Cancel order
+  const cancelOrder = async (orderId) => {
+    if (!orderId) return;
+
+    try {
+      setIsProcessing(true);
+      setProcessingOrderId(`cancel-${orderId}`);
+
+      const response = await OrderService.cancelOrder(orderId);
+
+      if (response && response.isSuccess) {
+        showToast({
+          type: "success",
+          message: `Order #${orderId} has been cancelled successfully`,
+        });
+
+        // Refresh all orders after cancelling
+        await fetchAllOrders();
+
+        // Close modal if open
+        if (isModalOpen) {
+          setIsModalOpen(false);
+          setCurrentOrder(null);
+        }
+      } else {
+        showToast({
+          type: "error",
+          message: response?.message || "Failed to cancel order",
+        });
+      }
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      showToast({
+        type: "error",
+        message:
+          error.message || "An error occurred while cancelling the order",
       });
     } finally {
       setIsProcessing(false);
@@ -290,17 +337,40 @@ const Orders = () => {
     }).format(amount);
   };
 
-  // Close the order details modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setCurrentOrder(null);
+  // Open items detail popup
+  const openItemDetails = (orderItems) => {
+    setSelectedOrderItems(orderItems);
+    setItemDetailsModal(true);
   };
 
-  // Get sorted and filtered orders
-  const getSortedAndFilteredOrders = (orders) => {
+  // Close items detail popup
+  const closeItemDetails = () => {
+    setItemDetailsModal(false);
+    setSelectedOrderItems(null);
+  };
+
+  // Get sorted and filtered orders based on active tab
+  const getSortedAndFilteredOrders = useCallback(() => {
+    let orders;
+
+    // First, get the orders based on the active tab
+    switch (activeTab) {
+      case "pending":
+        orders = [...pendingOrders];
+        break;
+      case "completed":
+        orders = [...completedOrders];
+        break;
+      case "cancelled":
+        orders = [...cancelledOrders];
+        break;
+      default:
+        orders = [];
+    }
+
     if (!orders || orders.length === 0) return [];
 
-    // First apply filters
+    // Apply filters
     let filteredOrders = [...orders];
 
     // Apply date range filter
@@ -368,7 +438,7 @@ const Orders = () => {
       }
     }
 
-    // Then sort
+    // Sort the filtered orders
     return filteredOrders.sort((a, b) => {
       let valueA, valueB;
 
@@ -400,7 +470,21 @@ const Orders = () => {
         return valueA < valueB ? 1 : -1;
       }
     });
-  };
+  }, [
+    activeTab,
+    pendingOrders,
+    completedOrders,
+    cancelledOrders,
+    filters,
+    sortField,
+    sortDirection,
+  ]);
+
+  // Get the display orders
+  const displayOrders = useMemo(
+    () => getSortedAndFilteredOrders(),
+    [getSortedAndFilteredOrders]
+  );
 
   // Handle sort
   const handleSort = (field) => {
@@ -455,11 +539,58 @@ const Orders = () => {
     processOrder(claimCode);
   };
 
-  // Get the actual orders to display based on active tab, sorting and filtering
-  const displayOrders =
-    activeTab === "pending"
-      ? getSortedAndFilteredOrders(pendingOrders)
-      : getSortedAndFilteredOrders(completedOrders);
+  // Handle cancel order from modal
+  const handleCancelOrder = (orderId) => {
+    if (!orderId) return;
+    cancelOrder(orderId);
+  };
+
+  // Get empty state message based on active tab and filters
+  const getEmptyStateMessage = () => {
+    if (Object.values(filters).some((v) => v !== "" && v !== "all")) {
+      return {
+        title: "No orders match your filters",
+        description: "Try adjusting your filter criteria",
+      };
+    }
+
+    switch (activeTab) {
+      case "pending":
+        return {
+          title: "No pending orders found",
+          description: "All orders have been processed or cancelled",
+        };
+      case "completed":
+        return {
+          title: "No fulfilled orders found",
+          description: "Process pending orders to see them here",
+        };
+      case "cancelled":
+        return {
+          title: "No cancelled orders found",
+          description: "There are no cancelled orders in the system",
+        };
+      default:
+        return {
+          title: "No orders found",
+          description: "Try a different filter or check back later",
+        };
+    }
+  };
+
+  // Get status color based on status
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Pending":
+        return "bg-amber-100 text-amber-700";
+      case "Completed":
+        return "bg-green-100 text-green-700";
+      case "Cancelled":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-neutral-100 text-neutral-700";
+    }
+  };
 
   return (
     <div className="bg-[var(--background)] rounded-lg shadow p-6 transition-all duration-200">
@@ -526,18 +657,18 @@ const Orders = () => {
             <div
               className={`rounded-full p-3 mr-3 ${
                 isDarkMode
-                  ? "bg-blue-900/30 text-blue-500"
-                  : "bg-blue-100 text-blue-600"
+                  ? "bg-red-900/30 text-red-500"
+                  : "bg-red-100 text-red-600"
               }`}
             >
-              <FiCalendar size={20} />
+              <FiSlash size={20} />
             </div>
             <div>
               <p className="text-[var(--text-secondary)] text-sm">
-                Orders This Week
+                Cancelled Orders
               </p>
               <p className="text-[var(--text-primary)] text-xl font-semibold">
-                {orderStats.weeklyCount}
+                {orderStats.cancelledCount}
               </p>
             </div>
           </div>
@@ -739,9 +870,7 @@ const Orders = () => {
 
           {/* Refresh Button */}
           <button
-            onClick={() =>
-              Promise.all([fetchPendingOrders(), fetchCompletedOrders()])
-            }
+            onClick={() => fetchAllOrders()}
             className={`flex items-center px-3 py-2 rounded-lg transition-colors text-sm ${
               isDarkMode
                 ? "bg-neutral-700 hover:bg-neutral-600 text-white"
@@ -757,27 +886,36 @@ const Orders = () => {
 
       {/* Tabs */}
       <div className="mb-6 border-b border-[var(--border)]">
-        <div className="flex space-x-8">
+        <div className="flex flex-wrap">
           <button
             onClick={() => setActiveTab("pending")}
-            className={`flex items-center pb-4 transition-colors ${
+            className={`flex items-center pb-4 px-4 transition-colors ${
               activeTab === "pending"
                 ? "border-b-2 border-primary-500 text-primary-500 font-medium"
                 : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             }`}
           >
-            <FiClock className="mr-2" /> Pending Orders ({pendingOrders.length})
+            <FiClock className="mr-2" /> Pending ({pendingOrders.length})
           </button>
           <button
             onClick={() => setActiveTab("completed")}
-            className={`flex items-center pb-4 transition-colors ${
+            className={`flex items-center pb-4 px-4 transition-colors ${
               activeTab === "completed"
                 ? "border-b-2 border-primary-500 text-primary-500 font-medium"
                 : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             }`}
           >
-            <FiCheck className="mr-2" /> Fulfilled Orders (
-            {completedOrders.length})
+            <FiCheck className="mr-2" /> Fulfilled ({completedOrders.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("cancelled")}
+            className={`flex items-center pb-4 px-4 transition-colors ${
+              activeTab === "cancelled"
+                ? "border-b-2 border-primary-500 text-primary-500 font-medium"
+                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            <FiSlash className="mr-2" /> Cancelled ({cancelledOrders.length})
           </button>
         </div>
       </div>
@@ -818,10 +956,10 @@ const Orders = () => {
             >
               <FiDollarSign size={12} />
               {filters.totalMin && filters.totalMax
-                ? `$${filters.totalMin} - $${filters.totalMax}`
+                ? `${filters.totalMin} - ${filters.totalMax}`
                 : filters.totalMin
-                ? `Min: $${filters.totalMin}`
-                : `Max: $${filters.totalMax}`}
+                ? `Min: ${filters.totalMin}`
+                : `Max: ${filters.totalMax}`}
               <button
                 onClick={() =>
                   setFilters({ ...filters, totalMin: "", totalMax: "" })
@@ -868,6 +1006,7 @@ const Orders = () => {
           </button>
         </div>
       )}
+
       {/* Orders Table */}
       {loading ? (
         <div className="flex justify-center items-center py-10">
@@ -881,18 +1020,10 @@ const Orders = () => {
             </div>
           </div>
           <p className="text-[var(--text-primary)] text-lg mt-4">
-            {Object.values(filters).some((v) => v !== "" && v !== "all")
-              ? "No orders match your filters"
-              : activeTab === "pending"
-              ? "No pending orders found"
-              : "No fulfilled orders found"}
+            {getEmptyStateMessage().title}
           </p>
           <p className="text-[var(--text-secondary)] mt-1">
-            {Object.values(filters).some((v) => v !== "" && v !== "all")
-              ? "Try adjusting your filter criteria"
-              : activeTab === "pending"
-              ? "All orders have been processed"
-              : "Process pending orders to see them here"}
+            {getEmptyStateMessage().description}
           </p>
 
           {Object.values(filters).some((v) => v !== "" && v !== "all") && (
@@ -958,13 +1089,16 @@ const Orders = () => {
                     Total <SortIndicator field="totalAmount" />
                   </button>
                 </th>
-                {activeTab === "completed" && (
+                {activeTab !== "pending" && (
                   <th className="py-3 px-4 text-left">
                     <button
                       onClick={() => handleSort("processedBy")}
                       className="flex items-center font-medium hover:text-primary-500"
                     >
-                      Processed By <SortIndicator field="processedBy" />
+                      {activeTab === "completed"
+                        ? "Processed By"
+                        : "Cancelled By"}{" "}
+                      <SortIndicator field="processedBy" />
                     </button>
                   </th>
                 )}
@@ -982,11 +1116,9 @@ const Orders = () => {
                   <td className="py-3 px-4 text-left">#{order.orderId}</td>
                   <td className="py-3 px-4 text-left">
                     <span
-                      className={`px-2 py-1 rounded-md font-medium ${
-                        activeTab === "pending"
-                          ? "bg-primary-100 text-primary-700"
-                          : "bg-green-100 text-green-700"
-                      }`}
+                      className={`px-2 py-1 rounded-md font-medium ${getStatusColor(
+                        order.status
+                      )}`}
                     >
                       {order.claimCode}
                     </span>
@@ -1006,44 +1138,89 @@ const Orders = () => {
                       <div>
                         <div>{formatShortDate(order.orderDate)}</div>
                         <div className="text-xs text-[var(--text-secondary)]">
-                          Processed: {formatShortDate(order.processedDate)}
+                          {activeTab === "completed"
+                            ? "Processed:"
+                            : "Cancelled:"}{" "}
+                          {formatShortDate(order.processedDate)}
                         </div>
                       </div>
                     )}
                   </td>
                   <td className="py-3 px-4 text-left">
-                    {order.orderItems?.length || 0} item(s)
+                    <div className="flex items-center space-x-2">
+                      <span>{order.orderItems?.length || 0} item(s)</span>
+                      <button
+                        onClick={() => openItemDetails(order.orderItems)}
+                        className={`px-2 py-1 rounded text-xs transition-colors ${
+                          isDarkMode
+                            ? "bg-blue-600 hover:bg-blue-700 text-white"
+                            : "bg-blue-500 hover:bg-blue-600 text-white"
+                        }`}
+                      >
+                        View
+                      </button>
+                    </div>
                   </td>
                   <td className="py-3 px-4 text-right font-medium">
                     {formatCurrency(parseFloat(order.totalAmount || 0))}
                   </td>
-                  {activeTab === "completed" && (
+                  {activeTab !== "pending" && (
                     <td className="py-3 px-4 text-left">{order.processedBy}</td>
                   )}
                   <td className="py-3 px-4 text-center">
                     {activeTab === "pending" ? (
-                      <button
-                        onClick={() => processOrder(order.claimCode)}
-                        disabled={
-                          isProcessing && processingOrderId === order.claimCode
-                        }
-                        className={`px-3 py-1 rounded transition-colors ${
-                          isDarkMode
-                            ? "bg-green-600 hover:bg-green-700 text-white"
-                            : "bg-green-600 hover:bg-green-500 text-white"
-                        } ${
-                          isProcessing && processingOrderId === order.claimCode
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                      >
-                        {isProcessing && processingOrderId === order.claimCode
-                          ? "Processing..."
-                          : "Process"}
-                      </button>
+                      <div className="flex justify-center space-x-2">
+                        <button
+                          onClick={() => processOrder(order.claimCode)}
+                          disabled={
+                            isProcessing &&
+                            processingOrderId === order.claimCode
+                          }
+                          className={`px-3 py-1 rounded transition-colors ${
+                            isDarkMode
+                              ? "bg-green-600 hover:bg-green-700 text-white"
+                              : "bg-green-600 hover:bg-green-500 text-white"
+                          } ${
+                            isProcessing &&
+                            processingOrderId === order.claimCode
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                        >
+                          {isProcessing && processingOrderId === order.claimCode
+                            ? "Processing..."
+                            : "Process"}
+                        </button>
+                        <button
+                          onClick={() => cancelOrder(order.orderId)}
+                          disabled={
+                            isProcessing &&
+                            processingOrderId === `cancel-${order.orderId}`
+                          }
+                          className={`px-3 py-1 rounded transition-colors ${
+                            isDarkMode
+                              ? "bg-red-600 hover:bg-red-700 text-white"
+                              : "bg-red-600 hover:bg-red-500 text-white"
+                          } ${
+                            isProcessing &&
+                            processingOrderId === `cancel-${order.orderId}`
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                        >
+                          {isProcessing &&
+                          processingOrderId === `cancel-${order.orderId}`
+                            ? "Cancelling..."
+                            : "Cancel"}
+                        </button>
+                      </div>
                     ) : (
-                      <span className="px-2 py-1 rounded-md bg-green-100 text-green-700">
-                        Fulfilled
+                      <span
+                        className={`px-2 py-1 rounded-md ${getStatusColor(
+                          order.status
+                        )}`}
+                      >
+                        {activeTab === "completed" ? "Fulfilled" : "Cancelled"}
                       </span>
                     )}
                   </td>
@@ -1063,7 +1240,7 @@ const Orders = () => {
                 Order Details
               </h2>
               <button
-                onClick={closeModal}
+                onClick={() => setIsModalOpen(false)}
                 className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               >
                 <FiX size={24} />
@@ -1090,13 +1267,11 @@ const Orders = () => {
                       Claim Code
                     </p>
                     <p
-                      className={`text-[var(--text-primary)] font-medium px-2 py-1 rounded-md inline-block ${
-                        (Array.isArray(currentOrder)
+                      className={`text-[var(--text-primary)] font-medium px-2 py-1 rounded-md inline-block ${getStatusColor(
+                        Array.isArray(currentOrder)
                           ? currentOrder[0].status
-                          : currentOrder.status) === "Pending"
-                          ? "bg-primary-100 text-primary-700"
-                          : "bg-green-100 text-green-700"
-                      }`}
+                          : currentOrder.status
+                      )}`}
                     >
                       {Array.isArray(currentOrder)
                         ? currentOrder[0].claimCode
@@ -1108,13 +1283,11 @@ const Orders = () => {
                       Status
                     </p>
                     <p
-                      className={`font-medium px-2 py-1 rounded-md inline-block ${
-                        (Array.isArray(currentOrder)
+                      className={`font-medium px-2 py-1 rounded-md inline-block ${getStatusColor(
+                        Array.isArray(currentOrder)
                           ? currentOrder[0].status
-                          : currentOrder.status) === "Pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-green-100 text-green-700"
-                      }`}
+                          : currentOrder.status
+                      )}`}
                     >
                       {Array.isArray(currentOrder)
                         ? currentOrder[0].status
@@ -1165,7 +1338,11 @@ const Orders = () => {
                       ? currentOrder[0].processedDate
                       : currentOrder.processedDate) && (
                       <p className="text-[var(--text-secondary)] text-xs">
-                        Processed:{" "}
+                        {(Array.isArray(currentOrder)
+                          ? currentOrder[0].status
+                          : currentOrder.status) === "Completed"
+                          ? "Processed:"
+                          : "Cancelled:"}{" "}
                         {formatDate(
                           Array.isArray(currentOrder)
                             ? currentOrder[0].processedDate
@@ -1309,14 +1486,31 @@ const Orders = () => {
               <div className="flex justify-end space-x-3">
                 <button
                   type="button"
-                  onClick={closeModal}
+                  onClick={() =>
+                    handleCancelOrder(
+                      Array.isArray(currentOrder)
+                        ? currentOrder[0].orderId
+                        : currentOrder.orderId
+                    )
+                  }
+                  disabled={isProcessing}
                   className={`px-4 py-2 rounded-md transition-colors ${
                     isDarkMode
-                      ? "bg-neutral-700 hover:bg-neutral-600 text-[var(--text-primary)]"
-                      : "bg-neutral-200 hover:bg-neutral-300 text-[var(--text-primary)]"
-                  }`}
+                      ? "bg-red-600 hover:bg-red-700 text-white"
+                      : "bg-red-600 hover:bg-red-500 text-white"
+                  } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  Cancel
+                  {isProcessing ? (
+                    <>
+                      <FiRefreshCw className="inline mr-2 animate-spin" />
+                      Cancelling...
+                    </>
+                  ) : (
+                    <>
+                      <FiSlash className="inline mr-2" />
+                      Cancel Order
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={() =>
@@ -1348,12 +1542,38 @@ const Orders = () => {
               </div>
             ) : (
               <div>
-                <div className="bg-green-100 text-green-800 px-4 py-3 rounded-md mb-4 flex items-start">
-                  <FiCheck className="mr-2 mt-0.5 flex-shrink-0" />
+                <div
+                  className={`${
+                    (Array.isArray(currentOrder)
+                      ? currentOrder[0].status
+                      : currentOrder.status) === "Completed"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  } px-4 py-3 rounded-md mb-4 flex items-start`}
+                >
+                  {(Array.isArray(currentOrder)
+                    ? currentOrder[0].status
+                    : currentOrder.status) === "Completed" ? (
+                    <FiCheck className="mr-2 mt-0.5 flex-shrink-0" />
+                  ) : (
+                    <FiSlash className="mr-2 mt-0.5 flex-shrink-0" />
+                  )}
                   <div>
-                    <p className="font-medium">This order has been processed</p>
+                    <p className="font-medium">
+                      This order has been{" "}
+                      {(Array.isArray(currentOrder)
+                        ? currentOrder[0].status
+                        : currentOrder.status) === "Completed"
+                        ? "processed"
+                        : "cancelled"}
+                    </p>
                     <p className="text-sm">
-                      Processed by{" "}
+                      {(Array.isArray(currentOrder)
+                        ? currentOrder[0].status
+                        : currentOrder.status) === "Completed"
+                        ? "Processed"
+                        : "Cancelled"}{" "}
+                      by{" "}
                       {Array.isArray(currentOrder)
                         ? currentOrder[0].processedBy
                         : currentOrder.processedBy}{" "}
@@ -1369,7 +1589,7 @@ const Orders = () => {
                 <div className="flex justify-end">
                   <button
                     type="button"
-                    onClick={closeModal}
+                    onClick={() => setIsModalOpen(false)}
                     className={`px-4 py-2 rounded-md transition-colors ${
                       isDarkMode
                         ? "bg-neutral-700 hover:bg-neutral-600 text-[var(--text-primary)]"
@@ -1381,6 +1601,86 @@ const Orders = () => {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Item Details Modal */}
+      {itemDetailsModal && selectedOrderItems && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[var(--surface)] rounded-lg shadow-xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-[var(--text-primary)]">
+                Order Items
+              </h2>
+              <button
+                onClick={closeItemDetails}
+                className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              >
+                <FiX size={24} />
+              </button>
+            </div>
+
+            <div className="bg-[var(--background)] rounded-md p-3 max-h-96 overflow-y-auto">
+              {selectedOrderItems && selectedOrderItems.length > 0 ? (
+                selectedOrderItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center mb-3 pb-3 border-b border-[var(--border)] last:border-0 last:mb-0 last:pb-0"
+                  >
+                    <div className="flex items-center">
+                      {item.photo ? (
+                        <img
+                          src={item.photo}
+                          alt={item.bookTitle}
+                          className="w-10 h-14 object-cover rounded mr-3"
+                        />
+                      ) : (
+                        <div className="w-10 h-14 bg-neutral-200 rounded flex items-center justify-center mr-3 text-neutral-500">
+                          <FiBook size={18} />
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-medium text-[var(--text-primary)]">
+                          {item.bookTitle}
+                        </p>
+                        <p className="text-xs text-[var(--text-secondary)]">
+                          {item.bookAuthor && `By ${item.bookAuthor}`}
+                          {item.bookAuthor && item.isbn && " • "}
+                          {item.isbn && `ISBN: ${item.isbn}`}
+                        </p>
+                        <p className="text-xs text-[var(--text-secondary)]">
+                          Qty: {item.quantity} x{" "}
+                          {formatCurrency(parseFloat(item.unitPrice || 0))}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="font-medium text-[var(--text-primary)] whitespace-nowrap">
+                      {formatCurrency(
+                        parseFloat(item.quantity * item.unitPrice || 0)
+                      )}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-[var(--text-secondary)] text-center py-4">
+                  No items available for this order
+                </p>
+              )}
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={closeItemDetails}
+                className={`px-4 py-2 rounded-md transition-colors ${
+                  isDarkMode
+                    ? "bg-neutral-700 hover:bg-neutral-600 text-white"
+                    : "bg-neutral-200 hover:bg-neutral-300 text-neutral-800"
+                }`}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

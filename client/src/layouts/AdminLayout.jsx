@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import ThemeToggle from "../components/ThemeToggle";
 import {
@@ -25,6 +25,14 @@ const AdminLayout = () => {
   const [greeting, setGreeting] = useState("");
   const theme = useSelector(selectTheme);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    avatar: "/api/placeholder/40/40",
+    role: "",
+    id: "",
+  });
 
   // Update isDarkMode state whenever theme changes
   useEffect(() => {
@@ -33,6 +41,43 @@ const AdminLayout = () => {
       setIsDarkMode(isDark);
     }
   }, [theme]);
+
+  // Check for token and user role on component mount
+  useEffect(() => {
+    // Get token from localStorage
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      // Decode JWT token
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userRole = payload.Role;
+      const userName = payload.Name;
+      const userEmail = payload.Email;
+      const userId = payload.UserId;
+
+      // Set user data
+      setUser({
+        name: userName,
+        email: userEmail,
+        avatar: "/api/placeholder/40/40",
+        role: userRole,
+        id: userId,
+      });
+
+      // If not a public user, redirect to login
+      if (userRole !== "Admin") {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      navigate("/login");
+    }
+  }, [navigate]);
 
   // Add MutationObserver to track DOM changes for theme
   useEffect(() => {
@@ -58,12 +103,6 @@ const AdminLayout = () => {
       };
     }
   }, []);
-
-  // Get user from Redux store
-  const user = useSelector((state) => state.user?.currentUser) || {
-    name: "Admin User",
-    role: "Administrator",
-  };
 
   // Set greeting based on time of day
   useEffect(() => {

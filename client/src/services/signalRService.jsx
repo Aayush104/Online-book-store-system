@@ -38,6 +38,11 @@ class SignalRService {
           this._notifyListeners("notification", notification);
         });
 
+        this.connection.on("ReceiveAnnouncement", (notification) => {
+          console.log("🔔 Received notification:", notification);
+          this._notifyListeners("notification", notification);
+        });
+
         this.connection.on("ReceiveTestMessage", (message) => {
           console.log("📝 Received test message:", message);
           this._notifyListeners("testMessage", message);

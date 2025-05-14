@@ -67,7 +67,7 @@ const AnnouncementManagement = () => {
     setLoading(true);
     try {
       // Try to fetch from API
-      const response = await AnnouncementService.getAllAnnouncements();
+      const response = await AnnouncementService.getActiveAnnouncements();
       if (response && response.data) {
         setAnnouncements(Array.isArray(response.data) ? response.data : []);
       } else {

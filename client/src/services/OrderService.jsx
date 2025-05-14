@@ -47,32 +47,69 @@ export const placeOrder = async (cartItems) => {
   }
 };
 
-// Get all pending orders (Staff/Admin)
-export const getAllPendingOrders = async () => {
-  logDebug("Fetching all pending orders");
+// Get all orders
+export const getAllOrders = async () => {
+  logDebug("Fetching all orders");
   checkToken();
 
   try {
-    const response = await api.get("/Orders/GetAllPendingOrders");
-    logDebug("Pending orders received:", response);
+    const response = await api.get("/Orders/GetAllOrders");
+    logDebug("All orders received:", response);
     return response;
+  } catch (error) {
+    logDebug("Get all orders error:", error);
+    throw error;
+  }
+};
+
+// Helper functions to filter orders by status - these are client-side filters
+export const getPendingOrders = async () => {
+  try {
+    const response = await getAllOrders();
+    if (response && response.data) {
+      // Filter pending orders client-side
+      const pendingOrders = response.data.filter(
+        (order) => order.status === "Pending"
+      );
+      return { ...response, data: pendingOrders };
+    }
+    return { data: [] };
   } catch (error) {
     logDebug("Get pending orders error:", error);
     throw error;
   }
 };
 
-// Get all completed orders (Staff/Admin)
-export const getAllCompletedOrders = async () => {
-  logDebug("Fetching all completed orders");
-  checkToken();
-
+export const getCompletedOrders = async () => {
   try {
-    const response = await api.get("/Orders/GetAllCompletedOrders");
-    logDebug("Completed orders received:", response);
-    return response;
+    const response = await getAllOrders();
+    if (response && response.data) {
+      // Filter completed orders client-side
+      const completedOrders = response.data.filter(
+        (order) => order.status === "Completed"
+      );
+      return { ...response, data: completedOrders };
+    }
+    return { data: [] };
   } catch (error) {
     logDebug("Get completed orders error:", error);
+    throw error;
+  }
+};
+
+export const getCancelledOrders = async () => {
+  try {
+    const response = await getAllOrders();
+    if (response && response.data) {
+      // Filter cancelled orders client-side
+      const cancelledOrders = response.data.filter(
+        (order) => order.status === "Cancelled"
+      );
+      return { ...response, data: cancelledOrders };
+    }
+    return { data: [] };
+  } catch (error) {
+    logDebug("Get cancelled orders error:", error);
     throw error;
   }
 };
@@ -83,7 +120,7 @@ export const getOrderById = async (orderId) => {
   checkToken();
 
   try {
-    const response = await api.get(`/Orders/GetOrderById`);
+    const response = await api.get(`/Orders/GetOrderById/${orderId}`);
     logDebug("Order details received:", response);
     return response;
   } catch (error) {
@@ -181,8 +218,10 @@ export const getMyOrders = async () => {
 
 const OrderService = {
   placeOrder,
-  getAllPendingOrders,
-  getAllCompletedOrders,
+  getAllOrders,
+  getPendingOrders,
+  getCompletedOrders,
+  getCancelledOrders,
   getOrderById,
   getOrderByClaimCode,
   cancelOrder,

@@ -15,12 +15,13 @@ const checkToken = () => {
   }
 };
 
-export const getActiveAnnouncements = async () => {
-  logDebug("Fetching active announcements");
+// Get all announcements (general list)
+export const getAnnouncements = async () => {
+  logDebug("Fetching announcements");
 
   try {
     const response = await api.get("/Announcement");
-    logDebug("Active announcements response:", response);
+    logDebug("Announcements response:", response);
     return response;
   } catch (error) {
     logDebug("Fetch announcements error:", error);
@@ -28,16 +29,17 @@ export const getActiveAnnouncements = async () => {
   }
 };
 
-export const getAllAnnouncements = async () => {
-  logDebug("Fetching all announcements");
-  checkToken();
+// Get only active announcements (for public display)
+export const getActiveAnnouncements = async () => {
+  logDebug("Fetching active announcements");
 
   try {
+    // Fixed path without /api prefix since axiosInstance already includes it
     const response = await api.get("/Announcement/active-announcements");
-    logDebug("All announcements response:", response);
+    logDebug("Active announcements response:", response);
     return response;
   } catch (error) {
-    logDebug("Fetch all announcements error:", error);
+    logDebug("Fetch active announcements error:", error);
     throw error;
   }
 };
@@ -63,12 +65,8 @@ export const createAnnouncement = async (announcementData) => {
   try {
     const response = await api.post(
       "/Announcement/SetAnnouncement",
-      announcementData,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
+      announcementData
     );
-
     logDebug("Create announcement response:", response);
     return response;
   } catch (error) {
@@ -82,10 +80,7 @@ export const updateAnnouncement = async (id, announcementData) => {
   checkToken();
 
   try {
-    const response = await api.put(`/Announcement/${id}`, announcementData, {
-      headers: { "Content-Type": "application/json" },
-    });
-
+    const response = await api.put(`/Announcement/${id}`, announcementData);
     logDebug("Update announcement response:", response);
     return response;
   } catch (error) {
@@ -109,8 +104,8 @@ export const deleteAnnouncement = async (id) => {
 };
 
 const AnnouncementService = {
+  getAnnouncements,
   getActiveAnnouncements,
-  getAllAnnouncements,
   getAnnouncementById,
   createAnnouncement,
   updateAnnouncement,

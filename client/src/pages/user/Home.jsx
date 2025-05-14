@@ -20,7 +20,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(2);
   const [pageSize, setPageSize] = useState(5);
 
   // Active tab state
@@ -202,7 +202,7 @@ const HomePage = () => {
 
         if (response && response.isSuccess) {
           setBooks(response.data || []);
-          setTotalPages(response.totalPages || 1);
+          setTotalPages(2);
         } else {
           setError("Failed to load books. Please try again.");
         }
@@ -414,7 +414,7 @@ const HomePage = () => {
                 <h3 className="text-xl font-bold text-[var(--text-primary)]">
                   {book.title}
                 </h3>
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <span
                       key={i}
@@ -433,7 +433,7 @@ const HomePage = () => {
                   <span className="ml-1 text-xs text-[var(--text-secondary)]">
                     ({book.reviewCount || 100} reviews)
                   </span>
-                </div>
+                </div> */}
               </div>
 
               {/* Tags row */}
@@ -630,7 +630,7 @@ const HomePage = () => {
       <div className="border-b border-[var(--border)]">
         <div className="max-w-screen-2xl mx-auto px-6">
           <div className="flex items-center text-sm py-2">
-            <a href="/" className="text-primary-600 hover:text-primary-500">
+            <a href="/home" className="text-primary-600 hover:text-primary-500">
               Home
             </a>
             <span className="mx-2 text-[var(--text-secondary)]">/</span>
@@ -961,7 +961,6 @@ const HomePage = () => {
                 </select>
               </div>
             </div>
-
             {/* Dynamic content based on state */}
             {renderContent()}
           </div>

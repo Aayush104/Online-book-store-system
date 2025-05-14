@@ -11,7 +11,7 @@ const ReviewModal = ({ book, isOpen, onClose, onReviewSubmitted }) => {
   const [error, setError] = useState(null);
 
   if (!isOpen) return null;
-
+  console.log(rating);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -24,7 +24,11 @@ const ReviewModal = ({ book, isOpen, onClose, onReviewSubmitted }) => {
     setError(null);
 
     try {
-      const response = await ReviewService.submitReview(book.id, reviewText);
+      const response = await ReviewService.submitReview(
+        book.id,
+        reviewText,
+        rating
+      );
 
       if (response && response.isSuccess) {
         onReviewSubmitted();

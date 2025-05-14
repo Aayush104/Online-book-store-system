@@ -49,7 +49,7 @@ const SingleBook = () => {
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-
+  const [averageStar, setAverageStar] = useState(0);
   // Authentication state (simplified)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [canReview, setCanReview] = useState(false);
@@ -140,8 +140,9 @@ const SingleBook = () => {
     setReviewsError(null);
     try {
       const response = await ReviewService.getBookReviews(bookId);
-      if (response.isSuccess && response.data) {
-        setReviews(response.data);
+      if (response.isSuccess && response.data.reviews) {
+        setReviews(response.data.reviews);
+        setAverageStar(response.data.averageStar);
       } else {
         setReviews([]);
       }
@@ -328,9 +329,16 @@ const SingleBook = () => {
   };
 
   // Generate star rating display
-  const renderStarRating = (rating = 0, size = "sm") => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating - fullStars >= 0.5;
+  const renderStarRating = (rating, size = "sm") => {
+    // Make sure rating is a number
+    const numericRating =
+      typeof rating === "number" ? rating : rating ? parseFloat(rating) : 0;
+    console.log(numericRating);
+    // Ensure the value is between 0 and 5
+    const safeRating = Math.max(0, Math.min(5, numericRating));
+
+    const fullStars = Math.floor(safeRating);
+    const hasHalfStar = safeRating - fullStars >= 0.5;
     const sizeClasses = size === "lg" ? "h-5 w-5" : "h-4 w-4";
 
     return (
@@ -365,7 +373,6 @@ const SingleBook = () => {
       </div>
     );
   };
-
   // Generate rating distribution display
   const renderRatingDistribution = () => {
     if (!book || !book.ratingDistribution) return null;
@@ -588,9 +595,9 @@ const SingleBook = () => {
 
               {/* Ratings */}
               <div className="flex items-center mb-4">
-                {renderStarRating(book.averageRating, "lg")}
+                {renderStarRating(averageStar, "lg")}
                 <span className="ml-2 text-[var(--text-secondary)] font-medium">
-                  {book.averageRating ? book.averageRating.toFixed(1) : "0.0"}
+                  {averageStar}
                 </span>
                 <span className="mx-2 text-[var(--text-tertiary)]">•</span>
                 <span className="text-[var(--text-secondary)]">
@@ -901,13 +908,11 @@ const SingleBook = () => {
                   </h2>
                   <div className="flex items-center mb-2">
                     <div className="flex items-center">
-                      {renderStarRating(book.averageRating || 0, "lg")}
+                      {renderStarRating(averageStar || 0, "lg")}
                     </div>
                     <div className="ml-2">
                       <span className="text-2xl font-bold text-[var(--text-primary)]">
-                        {book.averageRating
-                          ? book.averageRating.toFixed(1)
-                          : "0.0"}
+                        {averageStar ? averageStar.toFixed(1) : "0.0"}
                       </span>
                       <span className="text-sm text-[var(--text-tertiary)] ml-1">
                         out of 5
@@ -1027,7 +1032,7 @@ const SingleBook = () => {
                       </p>
 
                       <div className="space-y-6">
-                        {reviews.map((review) => (
+                        {reviews?.map((review) => (
                           <div
                             key={review.reviewId}
                             className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]"
