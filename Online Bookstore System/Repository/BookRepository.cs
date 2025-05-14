@@ -153,6 +153,13 @@ namespace Online_Bookstore_System.Repository
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<Book>> GetBooksByIdsAsync(IEnumerable<long> bookIds)
+        {
+            return await _context.Books
+                        .Where(b => bookIds.Contains(b.BookId))
+                        .ToListAsync();
+        }
+
         public async Task<List<Book>> GetNewReleaseBooks()
         {
             var threeMonthsAgo = DateTime.UtcNow.AddMonths(-3);

@@ -17,5 +17,7 @@ namespace Online_Bookstore_System.IRepository
         Task UpdateBook(Book book);
         Task DeleteBook(Book book);
 
+        Task<List<Book>> GetBooksByIdsAsync(IEnumerable<long> bookIds);
+
     }
 }

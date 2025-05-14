@@ -21,7 +21,9 @@ namespace Online_Bookstore_System.Service
         private readonly IDataProtector _dataProtector;
         private readonly IMailService _mailService;
         private readonly UserManager<ApplicationUser> _userManager;
+       
         private readonly AppDbContext _dbContext;
+        private readonly IBookRepository _bookRepository;
      
         private readonly IHubContext<Notificationhub> _Context;
 
@@ -30,13 +32,14 @@ namespace Online_Bookstore_System.Service
             IDataProtectionProvider dataProtector,
             DataSecurityProvider securityProvider,
             IMailService mailService,
-            UserManager<ApplicationUser> userManager, IHubContext<Notificationhub> Context, AppDbContext dbContext)
+            UserManager<ApplicationUser> userManager, IHubContext<Notificationhub> Context, AppDbContext dbContext, IBookRepository bookRepository)
         {
             _orderRepository = orderRepository;
             _mailService = mailService;
             _userManager = userManager;
             _Context = Context;
             _dbContext = dbContext;
+            _bookRepository = bookRepository;
             _dataProtector = dataProtector.CreateProtector(securityProvider.securityKey);
 
         }
@@ -78,56 +81,63 @@ namespace Online_Bookstore_System.Service
             }
         }
 
-        public async Task<ApiResponseDto> CompleteOrderAsync(CompleteOrderDto completeOrderDto)
+
+        public async Task<ApiResponseDto> CompleteOrderAsync(CompleteOrderDto dto)
         {
             try
             {
-                var userId = await _orderRepository.CompleteOrderAsync(completeOrderDto.ClaimCode);
+               
+                var (userId, orderItems) = await _orderRepository.CompleteOrderAsync(dto.ClaimCode);
 
-                if (userId == null)
-                {
-                    return new ApiResponseDto
-                    {
-                        IsSuccess = false,
-                        StatusCode = 404,
-                        Message = "No order found with the specified claim code.",
-                        Data = null
-                    };
-                }
 
                 var user = await _userManager.FindByIdAsync(userId);
-
                 if (user == null)
-                {
                     return new ApiResponseDto
                     {
                         IsSuccess = false,
                         StatusCode = 404,
                         Message = "User not found.",
-                        Data = null
                     };
-                }
 
-                var fullName = user.FullName ?? "User"; 
+              
+                var bookIds = orderItems.Select(oi => oi.BookId).Distinct().ToList();
 
-                var notificationObject = new
+             
+                var books = await _bookRepository.GetBooksByIdsAsync(bookIds);
+
+                
+                var bookTitles = books.Select(b => b.Title).ToList();
+                var booksList = string.Join(", ", bookTitles);
+
+               
+                var notification = new
                 {
                     type = "Order",
                     content = "Order Completed",
                     id = Guid.NewGuid().ToString(),
                     timestamp = DateTime.UtcNow,
                     title = "Order Completed",
-                    description = $"The order of {fullName} has been completed. Now it's your turn!"
+                    description = $"The order for {user.FullName ?? "User"} " +
+                                  $"({booksList}) has been completed."
                 };
+                await _Context.Clients.All.SendAsync("ReceiveNotification", notification);
 
-                await _Context.Clients.All.SendAsync("ReceiveNotification", notificationObject);
-
+               
                 return new ApiResponseDto
                 {
                     IsSuccess = true,
                     StatusCode = 200,
                     Message = "Order completed successfully.",
-                    Data = userId
+                    Data = new { userId, bookTitles }
+                };
+            }
+            catch (InvalidOperationException ex)
+            {
+                return new ApiResponseDto
+                {
+                    IsSuccess = false,
+                    StatusCode = 404,
+                    Message = ex.Message
                 };
             }
             catch (Exception ex)
@@ -136,14 +146,12 @@ namespace Online_Bookstore_System.Service
                 {
                     IsSuccess = false,
                     StatusCode = 500,
-                    Message = $"An error occurred while completing the order: {ex.Message}",
-                    Data = null
+                    Message = $"An error occurred while completing the order: {ex.Message}"
                 };
             }
         }
 
 
-     
 
         public async Task<ApiResponseDto> GetAllOrderAsync()
         {

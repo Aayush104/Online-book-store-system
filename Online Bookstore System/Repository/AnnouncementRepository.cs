@@ -21,13 +21,42 @@ namespace Online_Bookstore_System.Repository
 
         public async Task<List<Announce>> GetActiveAnnouncementsAsync()
         {
-            DateTime now = DateTime.UtcNow;
-            return await _dbContext.Announces
-                .Where(a => a.AnnouncemnetDateTime <= now &&
-                            a.AnnouncemnetEndDateTime >= now &&
-                            a.IsAnnounced)
+
+            var allAnnouncements = await _dbContext.Announces
+                .Select(a => new
+                {
+                    Entity = a,
+                    Start = a.AnnouncemnetDateTime,
+                    End = a.AnnouncemnetEndDateTime,
+                    Flag = a.IsAnnounced
+                })
                 .ToListAsync();
+
+
+            //var announcemnet = await _dbContext.Announces.Where(x => x.Expired == false).ToListAsync();
+
+
+            DateTime nowUtc = DateTime.UtcNow;
+            Console.WriteLine($"[DEBUG] nowUtc: {nowUtc:o}");
+
+
+            var active = allAnnouncements
+                .Where(a =>
+                {
+                    Console.WriteLine(
+                        $"[DEBUG] AnnounceID={a.Entity.Id}  " +
+                        $"Start={a.Start:o}  End={a.End:o}  Flag={a.Flag}");
+                    return a.Start <= nowUtc
+                        && a.End >= nowUtc
+                        && a.Flag;
+                })
+                .Select(a => a.Entity)
+                .ToList();
+
+
+            return active;
         }
+
 
         public async Task<List<Announce>> GetUpcomingAnnouncement()
         {

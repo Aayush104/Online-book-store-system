@@ -5,6 +5,7 @@ using Online_Bookstore_System.DataSecurity;
 using Online_Bookstore_System.Dto.OrderDto;
 using Online_Bookstore_System.IRepository;
 using Online_Bookstore_System.Model;
+using System;
 
 namespace Online_Bookstore_System.Repository
 {
@@ -40,30 +41,38 @@ namespace Online_Bookstore_System.Repository
 
             return true;
         }
-
-        public async Task<string> CompleteOrderAsync(string claimCode)
+        public async Task<(string UserId, List<OrderItem> OrderItems)> CompleteOrderAsync(string claimCode)
         {
             if (string.IsNullOrWhiteSpace(claimCode))
                 throw new ArgumentException("Claim code must be provided.", nameof(claimCode));
 
-            var order = await _appDbContext.Orders.FirstOrDefaultAsync(x => x.ClaimCode == claimCode);
+            var order = await _appDbContext.Orders
+                                 .FirstOrDefaultAsync(o => o.ClaimCode == claimCode);
 
             if (order == null)
                 throw new InvalidOperationException("Order not found for the provided claim code.");
 
             order.Status = "Completed";
-            order.OrderCompletedDate = DateTime.UtcNow;    
+            order.OrderCompletedDate = DateTime.UtcNow;
+
             _appDbContext.Orders.Update(order);
             await _appDbContext.SaveChangesAsync();
 
-            return order.UserId;
+            var items = await _appDbContext.OrderItems
+                                 .Where(oi => oi.OrderId == order.OrderId)
+                                 .ToListAsync();
+
+            return (order.UserId, items);
         }
+
 
 
         public async  Task<List<GetAllOrderDto>> GetAllOrderByClaimCode(string claimCode)
         {
             var orders = await _appDbContext.Orders
               .Where(o => o.ClaimCode == claimCode)
+              .Include(o => o.User)
+
               .Include(o => o.OrderItems)
               .ThenInclude(oi => oi.Book)
               .ToListAsync();
@@ -75,6 +84,8 @@ namespace Online_Bookstore_System.Repository
                 Status = order.Status,
                 OrderDate = order.OrderDate,
                 TotalAmount = order.TotalAmount,
+                FullName = order.User.FullName,
+                Email = order.User.Email,
                 DiscountApplied = order.DiscountApplied,
                 OrderItems = order.OrderItems.Select(item => new GetOrderItemDto
                 {
@@ -95,6 +106,7 @@ namespace Online_Bookstore_System.Repository
         {
             var orders = await _appDbContext.Orders
                .Where(o => o.UserId == userId)
+                 .Include(O => O.User)
                .Include(o => o.OrderItems)
                .ThenInclude(oi => oi.Book)
                .ToListAsync();
@@ -106,6 +118,8 @@ namespace Online_Bookstore_System.Repository
                 Status = order.Status,
                 OrderDate = order.OrderDate,
                 TotalAmount = order.TotalAmount,
+                FullName = order.User.FullName,
+                Email = order.User.Email,
                 DiscountApplied = order.DiscountApplied,
                 OrderItems = order.OrderItems.Select(item => new GetOrderItemDto
                 {
@@ -125,7 +139,7 @@ namespace Online_Bookstore_System.Repository
         public async Task<List<GetAllOrderDto>> GetAllPendingOrder()
         {
             var orders = await _appDbContext.Orders
-               
+               .Include(O => O.User)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Book)
                 .ToListAsync();
@@ -137,6 +151,8 @@ namespace Online_Bookstore_System.Repository
                 Status = order.Status,
                 OrderDate = order.OrderDate,
                 TotalAmount = order.TotalAmount,
+                FullName = order.User.FullName,
+                Email = order.User.Email,
                 DiscountApplied = order.DiscountApplied,
                 OrderItems = order.OrderItems.Select(item => new GetOrderItemDto
                 {
